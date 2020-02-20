@@ -25,4 +25,9 @@ tools:context=".MainActivity">
     android:layout_marginBottom="20dp"
     />
 
+    <Spinner
+        android:id="@+id/planets_spinner"
+        android:layout_width="201dp"
+        android:layout_height="39dp" />
+
 </RelativeLayout>

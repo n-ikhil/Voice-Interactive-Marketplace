@@ -1,7 +1,6 @@
 
 import 'package:flutter/material.dart';  
-import 'package:farmers_mate_mate/chat_Page.dart';
-import 'package:farmers_mate_mate/recorder.dart'; 
+import 'package:farmers_mate_mate/chat_Page.dart'; 
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart' show DateFormat; 
 import 'dart:async'; 

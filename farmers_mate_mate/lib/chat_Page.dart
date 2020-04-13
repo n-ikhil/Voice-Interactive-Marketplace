@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dialogflow/dialogflow_v2.dart';
 import 'package:intl/intl.dart' show DateFormat;
 import 'package:flutter_sound/flutter_sound.dart';
-// import 'package:flutter/material.dart';
-// import 'package:intl/date_symbol_data_local.dart';
+
 
 class ChatBoatScreen extends StatefulWidget {
   @override 
@@ -97,9 +96,9 @@ class _LandingScreenState extends State<ChatBoatScreen> {
                       }
                       this.stopRecorder();
                     },
-                     child:
+                    child:
                         this._isRecording ? Icon(Icons.stop) : Icon(Icons.mic),
-                   ), 
+                  ), 
                   new Row(
                     children: <Widget>[
                       new Flexible(

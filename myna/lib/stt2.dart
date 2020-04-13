@@ -36,12 +36,13 @@ class _MyAppState extends State<stt2> {
   String transcription = '';
 
   //String _currentLocale = 'en_US';
-  Language selectedLang = languages[4]; 
+  Language selectedLang = languages.first; 
   @override
   initState() {
     super.initState();
     activateSpeechRecognizer();
   }
+
    permission_class permission = new permission_class(); 
 
   // Platform messages are asynchronous, so we initialize in an async method.
@@ -132,8 +133,8 @@ class _MyAppState extends State<stt2> {
         ),
       ));
 
-  void start() => _speech.
-      listen(locale: selectedLang.code)
+  void start() => _speech
+      .listen(locale: selectedLang.code)
       .then((result) => print('_MyAppState.start => result $result'));
 
   void cancel() =>

@@ -1,4 +1,4 @@
- 
+import 'package:myna/screens/home-page.dart';
 import 'package:myna/stt2.dart';
 import 'package:myna/stt3_port.dart';
 import 'package:myna/tts.dart';
@@ -12,17 +12,17 @@ void main(){
 }
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Myna APP',
+      title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      // home: stt2(), 
-      home: stt3_port(), 
-      // home: tts(), 
+      home: stt3_port(),
+      // home: stt2(),
+      // home: tts(),
+      // home: HomePage(title: 'Google Translate'),
     );
   }
 }

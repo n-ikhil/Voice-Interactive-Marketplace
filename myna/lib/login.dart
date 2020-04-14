@@ -1,4 +1,5 @@
-import 'package:myna/chat_Page.dart'; 
+import 'package:myna/chat_Page.dart';
+import 'package:myna/recorder.dart';
 import 'package:myna/register.dart';
 import 'package:intl/intl.dart' show DateFormat;
 import 'package:flutter/material.dart';  
@@ -25,7 +26,27 @@ class _LoginPageState extends State<LoginPage> {
   String _playerTxt = '00:00:00';
   double _dbLevel; 
 
+
+//   // FlutterSoundRecorder flutterSoundRecorder = new FlutterSoundRecorder().initialize() as FlutterSoundRecorder;
+
+// //   // add later 
+// //  flutterSoundRecorder.release();
+
+//   // String _errorMessage;
+//   // bool _isLoading;
   
+//   // Future<void> start_recorder() async {
+//   //     var startRecorder = FlutterSoundRecorder.startRecorder(codec: t_CODEC.CODEC_AAC,);
+//   //     Future<String> result = (await startRecorder) as Future<String>;
+//   //     result.then(path) {
+//   //       print('startRecorder: $path');
+
+//   //       _recorderSubscription = flutterSoundRecorder.onRecorderStateChanged.listen((e) {
+//   //       DateTime date = new DateTime.fromMillisecondsSinceEpoch(e.currentPosition.toInt());
+//   //       String txt = DateFormat('mm:ss:SS', 'en_US').format(date);
+//   //       });
+//   //     }
+//   // }
 
  
     void startRecorder() async {

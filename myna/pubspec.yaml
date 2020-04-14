@@ -17,6 +17,8 @@ environment:
   sdk: ">=2.1.0 <3.0.0"
 
 dependencies:
+  flutter_sticky_header: "^0.4.2"
+  translator: ^0.1.4
   image_picker: 
   flutter_dialogflow: ^0.1.2
   flutter_sound:  any
@@ -27,6 +29,8 @@ dependencies:
   intl: ^0.15.6 
   flutter_tts:
   shared_preferences: any  
+  # to try web scrapping :
+  html: ^0.13.3+3 
   flutter:
     sdk: flutter
   

@@ -1,9 +1,9 @@
-import 'package:myna/permission.dart';
 import 'package:flutter/material.dart';
-import 'package:speech_recognition/speech_recognition.dart';
- 
+import 'package:speech_to_text/speech_to_text.dart';
+import 'package:speech_to_text/speech_recognition_result.dart';
+import 'package:speech_to_text/speech_recognition_error.dart';
 
-const languages = const [
+List<Language> languages = [
   const Language('Hindi', 'hi_IN'),
   const Language('English', 'en_US'),
   const Language('Kannad', 'kn_IN'), 
@@ -12,7 +12,6 @@ const languages = const [
   const Language('Telgu', 'te_IN'),
   const Language('Arabic', 'ar_AE'),
   const Language('punjabi', 'pa_guru_IN'),
- 
 ];
 
 class Language {
@@ -22,13 +21,13 @@ class Language {
   const Language(this.name, this.code);
 }
 
-class stt2 extends StatefulWidget {
+class stt3_port extends StatefulWidget {
   @override
   _MyAppState createState() => new _MyAppState();
 }
 
-class _MyAppState extends State<stt2> {
-  SpeechRecognition _speech;
+class _MyAppState extends State<stt3_port> {
+  SpeechToText _speech;
 
   bool _speechRecognitionAvailable = false;
   bool _isListening = false;
@@ -36,30 +35,33 @@ class _MyAppState extends State<stt2> {
   String transcription = '';
 
   //String _currentLocale = 'en_US';
-  Language selectedLang = languages.first; 
+  Language selectedLang = languages.first;
+
   @override
   initState() {
     super.initState();
     activateSpeechRecognizer();
   }
 
-   permission_class permission = new permission_class(); 
-
   // Platform messages are asynchronous, so we initialize in an async method.
-  void activateSpeechRecognizer() {
-     permission.requestPermission();
-     
+  Future<void> activateSpeechRecognizer() async {
     print('_MyAppState.activateSpeechRecognizer... ');
-    _speech = new SpeechRecognition();
-    _speech.setAvailabilityHandler(onSpeechAvailability);
-    _speech.setCurrentLocaleHandler(onCurrentLocale);
-    _speech.setRecognitionStartedHandler(onRecognitionStarted);
-    _speech.setRecognitionResultHandler(onRecognitionResult);
-    _speech.setRecognitionCompleteHandler(onRecognitionComplete);
-    _speech.setErrorHandler(errorHandler);
-    _speech
-        .activate()
-        .then((res) => setState(() => _speechRecognitionAvailable = res));
+    _speech = SpeechToText();
+    // _speech.setCurrentLocaleHandler(onCurrentLocale);
+    // _speech.setRecognitionStartedHandler(onRecognitionStarted);
+    // _speech.setRecognitionCompleteHandler(onRecognitionComplete);
+    _speechRecognitionAvailable = await _speech.initialize(
+        onError: errorHandler, onStatus: onSpeechAvailability);
+    List<LocaleName> localeNames = await _speech.locales();
+    languages.clear();
+    localeNames.forEach((localeName) =>
+        languages.add(Language(localeName.name, localeName.localeId)));
+    var currentLocale = await _speech.systemLocale();
+    if (null != currentLocale) {
+      selectedLang =
+          languages.firstWhere((lang) => lang.code == currentLocale.localeId);
+    }
+    setState(() {});
   }
 
   @override
@@ -133,19 +135,25 @@ class _MyAppState extends State<stt2> {
         ),
       ));
 
-  void start() => _speech
-      .listen(locale: selectedLang.code)
-      .then((result) => print('_MyAppState.start => result $result'));
+  void start() => _speech.listen(
+      onResult: onRecognitionResult, localeId: selectedLang.code);
 
-  void cancel() =>
-      _speech.cancel().then((result) => setState(() => _isListening = result));
+  void cancel() {
+    _speech.cancel();
+    setState(() => _isListening = false);
+  }
 
-  void stop() => _speech.stop().then((result) {
-        setState(() => _isListening = result);
-      });
+  void stop() {
+    _speech.stop();
+    setState(() => _isListening = false);
+  }
 
-  void onSpeechAvailability(bool result) =>
-      setState(() => _speechRecognitionAvailable = result);
+  void onSpeechAvailability(String status) {
+    setState(() {
+      _speechRecognitionAvailable = _speech.isAvailable;
+      _isListening = _speech.isListening;
+    });
+  }
 
   void onCurrentLocale(String locale) {
     print('_MyAppState.onCurrentLocale... $locale');
@@ -155,9 +163,10 @@ class _MyAppState extends State<stt2> {
 
   void onRecognitionStarted() => setState(() => _isListening = true);
 
-  void onRecognitionResult(String text) => setState(() => transcription = text);
+  void onRecognitionResult(SpeechRecognitionResult result) =>
+      setState(() => transcription = result.recognizedWords);
 
-  void onRecognitionComplete(String text) => setState(() => _isListening = false);
+  void onRecognitionComplete() => setState(() => _isListening = false);
 
-  void errorHandler() => activateSpeechRecognizer();
+  void errorHandler(SpeechRecognitionError error) => print(error);
 }

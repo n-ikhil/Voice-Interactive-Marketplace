@@ -1,26 +1,27 @@
-// import 'dart:convert';
+// import 'package:translator/translator.dart';
 
-// import 'package:http/http.dart';
-// import 'package:html/parser.dart';
-// import 'package:html/dom.dart';
+// void main() async {
+//   final translator = GoogleTranslator();
 
-// Future initiate(BaseClient client) async {
-//   // Make API call to Hackernews homepage
-//   Response response = await client.get('https://news.ycombinator.com');
+//   final input = "Здравствуйте. Ты в порядке?";
 
-//   if (response.statusCode != 200) return response.body;
+//   translator.translate(input, to: 'en').then((s) => print("Source: " +
+//       input +
+//       "\n"
+//           "Translated: " +
+//       s +
+//       "\n"));
 
-//   // Use html parser
-//   var document = parse(response.body);
-//   List<Element> links = document.querySelectorAll('td.title > a.storylink');
-//   List<Map<String, dynamic>> linkMap = [];
+//   // You can also call the extension method directly on the input
+//   print('Translated: ${await input.translate(to: 'en')}');
 
-//   for (var link in links) {
-//     linkMap.add({
-//       'title': link.text,
-//       'href': link.attributes['href'],
-//     });
-//   }
+//   // For countries that default base URL doesn't work
+//   translator.baseUrl = "https://translate.google.cn/translate_a/single";
+//   translator.translateAndPrint("This means 'testing' in chinese", to: 'zh-cn');
+//   //prints 这意味着用中文'测试'
 
-//   return json.encode(linkMap);
-// }
+//   var translation = await translator
+//       .translate("I would buy a car, if I had money.", from: 'en', to: 'it');
+//   print("translation: " + translation);
+//   // prints translation: Vorrei comprare una macchina, se avessi i soldi.
+// // }

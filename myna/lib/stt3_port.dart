@@ -1,3 +1,4 @@
+import 'package:feedback/feedback.dart';
 import 'package:flutter/material.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
@@ -22,6 +23,7 @@ class Language {
 }
 
 class stt3_port extends StatefulWidget {
+  const stt3_port({Key key}) : super(key: key);
   @override
   _MyAppState createState() => new _MyAppState();
 }
@@ -108,6 +110,11 @@ class _MyAppState extends State<stt3_port> {
                 ],
               ),
             )),
+            floatingActionButton: FloatingActionButton(
+              onPressed: (){BetterFeedback.of(context).show();},
+              tooltip: 'Send Feedback',
+              child: Icon(Icons.feedback),
+            ), 
       ),
     );
   }

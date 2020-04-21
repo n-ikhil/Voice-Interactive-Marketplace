@@ -20,6 +20,7 @@ dependencies:
   flutter_sticky_header: "^0.4.2"
   translator: ^0.1.4
   image_picker: 
+  feedback: ^0.2.1
   flutter_dialogflow: ^0.1.2
   flutter_sound:  any
   http: ^0.12.0
@@ -27,6 +28,7 @@ dependencies:
   permission_handler: ^3.2.0
   speech_to_text: ^2.1.0
   intl: ^0.15.6 
+  image_cropper: ^1.2.1
   flutter_tts:
   shared_preferences: any  
   # to try web scrapping :

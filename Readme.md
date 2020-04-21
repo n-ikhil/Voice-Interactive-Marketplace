@@ -7,6 +7,7 @@ Add little discription of myna-nest .
 |index|url|HTTP Verb|action description|input variables|output variables|sample i/o|
 |-|-|-|-|-|-|-|
 |1|login/|POST| used to authorize access|username,password|result|[Link](#login)|
+|2|register/|POST| used to register user|username,password,email etc etc>|result|[Link](#register)|
 
 ### Sample I/O's
 
@@ -32,3 +33,22 @@ output
 ```
 
 #### Register
+
+input
+
+``` json
+{
+  " username ":"NIkhil",
+  "Location" :"Jakarta"
+}
+
+````
+
+output
+
+``` json
+{
+  "result":true
+}
+
+```

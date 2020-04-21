@@ -6,17 +6,30 @@ Add little discription of myna-nest .
 
 |index|url|HTTP Verb|action description|input variables|output variables|sample i/o|
 |-|-|-|-|-|-|-|
-|1|login/|POST| used to authorize access|username,password|result|[Link](#login-sample)|
+|1|login/|POST| used to authorize access|username,password|result|
+[Link](#login)|
 
- ### Sample I/O's
-    -Login{#login-sample}
-      input
-      
-      ``` 
-      'json'
-      {""}
-      
-      ```
-      
-      output={""}
-    -Register
+### Sample I/O's
+
+### Login
+
+input
+
+``` json
+{
+  "username": "John@g.com",
+  "password": "<encrypted-pass>",
+}
+
+```
+
+output
+
+``` json
+{
+  "Result":true
+}
+
+```
+
+#### Register

@@ -1,54 +1,47 @@
-for help :read read-me file of myna
-
-Add little discription of myna-nest .
-
 ## API endpoints
 
-|index|url|HTTP Verb|action description|input variables|output variables|sample i/o|
+|index|url|HTTP Verb|action description|protocols|
 |-|-|-|-|-|-|-|
-|1|login/|POST| used to authorize access|username,password|result|[Link to login](#login)|
-|2|register/|POST| used to register user|username,password,email etc etc>|result|[Link to register](#register)|
+|1|profiles/login/|POST| used to authorize access|[login](#login)|
+|2|profiles/register/|POST| used to register user|result|[register](#register)|
+|3|marketplace/rental/add_product/|POST| used to add an item to the rental db|[add product](#marketplace-rental-add-product)|
 
-### Sample I/O's
+---
 
-### Login
+1. Sample I/O's
 
-input
+..* Register
 
-``` json
-{
-  "username": "John@g.com",
-  "password": "<encrypted-pass>",
-}
+Input:
 
-```
+|key|value type|required|
+|---|----------|--------|
+|user|email string|[x]|
+|password|string|[x]|
+|location| string|[]|
+|language|string|[]|
+|contact|string|[]|
 
-output
+Output:
 
-``` json
-{
-  "Result":true
-}
+|key|value|
+|---|-----|
+|result|bool|
+|info|string|
 
-```
 
-#### Register
+..* Login
 
-input
+Input:
 
-``` json
-{
-  " username ":"NIkhil",
-  "Location" :"Jakarta"
-}
+|key|value type|required|
+|---|----------|--------|
+|user|email string|[x]|
+|password|string|[x]|
 
-````
+* Output
 
-output
-
-``` json
-{
-  "result":true
-}
-
-```
+|key|value|
+|---|-----|
+|result|bool|
+|info|string|

@@ -16,7 +16,7 @@ Input:
 
 |key|value type|required|
 |---|----------|--------|
-|user|email string|[x]|
+|user|email string|<ul><li>- [x]</li><ul>|
 |password|string|[x]|
 |location| string|[]|
 |language|string|[]|
@@ -36,8 +36,8 @@ Input:
 
 |key|value type|required|
 |---|----------|--------|
-|user|email string|[x]|
-|password|string|[x]|
+|user|email string|- [x]|
+|password|string|- [x]|
 
 * Output
 

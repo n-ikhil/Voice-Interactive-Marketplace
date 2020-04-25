@@ -16,7 +16,7 @@
 
 ### Register
 
-Input:
+* Input:
 
 |key|value type|required|
 |---|----------|--------|
@@ -26,7 +26,7 @@ Input:
 |language|string|:white_check_mark:|
 |contact|string|:white_check_mark:|
 
-Output:
+* Output:
 
 |key|value|
 |---|-----|
@@ -37,7 +37,7 @@ Output:
 
 ### Login
 
-Input:
+* Input:
 
 |key|value type|required|
 |---|----------|--------|

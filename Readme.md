@@ -5,14 +5,14 @@
 |index|url|HTTP Verb|action description|protocols|
 |-|-|-|-|-|-|-|
 |1|profiles/login/|POST| used to authorize access|[login](#login)|
-|2|profiles/register/|POST| used to register user|result|[register](#register)|
+|2|profiles/register/|POST| used to register user|[register](#register)|
 |3|marketplace/rental/add_product/|POST| used to add an item to the rental db|[add product](#marketplace-rental-add-product)|
 
 ---
 
 #### Sample I/O's
 
-..* Register
+##### Register
 
 Input:
 

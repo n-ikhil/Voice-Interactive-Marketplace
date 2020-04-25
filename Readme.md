@@ -10,9 +10,11 @@
 
 ---
 
-#### Sample I/O's
+## Sample I/O's
 
-##### Register
+---
+
+### Register
 
 Input:
 
@@ -31,8 +33,9 @@ Output:
 |result|bool|
 |info|string|
 
+---
 
-#### Login
+### Login
 
 Input:
 

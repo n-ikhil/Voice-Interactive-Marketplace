@@ -16,9 +16,9 @@ Input:
 
 |key|value type|required|
 |---|----------|--------|
-|user|email string|<ul><li>- [x]</li><ul>|
-|password|string|[x]|
-|location| string|[]|
+|user|email string|&#9745;|
+|password|string|:heavy_check_mark: |
+|location| string|&#9744;|
 |language|string|[]|
 |contact|string|[]|
 

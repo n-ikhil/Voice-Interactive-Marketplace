@@ -1,3 +1,5 @@
+#
+
 ## API endpoints
 
 |index|url|HTTP Verb|action description|protocols|
@@ -8,7 +10,7 @@
 
 ---
 
-1. Sample I/O's
+#### Sample I/O's
 
 ..* Register
 
@@ -16,11 +18,11 @@ Input:
 
 |key|value type|required|
 |---|----------|--------|
-|user|email string|&#9745;|
+|user|email string|:heavy_check_mark:|
 |password|string|:heavy_check_mark: |
-|location| string|&#9744;|
-|language|string|[]|
-|contact|string|[]|
+|location| string|:white_check_mark:|
+|language|string|:white_check_mark:|
+|contact|string|:white_check_mark:|
 
 Output:
 
@@ -30,14 +32,14 @@ Output:
 |info|string|
 
 
-..* Login
+#### Login
 
 Input:
 
 |key|value type|required|
 |---|----------|--------|
-|user|email string|- [x]|
-|password|string|- [x]|
+|user|email string|:heavy_check_mark:|
+|password|string|:heavy_check_mark:|
 
 * Output
 

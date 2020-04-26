@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from rest_framework import generics
 from .serializers import MessagesSerializer,ThreadsSerializer
-from .models import Message,Thread
-from django.contrib.auth import User
+from .models import Message,MessageThread
+from django.contrib.auth.models import User
 # from django.db.models import Q
 from rest_framework.authtoken.models import Token
     
@@ -35,9 +35,9 @@ class ChatThread(generics.ListAPIView):
 
 class ThreadHistory(generics.ListAPIView):
     serialzer_class=ThreadsSerializer
-    model=Thread
+    model=MessageThread
 
     def get_queryset(self):
         requester=tokentoUserId(self.request.META.get('HTTP_AUTHORIZATION') )
-        return Thread.objects.filter(member1=requester) | User.objects.filter(member2=requester)
+        return MessageThread.objects.filter(member1=requester) | User.objects.filter(member2=requester)
 

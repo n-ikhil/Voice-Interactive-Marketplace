@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Message,Thread
+from .models import Message,MessageThread
 
 class MessagesSerializer(serializers.ListSerializer):
     class Meta:
@@ -8,6 +8,6 @@ class MessagesSerializer(serializers.ListSerializer):
 
 class ThreadsSerializer(serializers.ListSerializer):
     class Meta:
-        model= Thread
+        model= MessageThread
         fields='__all__'
-        
+

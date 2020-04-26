@@ -3,8 +3,8 @@ from bs4 import BeautifulSoup
 import requests
 from django.http import HttpResponse,JsonResponse
 from rest_framework.parsers import JSONParser
-from .models import Provider,Seeker,User
-from .serializers import SeekerSerializer,ProviderSerializer
+from .models import User
+# from .serializers import SeekerSerializer,ProviderSerializer
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.response import Response
 from rest_framework import status

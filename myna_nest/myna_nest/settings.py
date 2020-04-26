@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'marketplace',
     'rest_framework',
     'rest_framework.authtoken',
+    'chat'
 
 ]
 

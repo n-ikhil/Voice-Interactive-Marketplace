@@ -20,24 +20,24 @@ class User(AbstractUser):
 		return self.email
 
 
-class Seeker(models.Model):
-	user = models.OneToOneField(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
-	#email = models.CharField(max_length=255)
-	phno = models.CharField(max_length=10)
-	address = models.TextField(null=True,blank=True)
+# class Seeker(models.Model):
+# 	user = models.OneToOneField(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
+# 	#email = models.CharField(max_length=255)
+# 	phno = models.CharField(max_length=10)
+# 	address = models.TextField(null=True,blank=True)
 
 
-	def __str__(self):
-		return self.user.email + " | " + self.phno
+# 	def __str__(self):
+# 		return self.user.email + " | " + self.phno
 
-class Provider(models.Model):
-	title = models.CharField(verbose_name = 'name of the company',max_length=100)
-	services = models.TextField()
-	user = models.OneToOneField(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
-	#email = models.CharField(max_length=255)
-	phno = models.CharField(max_length=10)
-	address = models.TextField()
-	rating = models.DecimalField(max_digits = 5,decimal_places=2,null=True,blank=True)
+# class Provider(models.Model):
+# 	title = models.CharField(verbose_name = 'name of the company',max_length=100)
+# 	services = models.TextField()
+# 	user = models.OneToOneField(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
+# 	#email = models.CharField(max_length=255)
+# 	phno = models.CharField(max_length=10)
+# 	address = models.TextField()
+# 	rating = models.DecimalField(max_digits = 5,decimal_places=2,null=True,blank=True)
 
-	def __str__(self):
-		return self.title
+# 	def __str__(self):
+# 		return self.title

@@ -19,7 +19,7 @@ class StandardProduct(models.Model):
     category=models.ManyToManyField(Category)
 
 class Product(models.Model):
-    pId=models.ForeignKey(StandardProduct,verbose_name="Product name")
+    pId=models.ForeignKey(StandardProduct,verbose_name="Product name",on_delete=models.CASCADE)
     owner=models.ForeignKey(User,verbose_name="Owner of the object",on_delete=models.CASCADE)
     location=models.CharField(max_length=30,verbose_name="Location of the product")
     isRentable=models.BooleanField(verbose_name="Avaible for length")

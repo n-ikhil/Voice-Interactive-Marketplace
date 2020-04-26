@@ -140,7 +140,7 @@ def provider_list(request):
 @csrf_exempt
 @api_view(["POST"])
 @permission_classes((AllowAny,))
-def obtain_auth_token(request):
+def login(request):
 	email = request.data.get("email")
 	password = request.data.get("password")
 	if email is None or password is None:
@@ -158,7 +158,7 @@ def obtain_auth_token(request):
 @csrf_exempt
 @api_view(["POST"])
 @permission_classes((AllowAny,))
-def seeker_registration(request):
+def registration(request):
 	if request.method=='POST':
 		data = JSONParser().parse(request)
 		try:
@@ -173,8 +173,6 @@ def seeker_registration(request):
 			if User.objects.filter(email = email).__len__()==0:
 				usr = User.objects.create_user(email=email,password=password,username=email)
 				usr.save()
-				skr = Seeker(user = usr,phno=phno,address=address)
-				skr.save()
 				return JsonResponse({"email":usr.email,"status":"created"})
 			else:
 				return JsonResponse({"status":"email already existing"},status=201)
@@ -185,35 +183,3 @@ def seeker_registration(request):
 
 	return HttpResponse("<h5>error: request method must be post with the details of registration</h5>")
 
-@csrf_exempt
-@api_view(["POST"])
-@permission_classes((AllowAny,))
-def provider_registration(request):
-	if request.method=='POST':
-		data = JSONParser().parse(request)
-		try:
-			password = data["password"]
-			email = data["email"]
-			phno = data['phno']
-			address = data['address']
-			title = data['title']
-			services = data['services']
-		except Exception as e:
-			return JsonResponse({"status":"please provide all the fields"})
-		
-		try:
-			if User.objects.filter(email = email).__len__()==0:
-				usr = User.objects.create_user(email=email,password=password,username=email)
-				usr.save()
-				skr = Provider(user = usr,phno=phno,address=address,title=title,services=services)
-				skr.save()
-				return JsonResponse({"email":usr.email,"status":"created"})
-			else:
-				return JsonResponse({"status":"email already existing"},status=201)
-		except Exception as e:
-			raise e
-		
-		return JsonResponse({"status":"unable to create user"})
-
-
-	return HttpResponse("<h5>error: request method must be post with the details of registration</h5>")

@@ -3,8 +3,8 @@ from bs4 import BeautifulSoup
 import requests
 from django.http import HttpResponse,JsonResponse
 from rest_framework.parsers import JSONParser
-from .models import Provider,Seeker,User
-from .serializers import SeekerSerializer,ProviderSerializer
+from .models import User
+from marketplace.models import Provider,Seeker,Products
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.response import Response
 from rest_framework import status
@@ -97,41 +97,39 @@ def get_query(request):
 
 
 
-# @csrf_exempt
-# def seeker_list(request):
-
-# 	if request.method == 'GET':
-# 		seekers = Seeker.objects.all()
-# 		ser = SeekerSerializer(seekers,many=True)
-
-# 		return JsonResponse(ser.data,safe=False)
-
-# 	elif request.method == 'POST':
-# 		data = JSONParser().parse(request)
-# 		ser = SeekerSerializer(data = data)
-
-# 		if ser.is_valid():
-# 			ser.save()
-# 			return JsonResponse(ser.data,status=201)
-
-# 		else :
-# 			return JsonResponse(ser.errors,status=400)
 
 
 @csrf_exempt
 @api_view(["GET"])
 @permission_classes((IsAuthenticated,))
-def provider_list(request):
+def buyMode(request):
 
 	if request.method == 'GET':
+		data = JSONParser().parse(request)
 		try:
-			data = JSONParser().parse(request)
-			pvd = Provider.objects.filter(services__contains=data['service'],address__contains=data['place'])
-			ser = ProviderSerializer(pvd,many=True)
-			final_data = ser.data
-			print(final_data)
+			name = data['product']
+			place = data['place']
 		except Exception as e:
-			final_data = {'data':'Incorrect Parameters or no data for given Parameters'}
+			return JsonResponse({"info":"please provide all the fields",'status':False})
+
+		try:
+			
+			pvd = Products.objects.filter(name=name,location__contains = place)
+			final_data = {}
+			for p in pvd:
+				tmp = {}
+				tmp['title'] = p.provider.title
+				tmp['phno'] = p.provider.user.phno
+				tmp['location'] = p.location
+				tmp['username'] = p.provider.user.username
+				final_data[p.id] = tmp
+			# pvd = Provider.objects.filter(services__contains=data['service'],address__contains=data['place'])
+			# ser = ProviderSerializer(pvd,many=True)
+			# final_data = ser.data
+			print(final_data)
+			final_data['status'] = True
+		except Exception as e:
+			final_data = {'info':'Incorrect Parameters or no data for given Parameters','status':False}
 			print('no data')
 
 		return JsonResponse(final_data,safe=False)
@@ -144,16 +142,18 @@ def login(request):
 	email = request.data.get("email")
 	password = request.data.get("password")
 	if email is None or password is None:
-		return Response({'error': 'Please provide both email and password'},
+		return Response({'info': 'Please provide both email and password','status':False},
 			status=HTTP_400_BAD_REQUEST)
 	user_cur = authenticate(email = email,password = password)
 	print(user_cur)
 	if not user_cur:
-		return Response({'error': 'Invalid Credentials'},
+		return Response({'error': 'Invalid Credentials','status':False},
 				status=HTTP_404_NOT_FOUND)
 	token, _ = Token.objects.get_or_create(user=user_cur)
-	return Response({'token': token.key},
+	return Response({'token': token.key,'status':True},
 				status=HTTP_200_OK)
+
+
 
 @csrf_exempt
 @api_view(["POST"])
@@ -164,22 +164,131 @@ def registration(request):
 		try:
 			password = data["password"]
 			email = data["email"]
+			username = data['username']
 			phno = data['phno']
 			address = data['address']
 		except Exception as e:
-			return JsonResponse({"status":"please provide all the fields"})
+			return JsonResponse({"info":"please provide all the fields",'status':False})
 		
 		try:
 			if User.objects.filter(email = email).__len__()==0:
-				usr = User.objects.create_user(email=email,password=password,username=email)
+				usr = User.objects.create_user(email=email,password=password,username=username,phno = phno,address=address)
 				usr.save()
-				return JsonResponse({"email":usr.email,"status":"created"})
+				return JsonResponse({"email":usr.email,"info":"user created successfully","status":True})
 			else:
-				return JsonResponse({"status":"email already existing"},status=201)
+				return JsonResponse({"info":"email already existing","status":False},status=201)
 		except Exception as e:
 			raise e
 		
-		return JsonResponse({"status":"unable to create user"})
+		return JsonResponse({"info":"unable to create user","status":False})
 
 	return HttpResponse("<h5>error: request method must be post with the details of registration</h5>")
 
+
+
+
+@csrf_exempt
+@api_view(["GET"])
+@permission_classes((IsAuthenticated,))
+def sellMode(request):
+	if request.method == 'GET':
+		try:
+			usr = request.user
+			p = Provider.objects.filter(user__email=usr.email)
+			if p.__len__()==0:
+				final_data = {'info':'first register by giving the company name and details','hint':'call provider_registration','status':False}
+			else :
+
+				prd = Provider.objects.get(user=usr)
+
+				product_list = Products.objects.filter(provider=prd)
+				final_data = {}
+				for p in product_list:
+					tmp = {}
+					tmp['name'] = p.name
+					tmp['mode'] = p.mode
+					tmp['location'] = p.location
+					final_data[p.id] = tmp
+
+				final_data['status'] = True
+		except Exception as e:
+			final_data = {'info':'Incorrect Parameters or no data for given Parameters','status':False}
+			print('no data')
+
+		return JsonResponse(final_data,safe=False)
+
+
+@csrf_exempt
+@api_view(["POST"])
+@permission_classes((IsAuthenticated,))
+def providerRegistration(request):
+
+	if request.method == 'POST':
+		data = JSONParser().parse(request)
+		usr = request.user
+		try:
+			title = data['title']
+			address = data['address']
+			description = ''
+			try:
+				description = data['description']
+			except Exception as e:
+				print('no description')
+		except Exception as e:
+			return JsonResponse({"info":"please provide all the fields",'status':False})
+
+
+		try:
+			pd = Provider.objects.filter(user=usr)
+			if pd.__len__()==0:
+				pvd = Provider(user= usr,title=title,description=description,address=address)
+				pvd.save()
+				final_data = {'info':'created successfully','status':True}
+			else:
+				final_data = {'info':'already registered','status':False}
+		except Exception as e:
+			raise e
+			final_data = {'info':'error in creating Provider','status':False}
+
+		return JsonResponse(final_data,safe=False)
+
+
+
+@csrf_exempt
+@api_view(["POST"])
+@permission_classes((IsAuthenticated,))
+def addProduct(request):
+
+	if request.method == 'POST':
+		data = JSONParser().parse(request)
+		usr = request.user
+		provider = Provider.objects.get(user=usr)
+		try:
+			name = data['name']
+			location = data['location']
+			mode = data['mode']
+		except Exception as e:
+			return JsonResponse({"info":"please provide all the fields",'status':False})
+
+
+		try:
+			pd = Products.objects.filter(provider = provider,name = name,location=location)
+			if pd.__len__()==0:
+				pvd = Products(provider=provider,name=name,location=location,mode=mode)
+				pvd.save()
+				product_list = Products.objects.filter(provider=provider)
+				final_data = {}
+				for p in product_list:
+					tmp = {}
+					tmp['name'] = p.name
+					tmp['mode'] = p.mode
+					tmp['location'] = p.location
+					final_data[p.id] = tmp
+
+				final_data['status'] = True
+			else:
+				final_data = {'info':'product with same details already existing','status':False}
+		except Exception as e:
+			final_data = {'info':'error in creating Provider','status':False}
+
+		return JsonResponse(final_data,safe=False)

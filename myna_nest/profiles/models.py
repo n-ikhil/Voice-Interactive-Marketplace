@@ -11,6 +11,7 @@ class User(AbstractUser):
 	email = models.EmailField(verbose_name='email',max_length=255,unique=True)
 	phno = models.CharField(verbose_name='phone number',max_length=12)
 	username = models.CharField(verbose_name='username',max_length=100,null = True,blank=True)
+	address = models.TextField()
 	REQUIRED_FIELDS = ['username']
 
 	USERNAME_FIELD = 'email'
@@ -20,24 +21,35 @@ class User(AbstractUser):
 		return self.email
 
 
-class Seeker(models.Model):
-	user = models.OneToOneField(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
-	#email = models.CharField(max_length=255)
-	phno = models.CharField(max_length=10)
-	address = models.TextField(null=True,blank=True)
 
 
-	def __str__(self):
-		return self.user.email + " | " + self.phno
+# class Provider(models.Model):
+# 	title = models.CharField(verbose_name = 'name of the company',max_length=100)
+# 	address = models.TextField(null=True,blank=True)
+# 	description = models.TextField(blank=True,null=True)
+# 	user = models.OneToOneField(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
+# 	rating = models.DecimalField(max_digits = 5,decimal_places=2,null=True,blank=True)
 
-class Provider(models.Model):
-	title = models.CharField(verbose_name = 'name of the company',max_length=100)
-	services = models.TextField()
-	user = models.OneToOneField(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
-	#email = models.CharField(max_length=255)
-	phno = models.CharField(max_length=10)
-	address = models.TextField()
-	rating = models.DecimalField(max_digits = 5,decimal_places=2,null=True,blank=True)
+# 	def __str__(self):
+# 		return self.title
 
-	def __str__(self):
-		return self.title
+
+# class Products(models.Model):
+# 	provider = models.ForeignKey(Provider,on_delete=models.CASCADE)
+# 	name = models.CharField(verbose_name='product or service name',max_length=100)
+# 	quantity = models.CharField(verbose_name='product quantity',max_length=1000,null=True,blank=True)
+# 	location = models.TextField()
+# 	mode = models.CharField(verbose_name='mode',max_length=10)
+# 	# images = models.ImageField()
+
+# 	def __str__(self):
+# 		return self.name  + " | " + self.mode
+
+
+
+# class Seeker(models.Model):
+# 	user = models.OneToOneField(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
+# 	marked = models.ManyToManyField(Products,blank=True)
+
+# 	def __str__(self):
+# 		return self.user.email + " | " + self.user.phno

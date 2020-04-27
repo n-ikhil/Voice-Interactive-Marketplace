@@ -53,3 +53,4 @@ class User(AbstractUser):
 
 # 	def __str__(self):
 # 		return self.user.email + " | " + self.user.phno
+

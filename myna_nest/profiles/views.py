@@ -4,7 +4,6 @@ import requests
 from django.http import HttpResponse,JsonResponse
 from rest_framework.parsers import JSONParser
 from .models import User
-from marketplace.models import Provider,Seeker
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.response import Response
 from rest_framework import status

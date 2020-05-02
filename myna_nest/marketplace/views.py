@@ -6,7 +6,7 @@ from django.shortcuts import render
 from django.http import HttpResponse,JsonResponse
 from rest_framework.parsers import JSONParser
 from profiles.models import User
-from marketplace.models import Provider,Seeker,Product,StandardProduct
+from marketplace.models import Product,StandardProduct,Category
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.response import Response
 from rest_framework import status
@@ -21,19 +21,9 @@ from rest_framework.status import (
 )
 from rest_framework.renderers import JSONRenderer, TemplateHTMLRenderer
 from django.forms.models import model_to_dict
+from .serializers import CategorySerializer,StandardProductSerializer
 
 
-
-
-
-
-
-def removeProduct(request):
-	pass
-def queryProduct(request):
-	pass
-def getProductInfo(request):
-	pass
 
 
 
@@ -41,35 +31,34 @@ def getProductInfo(request):
 @csrf_exempt
 @api_view(["POST"])
 @permission_classes((IsAuthenticated,))
-def providerRegistration(request):
-
+def removeProduct(request):
 	if request.method == 'POST':
 		data = JSONParser().parse(request)
 		usr = request.user
 		try:
-			title = data['title']
-			address = data['address']
-			description = ''
-			try:
-				description = data['description']
-			except Exception as e:
-				print('no description')
+			product_id = data['id']
 		except Exception as e:
 			return JsonResponse({"info":"please provide all the fields",'status':False})
 
-
 		try:
-			pd = Provider.objects.filter(user=usr)
-			if pd.__len__()==0:
-				pvd = Provider(user= usr,title=title,description=description,address=address)
-				pvd.save()
-				final_data = {'info':'created successfully','status':True}
-			else:
-				final_data = {'info':'already registered','status':False}
-		except Exception as e:
-			raise e
-			final_data = {'info':'error in creating Provider','status':False}
+			try:
+				product = Product.objects.get(id=product_id)
+			except Exception as e:
+				return JsonResponse({"info":"No product with given id",'status':False})
+			product.delete()
+			product_list = Product.objects.filter(owner=usr)
+			final_data = {}
+			for p in product_list:
+				tmp = {}
+				tmp['name'] = p.pId.name
+				tmp['mode'] = p.mode
+				tmp['location'] = p.location
+				final_data[p.id] = tmp
+			final_data['status'] = True
 
+		except Exception as e:
+			final_data = {'info':'Incorrect Parameters or no data for given Parameters','status':False}
+			print('no data')
 		return JsonResponse(final_data,safe=False)
 
 
@@ -78,23 +67,52 @@ def providerRegistration(request):
 @csrf_exempt
 @api_view(["GET"])
 @permission_classes((IsAuthenticated,))
-def getSellerProductList(request):
+def getProductInfo(request):
+	if request.method == 'GET':
+		data = JSONParser().parse(request)
+		usr = request.user
+		try:
+			product_id = data['id']
+		except Exception as e:
+			return JsonResponse({"info":"please provide all the fields",'status':False})
+
+		try:
+			try:
+				product = Product.objects.get(id=product_id)
+			except Exception as e:
+				return JsonResponse({"info":"No product with given id",'status':False})
+			
+			final_data = {}
+			final_data['name'] = product.pId.name
+			final_data['mode'] = product.mode
+			final_data['location'] = product.location
+			final_data['owner'] = product.owner.username
+			final_data['owner_location'] = product.owner.address 
+			final_data['owner_phno'] = product.owner.phno
+			final_data['owner_email'] = product.owner.email 
+			final_data['status'] = True
+		except Exception as e:
+			final_data = {'info':'Incorrect Parameters or no data for given Parameters','status':False}
+			print('no data')
+		return JsonResponse(final_data,safe=False)
+
+
+@csrf_exempt
+@api_view(["GET"])
+@permission_classes((IsAuthenticated,))
+def sellerProductList(request):
 	if request.method == 'GET':
 		try:
 			usr = request.user
-			p = Provider.objects.filter(user=usr)
-			if p.__len__()==0:
-				final_data = {'info':'first register by giving the company name and details','hint':'call provider_registration','status':False}
-			else :
-				product_list = Product.objects.filter(owner=usr)
-				final_data = {}
-				for p in product_list:
-					tmp = {}
-					tmp['name'] = p.pId.name
-					tmp['mode'] = p.mode
-					tmp['location'] = p.location
-					final_data[p.id] = tmp
-				final_data['status'] = True
+			product_list = Product.objects.filter(owner=usr)
+			final_data = {}
+			for p in product_list:
+				tmp = {}
+				tmp['name'] = p.pId.name
+				tmp['mode'] = p.mode
+				tmp['location'] = p.location
+				final_data[p.id] = tmp
+			final_data['status'] = True
 		except Exception as e:
 			final_data = {'info':'Incorrect Parameters or no data for given Parameters','status':False}
 			print('no data')
@@ -112,7 +130,6 @@ def addProduct(request):
 	if request.method == 'POST':
 		data = JSONParser().parse(request)
 		usr = request.user
-		provider = Provider.objects.get(user=usr)
 		try:
 			name = data['name']
 			location = data['location']
@@ -154,7 +171,7 @@ def addProduct(request):
 @csrf_exempt
 @api_view(["GET"])
 @permission_classes((IsAuthenticated,))
-def getBuyerProductList(request):
+def queryProduct(request):
 
 	if request.method == 'GET':
 		usr = request.user
@@ -175,15 +192,11 @@ def getBuyerProductList(request):
 			pvd = Product.objects.filter(pId__name = name,location__contains = place)
 			print(pvd)
 			final_data = {}
-			provider = Provider.objects.get(user=usr)
-			print(provider)
 			for p in pvd:
 				tmp = {}
-				tmp['title'] = provider.title
 				tmp['phno'] = p.owner.phno
 				tmp['location'] = p.location
 				tmp['username'] = p.owner.username
-				tmp['description'] = provider.description
 				final_data[p.id] = tmp
 			# pvd = Provider.objects.filter(services__contains=data['service'],address__contains=data['place'])
 			# ser = ProviderSerializer(pvd,many=True)
@@ -192,6 +205,53 @@ def getBuyerProductList(request):
 			final_data['status'] = True
 		except Exception as e:
 			final_data = {'info':'Incorrect Parameters or no data for given Parameters','status':False}
+			print('no data')
+
+		return JsonResponse(final_data,safe=False)
+
+
+
+@csrf_exempt
+@api_view(["GET"])
+@permission_classes((IsAuthenticated,))
+def getCategoryList(request):
+	if request.method == 'GET':
+		usr = request.user
+		try:
+			categorylist = Category.objects.all()
+			if categorylist.__len__()==0:
+				final_data = {'info':'no elements in category list','status':False}
+			else :
+				final_data = {}
+				ser = CategorySerializer(categorylist,many=True)
+				final_data['category_list'] = ser.data
+				final_data['status'] = True
+		except Exception as e:
+			final_data = {'info':'error in getting category list','status':False}
+			print('no data')
+
+		return JsonResponse(final_data,safe=False)
+
+@csrf_exempt
+@api_view(["GET"])
+@permission_classes((IsAuthenticated,))
+def getProductList(request):
+	if request.method == 'GET':
+		usr = request.user
+		data = JSONParser().parse(request)
+		try:
+			category = data['category']
+		except Exception as e:
+			return JsonResponse({"info":"please provide all the fields",'status':False})
+
+		try:
+			final_data = {}
+			product_list = StandardProduct.objects.filter(category__name=category)
+			ser = StandardProductSerializer(product_list,many=True)
+			final_data['product_list'] = ser.data
+			final_data['status'] = True
+		except Exception as e:
+			final_data = {'info':'error in getting product list for given category','status':False}
 			print('no data')
 
 		return JsonResponse(final_data,safe=False)

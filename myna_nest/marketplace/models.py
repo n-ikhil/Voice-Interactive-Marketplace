@@ -8,10 +8,16 @@ languages=[("english","english"),("hindi","hindi"),("kannada","kannada"),("telug
 class Category(models.Model):
     name=models.CharField(max_length=30,verbose_name="Product Category",unique=True)
 
+    def __str__(self):
+      return self.name
+
 class StandardProductName(models.Model):
     # productId=models.ForeignKey(StandardProduct)
     language=models.CharField(max_length=30,choices=languages)
     name=models.CharField(max_length=40)
+
+    def __str__(self):
+      return self.name
 
 
 class StandardProduct(models.Model):
@@ -30,38 +36,7 @@ class Product(models.Model):
     quantity = models.CharField(verbose_name='product quantity',max_length=1000,null=True,blank=True)
     #isRentable=models.BooleanField(verbose_name="Avaible for length")
     mode = models.CharField(verbose_name='mode',max_length=10,choices=[('sell','SELL'),('rent','RENT'),('service','SERVICE')])
-
+    #savedProducts = models.ManyToManyField(settings.AUTH_USER_MODEL,verbose_name='saved products');
     
 
 
-
-class Provider(models.Model):
-    title = models.CharField(verbose_name = 'name of the company',max_length=100)
-    address = models.TextField(null=True,blank=True)
-    description = models.TextField(blank=True,null=True)
-    user = models.OneToOneField(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
-    rating = models.DecimalField(max_digits = 5,decimal_places=2,null=True,blank=True)
-
-    def __str__(self):
-        return self.title
-
-
-# class Products(models.Model):
-#   provider = models.ForeignKey(Provider,on_delete=models.CASCADE)
-#   name = models.CharField(verbose_name='product or service name',max_length=100)
-#   quantity = models.CharField(verbose_name='product quantity',max_length=1000,null=True,blank=True)
-#   location=models.CharField(max_length=30,verbose_name="Location of the product")
-#   mode = models.CharField(verbose_name='mode',max_length=10)
-#   # images = models.ImageField()
-
-#   def __str__(self):
-#       return self.name  + " | " + self.mode
-
-
-
-class Seeker(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
-    marked = models.ManyToManyField(Product,blank=True)
-
-    def __str__(self):
-        return self.user.email + " | " + self.user.phno

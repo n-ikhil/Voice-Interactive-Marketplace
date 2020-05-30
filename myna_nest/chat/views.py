@@ -23,19 +23,19 @@ def userNameToUserId(name):# helper function
 
 class ChatThread(generics.ListAPIView):
     seriliazer_class=MessagesSerializer
-    model=Message
+    # model=Message
     def get_queryset(self):
-        requester=tokentoUserId(self.request.META.get('HTTP_AUTHORIZATION') )
-        otherPerson= self.kwargs["username"]
+        personA=tokentoUserId(self.request.META.get('HTTP_AUTHORIZATION') )
+        personB= self.kwargs["username"]
         
-        if requester > otherPerson:
-            requester,person=person,requester
+        if personA > personB:
+            personA,personB=personB,personA
 
-        return Message.objects.get(member1=requester,member2=otherPerson)
+        return Message.objects.get(member1=personA,member2=personB) # or condition would suffice, but it is overtime
 
 class ThreadHistory(generics.ListAPIView):
     serialzer_class=ThreadsSerializer
-    model=MessageThread
+    # model=MessageThread
 
     def get_queryset(self):
         requester=tokentoUserId(self.request.META.get('HTTP_AUTHORIZATION') )

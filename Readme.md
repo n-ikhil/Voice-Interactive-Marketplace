@@ -22,6 +22,7 @@ chat assumptions
 
 ### Chat get thread list
 
+* Output:
 json List of following structure
 |key|value|
 |-|-|

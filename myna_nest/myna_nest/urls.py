@@ -20,6 +20,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('profiles/',include('profiles.urls')),
     path("chat/", include("chat.urls")),
-   # path('marketplace/',include('marketplace.urls')),
+    path('marketplace/',include('marketplace.urls')),
     #path('chat',include('chat.urls')),
 ]

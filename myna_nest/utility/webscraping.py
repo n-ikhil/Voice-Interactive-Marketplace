@@ -1,19 +1,34 @@
+#!/usr/bin/env python3
+
 from django.shortcuts import render
 from bs4 import BeautifulSoup
 import requests
 
 # Create your views here.
 
-def get_query(request):
-	if request.method=='POST':
-		s1 = request.POST['obj']
-		s2 = request.POST['place']
-		# print(s1,s2)
+class VendorInfo:
+	def __init__(self,data):
+		self.vendorName=data["name"]
+		self.shopName=data["shop"]
+		self.address=data["address"]
+		self.contact=data["contact"]
+
+class WebData:
+
+	def __init__(self,queryText):
+		self.requestType=queryText["type"]
+		self.location=queryText["location"]
+		self.results=self.scrapData() ## return list of vendor info items
+
+	def scrapData(self):#return list of vendor info items
+		s1=self.requestType
+		s2=self.location
 		print("googling...")
 		link = requests.get('https://www.google.com/search?q=' + s1 + ' in ' + s2)
 		link.raise_for_status()
 		search = link.text
-		soup = BeautifulSoup(search,'lxml')
+		soup = BeautifulSoup(search,'html.parser')
+		print(soup)
 		linkElements = soup.find_all('a')
 		flag = False
 		l1 = []
@@ -63,8 +78,10 @@ def get_query(request):
 
 
 		data = {'text':l2}
-		return render(request,'main.html',data)
+		print(data)
+		
+		# return render(request,'main.html',data)
 
 
 
-	return render(request,'base.html')
+	# return render(request,'base.html')

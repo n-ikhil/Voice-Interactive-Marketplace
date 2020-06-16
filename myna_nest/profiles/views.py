@@ -3,8 +3,7 @@ from bs4 import BeautifulSoup
 import requests
 from django.http import HttpResponse,JsonResponse
 from rest_framework.parsers import JSONParser
-from .models import Provider,Seeker,User
-from .serializers import SeekerSerializer,ProviderSerializer
+from .models import User
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.response import Response
 from rest_framework import status
@@ -97,123 +96,58 @@ def get_query(request):
 
 
 
-# @csrf_exempt
-# def seeker_list(request):
-
-# 	if request.method == 'GET':
-# 		seekers = Seeker.objects.all()
-# 		ser = SeekerSerializer(seekers,many=True)
-
-# 		return JsonResponse(ser.data,safe=False)
-
-# 	elif request.method == 'POST':
-# 		data = JSONParser().parse(request)
-# 		ser = SeekerSerializer(data = data)
-
-# 		if ser.is_valid():
-# 			ser.save()
-# 			return JsonResponse(ser.data,status=201)
-
-# 		else :
-# 			return JsonResponse(ser.errors,status=400)
 
 
-@csrf_exempt
-@api_view(["GET"])
-@permission_classes((IsAuthenticated,))
-def provider_list(request):
-
-	if request.method == 'GET':
-		try:
-			data = JSONParser().parse(request)
-			pvd = Provider.objects.filter(services__contains=data['service'],address__contains=data['place'])
-			ser = ProviderSerializer(pvd,many=True)
-			final_data = ser.data
-			print(final_data)
-		except Exception as e:
-			final_data = {'data':'Incorrect Parameters or no data for given Parameters'}
-			print('no data')
-
-		return JsonResponse(final_data,safe=False)
 
 
 @csrf_exempt
 @api_view(["POST"])
 @permission_classes((AllowAny,))
-def obtain_auth_token(request):
+def login(request):
 	email = request.data.get("email")
 	password = request.data.get("password")
 	if email is None or password is None:
-		return Response({'error': 'Please provide both email and password'},
+		return Response({'info': 'Please provide both email and password','status':False},
 			status=HTTP_400_BAD_REQUEST)
 	user_cur = authenticate(email = email,password = password)
 	print(user_cur)
 	if not user_cur:
-		return Response({'error': 'Invalid Credentials'},
+		return Response({'error': 'Invalid Credentials','status':False},
 				status=HTTP_404_NOT_FOUND)
 	token, _ = Token.objects.get_or_create(user=user_cur)
-	return Response({'token': token.key},
+	return Response({'token': token.key,'status':True},
 				status=HTTP_200_OK)
 
+
+
 @csrf_exempt
 @api_view(["POST"])
 @permission_classes((AllowAny,))
-def seeker_registration(request):
+def registration(request):
 	if request.method=='POST':
 		data = JSONParser().parse(request)
 		try:
 			password = data["password"]
 			email = data["email"]
+			username = data['username']
 			phno = data['phno']
 			address = data['address']
+			language = data['language']
 		except Exception as e:
-			return JsonResponse({"status":"please provide all the fields"})
+			return JsonResponse({"info":"please provide all the fields",'status':False})
 		
 		try:
 			if User.objects.filter(email = email).__len__()==0:
-				usr = User.objects.create_user(email=email,password=password,username=email)
+				usr = User.objects.create_user(email=email,password=password,username=username,phno = phno,address=address,language=language)
 				usr.save()
-				skr = Seeker(user = usr,phno=phno,address=address)
-				skr.save()
-				return JsonResponse({"email":usr.email,"status":"created"})
+				return JsonResponse({"email":usr.email,"info":"user created successfully","status":True})
 			else:
-				return JsonResponse({"status":"email already existing"},status=201)
+				return JsonResponse({"info":"email already existing","status":False},status=201)
 		except Exception as e:
 			raise e
 		
-		return JsonResponse({"status":"unable to create user"})
+		return JsonResponse({"info":"unable to create user","status":False})
 
 	return HttpResponse("<h5>error: request method must be post with the details of registration</h5>")
 
-@csrf_exempt
-@api_view(["POST"])
-@permission_classes((AllowAny,))
-def provider_registration(request):
-	if request.method=='POST':
-		data = JSONParser().parse(request)
-		try:
-			password = data["password"]
-			email = data["email"]
-			phno = data['phno']
-			address = data['address']
-			title = data['title']
-			services = data['services']
-		except Exception as e:
-			return JsonResponse({"status":"please provide all the fields"})
-		
-		try:
-			if User.objects.filter(email = email).__len__()==0:
-				usr = User.objects.create_user(email=email,password=password,username=email)
-				usr.save()
-				skr = Provider(user = usr,phno=phno,address=address,title=title,services=services)
-				skr.save()
-				return JsonResponse({"email":usr.email,"status":"created"})
-			else:
-				return JsonResponse({"status":"email already existing"},status=201)
-		except Exception as e:
-			raise e
-		
-		return JsonResponse({"status":"unable to create user"})
 
-
-	return HttpResponse("<h5>error: request method must be post with the details of registration</h5>")

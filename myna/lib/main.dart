@@ -1,14 +1,15 @@
 import 'dart:typed_data'; 
 import 'package:feedback/feedback.dart';
-import 'package:myna/screens/home-page.dart';
-import 'package:myna/stt2.dart';
-import 'package:myna/stt3_port.dart';
-import 'package:myna/tts.dart';
+//import 'package:myna/extra/google_translator/screen//home-page.dart';
+import 'screen/HomePage.dart';
+import 'file:///D:/Development_Engineering_Prj/cuddly-umbrella/myna/lib/extra/stt2.dart';
+import 'file:///D:/Development_Engineering_Prj/cuddly-umbrella/myna/lib/extra/stt3_port.dart';
+import 'extra/translator/screens/home-page.dart';
+import 'file:///D:/Development_Engineering_Prj/cuddly-umbrella/myna/lib/model/tts.dart';
 import 'package:flutter/material.dart';
-import 'signin.dart';  
-import './profile_image_upload/home_screen.dart';
+import 'screen/signin.dart';
 
-import 'login.dart'; 
+import 'extra/login.dart';
 // void main() {runApp(MyApp()) ;}
 
 
@@ -41,11 +42,12 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      // home: const stt3_port(),
-      // home: stt2(),
-      // home: tts(),
-       home:  HomeScreen(title: 'Flutter Image picker'),
-      // home: HomePage(title: 'Google Translate'), 
+//       home: const stt3_port(),
+//       home:   SigninPage(),
+//      home:   Home(),
+//       home: stt2(),
+       home: tts(),
+//       home: HomePage(title: 'Google Translate'),
       //google translate api do the same work
     );
   }

@@ -31,6 +31,8 @@ dependencies:
   image_cropper: ^1.2.1
   flutter_tts:
   shared_preferences: any  
+  geolocator: any
+  custom_switch: any
   # to try web scrapping :
   html: ^0.13.3+3 
   flutter:

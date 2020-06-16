@@ -1,5 +1,6 @@
-import 'dart:typed_data'; 
+import 'dart:typed_data';
 import 'package:feedback/feedback.dart';
+
 //import 'package:myna/extra/google_translator/screen//home-page.dart';
 import 'screen/HomePage.dart';
 import 'file:///D:/Development_Engineering_Prj/cuddly-umbrella/myna/lib/extra/stt2.dart';
@@ -12,13 +13,12 @@ import 'screen/signin.dart';
 import 'extra/login.dart';
 // void main() {runApp(MyApp()) ;}
 
-
 void main() {
   runApp(
     BetterFeedback(
-      backgroundColor: Colors.grey, 
+      backgroundColor: Colors.grey,
       drawColors: [Colors.red, Colors.green, Colors.blue, Colors.yellow],
-       translation: PunjabiTranslation(),
+      translation: PunjabiTranslation(),
       child: MyApp(
         key: GlobalKey(debugLabel: 'app_key'),
       ),
@@ -32,9 +32,10 @@ void main() {
     ),
   );
 }
- 
-class MyApp extends StatelessWidget { 
- const MyApp({Key key}) : super(key: key);
+
+class MyApp extends StatelessWidget {
+  const MyApp({Key key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -46,10 +47,9 @@ class MyApp extends StatelessWidget {
 //       home:   SigninPage(),
 //      home:   Home(),
 //       home: stt2(),
-       home: tts(),
+      home: tts(),
 //       home: HomePage(title: 'Google Translate'),
       //google translate api do the same work
     );
   }
 }
- 

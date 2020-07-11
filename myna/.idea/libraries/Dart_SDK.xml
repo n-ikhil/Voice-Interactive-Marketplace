@@ -1,17 +1,17 @@
 <component name="libraryTable">
   <library name="Dart SDK">
     <CLASSES>
-      <root url="file://F:/r_programming/flutter/bin/cache/dart-sdk/lib/async" />
-      <root url="file://F:/r_programming/flutter/bin/cache/dart-sdk/lib/collection" />
-      <root url="file://F:/r_programming/flutter/bin/cache/dart-sdk/lib/convert" />
-      <root url="file://F:/r_programming/flutter/bin/cache/dart-sdk/lib/core" />
-      <root url="file://F:/r_programming/flutter/bin/cache/dart-sdk/lib/developer" />
-      <root url="file://F:/r_programming/flutter/bin/cache/dart-sdk/lib/html" />
-      <root url="file://F:/r_programming/flutter/bin/cache/dart-sdk/lib/io" />
-      <root url="file://F:/r_programming/flutter/bin/cache/dart-sdk/lib/isolate" />
-      <root url="file://F:/r_programming/flutter/bin/cache/dart-sdk/lib/math" />
-      <root url="file://F:/r_programming/flutter/bin/cache/dart-sdk/lib/mirrors" />
-      <root url="file://F:/r_programming/flutter/bin/cache/dart-sdk/lib/typed_data" />
+      <root url="file:///home/nikhil/flutter_linux_v1.12.13+hotfix.5-stable/flutter/bin/cache/dart-sdk/lib/async" />
+      <root url="file:///home/nikhil/flutter_linux_v1.12.13+hotfix.5-stable/flutter/bin/cache/dart-sdk/lib/collection" />
+      <root url="file:///home/nikhil/flutter_linux_v1.12.13+hotfix.5-stable/flutter/bin/cache/dart-sdk/lib/convert" />
+      <root url="file:///home/nikhil/flutter_linux_v1.12.13+hotfix.5-stable/flutter/bin/cache/dart-sdk/lib/core" />
+      <root url="file:///home/nikhil/flutter_linux_v1.12.13+hotfix.5-stable/flutter/bin/cache/dart-sdk/lib/developer" />
+      <root url="file:///home/nikhil/flutter_linux_v1.12.13+hotfix.5-stable/flutter/bin/cache/dart-sdk/lib/html" />
+      <root url="file:///home/nikhil/flutter_linux_v1.12.13+hotfix.5-stable/flutter/bin/cache/dart-sdk/lib/io" />
+      <root url="file:///home/nikhil/flutter_linux_v1.12.13+hotfix.5-stable/flutter/bin/cache/dart-sdk/lib/isolate" />
+      <root url="file:///home/nikhil/flutter_linux_v1.12.13+hotfix.5-stable/flutter/bin/cache/dart-sdk/lib/math" />
+      <root url="file:///home/nikhil/flutter_linux_v1.12.13+hotfix.5-stable/flutter/bin/cache/dart-sdk/lib/mirrors" />
+      <root url="file:///home/nikhil/flutter_linux_v1.12.13+hotfix.5-stable/flutter/bin/cache/dart-sdk/lib/typed_data" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

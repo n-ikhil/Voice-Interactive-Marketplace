@@ -17,7 +17,7 @@ environment:
   sdk: ">=2.1.0 <3.0.0"
 
 dependencies:
-  pedantic: ^1.8.0 # for linting
+  pedantic: ^1.8.0 # for linting purposes
   flutter:
     sdk: flutter
 

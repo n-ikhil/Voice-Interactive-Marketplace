@@ -235,6 +235,6 @@ app.*.symbols
 
 
 # documt=ent file
-document/**
+document
 
 

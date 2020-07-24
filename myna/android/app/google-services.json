@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "163149270203",
+    "firebase_url": "https://myna-app.firebaseio.com",
+    "project_id": "myna-app",
+    "storage_bucket": "myna-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:163149270203:android:65ecf64aba59ed47296d9e",
+        "android_client_info": {
+          "package_name": "com.example.myna"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "163149270203-16f5i4m27tiihjoeh75kqvk99sc4r8s9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBrS_ho5TUtkMjLCCoISJ8uHrlkZ4Z1tls"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "163149270203-16f5i4m27tiihjoeh75kqvk99sc4r8s9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

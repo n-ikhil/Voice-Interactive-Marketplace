@@ -15,7 +15,7 @@ class BaseLayout extends StatelessWidget {
             FlatButton(
                 child: Icon(Icons.search),
                 onPressed: () {
-                  Navigator.pushNamed(context, searchPage);
+                  Navigator.pushNamed(context, productList);
                 })
           ],
         ),

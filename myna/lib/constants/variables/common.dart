@@ -1,4 +1,2 @@
-import 'package:flutter/material.dart';
-
 const String APP_NAME = "Myna";
-const Color main = Colors.blue;
+const LENGTH_TO_TRIGGER_SEARCH = "strLenTriggerSearch";

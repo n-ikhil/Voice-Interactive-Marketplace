@@ -1,19 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:myna/screens/HomePage/HomePage.dart';
-import 'package:myna/screens/Search/Search.dart';
+import 'package:myna/screens/ItemList/ItemList.dart';
+import 'package:myna/screens/NewItem/NewItem.dart';
+import 'package:myna/screens/ProductList/ProductList.dart';
+import 'package:myna/screens/itemDetail/ItemDetail.dart';
 import '../constants/variables/ROUTES.dart';
 
+// https://medium.com/flutter-community/clean-navigation-in-flutter-using-generated-routes-891bd6e000df
 class Router {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case homePage:
         return MaterialPageRoute(builder: (_) => HomePage());
-      case searchPage:
-        return MaterialPageRoute(builder: (_) => SearchPage());
-      // case loginPage:
-      //   return MaterialPageRoute(builder: (_) => );
-      // case registerPage:
-      //   return MaterialPageRoute(builder: (_) => Feed());
+      case productList:
+        return MaterialPageRoute(
+            builder: (_) => ProductList(
+                  categoryID: settings.arguments,
+                ));
+      case newItemPage:
+        return MaterialPageRoute(builder: (_) => NewItem());
+      case itemDetail:
+        return MaterialPageRoute(builder: (_) => ItemDetail());
+      case itemList:
+        return MaterialPageRoute(builder: (_) => ItemList());
+
       default:
         return MaterialPageRoute(
             builder: (_) => Scaffold(

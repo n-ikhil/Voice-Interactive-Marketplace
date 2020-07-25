@@ -32,6 +32,9 @@ class MyInheritedWidget extends InheritedWidget {
   MyInheritedWidget(this.firebaseInstance, child) : super(child: child);
 
   @override
-  bool updateShouldNotify(MyInheritedWidget old) =>
-      firebaseInstance != old.firebaseInstance;
+  bool updateShouldNotify(MyInheritedWidget old) {
+    print("updateer");
+    print(firebaseInstance != old.firebaseInstance);
+    return firebaseInstance != old.firebaseInstance;
+  }
 }

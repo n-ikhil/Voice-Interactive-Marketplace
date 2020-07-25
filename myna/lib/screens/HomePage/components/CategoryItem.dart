@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myna/constants/variables/ROUTES.dart';
 import 'package:myna/models/Category.dart';
 
 class SingleCategory extends StatelessWidget {
@@ -15,7 +16,12 @@ class SingleCategory extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Text(this.cat.name),
+              FlatButton(
+                child: Text(this.cat.name),
+                onPressed: () {
+                  Navigator.pushNamed(context, productList, arguments: cat.id);
+                },
+              ),
             ],
           ),
         ));

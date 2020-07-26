@@ -38,12 +38,9 @@ class FirebaseCommon {
         .where("name", isEqualTo: str)
         .getDocuments()
         .then((QuerySnapshot snapshot) {
-      print(snapshot.documents[0].data);
       num = snapshot.documents[0].data["value"];
-      print(num);
     }).catchError((onError) {
       print(onError);
-      print("err");
       Future.error(onError);
     });
     return num;
@@ -56,7 +53,9 @@ class FirebaseCommon {
         .where("category", isEqualTo: catId)
         .getDocuments()
         .then((QuerySnapshot snapshot) {
-      snapshot.documents.forEach((f) => products.add(Product(f)));
+      snapshot.documents.forEach((f) {
+        products.add(Product(f));
+      });
     }).catchError((onError) {
       print(onError);
       Future.error(onError);
@@ -74,7 +73,9 @@ class FirebaseCommon {
         .where("name", isLessThan: endPrefix)
         .getDocuments()
         .then((QuerySnapshot snapshot) {
-      snapshot.documents.forEach((f) => products.add(Product(f)));
+      snapshot.documents.forEach((f) {
+        products.add(Product(f));
+      });
     }).catchError((onError) {
       print(onError);
       Future.error(onError);

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:myna/components/Loading.dart';
 import 'package:myna/constants/variables/ROUTES.dart';
 import 'package:myna/constants/variables/common.dart';
 import 'package:myna/models/Firebase.dart';
@@ -32,6 +32,7 @@ class _ProductListState extends State<ProductList> {
   @override
   initState() {
     print(widget.categoryID);
+    print('widget up');
     super.initState();
 
     controller.addListener(() {
@@ -40,7 +41,6 @@ class _ProductListState extends State<ProductList> {
       });
       if (controller.text.length == strLenTriggerSearch &&
           widget.categoryID == null) {
-        print(strLenTriggerSearch);
         loadProductList();
       }
     });
@@ -52,14 +52,8 @@ class _ProductListState extends State<ProductList> {
     firebaseInstance = context
         .dependOnInheritedWidgetOfExactType<MyInheritedWidget>()
         .firebaseInstance;
-    if (widget.categoryID != "") {
-      firebaseInstance
-          .storeGetProductsOnCategories(widget.categoryID)
-          .then((data) {
-        setState(() {
-          this.products = data;
-        });
-      });
+    if (widget.categoryID != null) {
+      loadProductList(isCategory: true);
     }
     firebaseInstance.storeGetConstant(LENGTH_TO_TRIGGER_SEARCH).then((data) {
       setState(() {
@@ -69,21 +63,37 @@ class _ProductListState extends State<ProductList> {
     });
   }
 
-  void loadProductList() {
+  void loadProductList({bool isCategory = false}) {
     setState(() {
       loadState = 1;
     });
-    firebaseInstance.storeGetProductsOnSearch(filter).then((data) {
-      setState(() {
-        products = data;
-        loadState = 2;
+    if (!isCategory) {
+      firebaseInstance.storeGetProductsOnSearch(filter).then((data) {
+        setState(() {
+          products = data;
+          loadState = 2;
+        });
+      }).catchError((err) {
+        setState(() {
+          loadState = 0;
+          errMsg = err;
+        });
       });
-    }).catchError((err) {
-      setState(() {
-        loadState = 0;
-        errMsg = err;
+    } else {
+      firebaseInstance
+          .storeGetProductsOnCategories(widget.categoryID)
+          .then((data) {
+        setState(() {
+          this.products = data;
+          this.loadState = 2;
+        });
+      }).catchError((err) {
+        setState(() {
+          loadState = 0;
+          errMsg = err;
+        });
       });
-    });
+    }
   }
 
   @override
@@ -96,50 +106,58 @@ class _ProductListState extends State<ProductList> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(APP_NAME),
-          leading: RaisedButton(
-            child: Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.pop(context);
-            },
+            title: Text(APP_NAME),
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            )),
+        body: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.only(top: 10),
+              ),
+              TextField(
+                decoration: InputDecoration(
+                    labelText: "Search products and services",
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20))),
+                controller: controller,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: Text("Results:"),
+              ),
+              loadState == 2
+                  ? Expanded(
+                      child: ListView.builder(
+                          itemCount: products.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return filter == null || filter == ""
+                                ? ListItem(products[index].name, () {
+                                    Navigator.pushNamed(context, itemList,
+                                        arguments: {"id": products[index].id});
+                                  })
+                                : products[index]
+                                        .name
+                                        .toLowerCase()
+                                        .contains(filter.toLowerCase())
+                                    ? ListItem(products[index].name, () {
+                                        Navigator.pushNamed(context, itemList,
+                                            arguments: {
+                                              "id": products[index].id
+                                            });
+                                      })
+                                    : Container();
+                          }))
+                  : loadState == 0
+                      ? Center(child: Text(errMsg))
+                      : LoadingWidget()
+            ],
           ),
-        ),
-        body: Column(
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.only(top: 20.0),
-            ),
-            TextField(
-              decoration:
-                  InputDecoration(labelText: "Search products and services"),
-              controller: controller,
-            ),
-            loadState == 2
-                ? Expanded(
-                    child: ListView.builder(
-                        itemCount: products.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return filter == null || filter == ""
-                              ? Card(child: Text(products[index].name))
-                              : products[index]
-                                      .name
-                                      .toLowerCase()
-                                      .contains(filter.toLowerCase())
-                                  ? ListItem(products[index].name, () {
-                                      Navigator.pushNamed(context, itemList,
-                                          arguments: {
-                                            "id": products[index].id
-                                          });
-                                    })
-                                  : Container();
-                        }))
-                : loadState == 0
-                    ? Center(child: Text(errMsg))
-                    : SpinKitDoubleBounce(
-                        color: Colors.blueAccent,
-                        size: 50.0,
-                      ),
-          ],
         ));
   }
 }

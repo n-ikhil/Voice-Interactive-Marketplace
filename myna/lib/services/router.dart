@@ -13,6 +13,7 @@ class Router {
       case homePage:
         return MaterialPageRoute(builder: (_) => HomePage());
       case productList:
+        print(settings.arguments);
         return MaterialPageRoute(
             builder: (_) => ProductList(
                   categoryID: settings.arguments,

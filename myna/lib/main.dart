@@ -34,7 +34,6 @@ class MyInheritedWidget extends InheritedWidget {
   @override
   bool updateShouldNotify(MyInheritedWidget old) {
     print("updateer");
-    print(firebaseInstance != old.firebaseInstance);
     return firebaseInstance != old.firebaseInstance;
   }
 }

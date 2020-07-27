@@ -32,6 +32,7 @@ class _SearchableListState extends State<SearchableList> {
             padding: EdgeInsets.only(top: 10),
           ),
           TextField(
+            autofocus: true,
             decoration: InputDecoration(
                 labelText: "search here...",
                 border: OutlineInputBorder(

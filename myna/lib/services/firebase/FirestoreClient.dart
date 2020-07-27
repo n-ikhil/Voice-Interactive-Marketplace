@@ -14,9 +14,7 @@ class FirestoreClient {
         .getDocuments()
         .then((QuerySnapshot snapshot) {
       snapshot.documents.forEach((f) {
-        print(constants);
         constants[f.documentID] = f.data["value"];
-        print(constants);
       });
     }).catchError((onError) {
       print(onError);

@@ -30,7 +30,9 @@ class _CategoryGridState extends State<CategoryGrid> {
       loadedCategories = false;
       isError = false;
     });
-    myInheritedWidget.firebaseInstance.storeGetCategories().then((data) {
+    myInheritedWidget.firebaseInstance.firestoreClient
+        .storeGetCategories()
+        .then((data) {
       setState(() {
         isError = false;
         loadedCategories = true;

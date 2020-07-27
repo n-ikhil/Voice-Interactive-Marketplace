@@ -3,7 +3,6 @@ import 'package:myna/screens/CategoryResult/CategoryResult.dart';
 import 'package:myna/screens/HomePage/HomePage.dart';
 import 'package:myna/screens/ItemList/ItemList.dart';
 import 'package:myna/screens/NewItem/NewItem.dart';
-import 'package:myna/screens/ProductList/ProductList.dart';
 import 'package:myna/screens/SearchPage/SearchPage.dart';
 import 'package:myna/screens/itemDetail/ItemDetail.dart';
 import '../constants/variables/ROUTES.dart';
@@ -14,9 +13,6 @@ class Router {
     switch (settings.name) {
       case homePage:
         return MaterialPageRoute(builder: (_) => HomePage());
-      case productList:
-        return MaterialPageRoute(
-            builder: (_) => ProductList(categoryID: settings.arguments));
       case newItemPage:
         return MaterialPageRoute(builder: (_) => NewItem());
       case itemDetail:

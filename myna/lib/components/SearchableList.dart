@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:myna/components/Loading.dart';
 import 'package:myna/constants/variables/ROUTES.dart';
-import 'package:myna/screens/ProductList/components/ListItem.dart';
-
+import './ListItem.dart';
 import '../main.dart';
-
-// input list, callback on keypress, length to trig keypress
 
 // https://medium.com/@thedome6/how-to-create-a-searchable-filterable-listview-in-flutter-4faf3e300477
 
@@ -76,7 +73,9 @@ class _SearchableListState extends State<SearchableList> {
     super.didChangeDependencies();
     strLenTriggerSearch = context
         .dependOnInheritedWidgetOfExactType<MyInheritedWidget>()
-        .strLenTriggerSearch;
+        .firebaseInstance
+        .firestoreClient
+        .constants["strLenTriggerSearch"];
   }
 
   @override

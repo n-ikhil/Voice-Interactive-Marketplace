@@ -28,11 +28,13 @@ class MyApp extends StatelessWidget {
 
 class MyInheritedWidget extends InheritedWidget {
   final FirebaseCommon firebaseInstance;
+  final int strLenTriggerSearch = 3;
 
   MyInheritedWidget(this.firebaseInstance, child) : super(child: child);
 
   @override
   bool updateShouldNotify(MyInheritedWidget old) {
-    return firebaseInstance != old.firebaseInstance;
+    if (strLenTriggerSearch != old.strLenTriggerSearch) return true;
+    return false;
   }
 }

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:myna/screens/CategoryResult/CategoryResult.dart';
 import 'package:myna/screens/HomePage/HomePage.dart';
 import 'package:myna/screens/ItemList/ItemList.dart';
 import 'package:myna/screens/NewItem/NewItem.dart';
 import 'package:myna/screens/ProductList/ProductList.dart';
+import 'package:myna/screens/SearchPage/SearchPage.dart';
 import 'package:myna/screens/itemDetail/ItemDetail.dart';
 import '../constants/variables/ROUTES.dart';
 
@@ -13,17 +15,19 @@ class Router {
       case homePage:
         return MaterialPageRoute(builder: (_) => HomePage());
       case productList:
-        print(settings.arguments);
         return MaterialPageRoute(
-            builder: (_) => ProductList(
-                  categoryID: settings.arguments,
-                ));
+            builder: (_) => ProductList(categoryID: settings.arguments));
       case newItemPage:
         return MaterialPageRoute(builder: (_) => NewItem());
       case itemDetail:
         return MaterialPageRoute(builder: (_) => ItemDetail());
       case itemList:
         return MaterialPageRoute(builder: (_) => ItemList());
+      case searchPage:
+        return MaterialPageRoute(builder: (_) => SearchPage());
+      case categoryResult:
+        return MaterialPageRoute(
+            builder: (_) => CategoryResult(settings.arguments));
 
       default:
         return MaterialPageRoute(

@@ -10,7 +10,7 @@ class SingleCategory extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10), color: Colors.blue[100]),
+            borderRadius: BorderRadius.circular(10), color: Colors.grey[350]),
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

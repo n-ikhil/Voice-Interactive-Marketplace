@@ -47,7 +47,7 @@ class _CategoryGridState extends State<CategoryGrid> {
   Widget build(BuildContext context) {
     //loadCategories();
     return SizedBox(
-      height: 300,
+      height: 500,
       width: double.infinity,
       child: loadedCategories
           ? Container(
@@ -66,7 +66,7 @@ class _CategoryGridState extends State<CategoryGrid> {
                               .map((f) => SingleCategory(f))
                               .toList(),
                           RaisedButton(
-                            child: Center(child: Text("Reload(dev)")),
+                            child: Center(child: Text("Reload     (dev)")),
                             onPressed: () {
                               this.setState(() {
                                 loadCategories(context);

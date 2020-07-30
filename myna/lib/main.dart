@@ -13,15 +13,26 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   final FirebaseCommon firebaseInstance;
+
   MyApp(this.firebaseInstance) : super();
+
   @override
   Widget build(BuildContext context) {
     return MyInheritedWidget(
         firebaseInstance,
         MaterialApp(
+          theme: ThemeData(
+            primaryColor: PRIMARY_COLOR,
+            buttonColor: BUTTON_COLOR,
+            accentColor: ACCENT_COLOR,
+            cardColor: CARD_COLOR,
+            canvasColor: CANVAS_COLOR,
+            // Define the default font family.
+            fontFamily: FONT_DEFAULT ,
+          ),
           title: APP_NAME,
           onGenerateRoute: Router.generateRoute,
-          initialRoute: homePage,
+          initialRoute: credentialPage,
         ));
   }
 }
@@ -33,7 +44,7 @@ class MyInheritedWidget extends InheritedWidget {
 
   @override
   bool updateShouldNotify(MyInheritedWidget old) {
-    print("updateer");
+    print("updater");
     return firebaseInstance != old.firebaseInstance;
   }
 }

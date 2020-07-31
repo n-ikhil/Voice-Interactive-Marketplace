@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:myna/services/firebase/config.dart';
 import 'package:myna/services/router.dart';
-//import 'models/Firebase.dart';
 import './constants/variables/ROUTES.dart';
 import './constants/variables/common.dart';
+import './theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,15 +20,7 @@ class MyApp extends StatelessWidget {
     return MyInheritedWidget(
         firebaseInstance,
         MaterialApp(
-          theme: ThemeData(
-            primaryColor: PRIMARY_COLOR,
-            buttonColor: BUTTON_COLOR,
-            accentColor: ACCENT_COLOR,
-            cardColor: CARD_COLOR,
-            canvasColor: CANVAS_COLOR,
-            // Define the default font family.
-            fontFamily: FONT_DEFAULT ,
-          ),
+          theme: myTheme,
           title: APP_NAME,
           onGenerateRoute: Router.generateRoute,
           initialRoute: credentialPage,

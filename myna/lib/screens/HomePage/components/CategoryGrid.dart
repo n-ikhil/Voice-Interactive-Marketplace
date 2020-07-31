@@ -3,7 +3,6 @@ import 'package:myna/components/Loading.dart';
 import '../../../main.dart';
 import './CategoryItem.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import '../../../models/Category.dart';
 
 class CategoryGrid extends StatefulWidget {
@@ -25,7 +24,7 @@ class _CategoryGridState extends State<CategoryGrid> {
 
   void loadCategories(context) {
     final MyInheritedWidget myInheritedWidget =
-    context.dependOnInheritedWidgetOfExactType<MyInheritedWidget>();
+        context.dependOnInheritedWidgetOfExactType<MyInheritedWidget>();
     setState(() {
       loadedCategories = false;
       isError = false;
@@ -55,33 +54,33 @@ class _CategoryGridState extends State<CategoryGrid> {
         width: double.infinity,
         child: loadedCategories
             ? Container(
-          child: CustomScrollView(
-            primary: false,
-            slivers: <Widget>[
-              SliverPadding(
-                padding: const EdgeInsets.all(20),
-                sliver: SliverGrid.count(
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 10,
-                    crossAxisCount: 3,
-                    children: [
-                      ...this
-                          .categories
-                          .map((f) => SingleCategory(f))
-                          .toList(),
-                      RaisedButton(
-                        child: Center(child: Text("Reload  (dev)")),
-                        onPressed: () {
-                          this.setState(() {
-                            loadCategories(context);
-                          });
-                        },
-                      )
-                    ]),
-              ),
-            ],
-          ),
-        )
+                child: CustomScrollView(
+                  primary: false,
+                  slivers: <Widget>[
+                    SliverPadding(
+                      padding: const EdgeInsets.all(20),
+                      sliver: SliverGrid.count(
+                          crossAxisSpacing: 10,
+                          mainAxisSpacing: 10,
+                          crossAxisCount: 3,
+                          children: [
+                            ...this
+                                .categories
+                                .map((f) => SingleCategory(f))
+                                .toList(),
+                            RaisedButton(
+                              child: Center(child: Text("Reload  (dev)")),
+                              onPressed: () {
+                                this.setState(() {
+                                  loadCategories(context);
+                                });
+                              },
+                            )
+                          ]),
+                    ),
+                  ],
+                ),
+              )
             : (isError ? Center(child: Text(errorMsg)) : LoadingWidget()));
   }
 }

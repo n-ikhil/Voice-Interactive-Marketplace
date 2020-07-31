@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Product {
   String name;
   String id;
-  Product(data) {
+  Product(DocumentSnapshot data) {
     this.name = data.data["name"];
     this.id = data.documentID;
   }

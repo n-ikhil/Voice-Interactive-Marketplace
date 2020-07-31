@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:myna/services/firebase/config.dart';
 import 'package:myna/services/router.dart';
-import 'models/Firebase.dart';
+//import 'models/Firebase.dart';
 import './constants/variables/ROUTES.dart';
 import './constants/variables/common.dart';
 
@@ -13,9 +14,7 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   final FirebaseCommon firebaseInstance;
-
   MyApp(this.firebaseInstance) : super();
-
   @override
   Widget build(BuildContext context) {
     return MyInheritedWidget(
@@ -44,7 +43,8 @@ class MyInheritedWidget extends InheritedWidget {
 
   @override
   bool updateShouldNotify(MyInheritedWidget old) {
-    print("updater");
-    return firebaseInstance != old.firebaseInstance;
+    if (firebaseInstance.firestoreClient.constants !=
+        old.firebaseInstance.firestoreClient.constants) return true;
+    return false;
   }
 }

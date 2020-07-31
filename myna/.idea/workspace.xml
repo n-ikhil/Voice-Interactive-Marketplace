@@ -2,16 +2,40 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a7edccb0-6993-469a-a695-11180b1473c9" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/../firebase/.firebaserc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../firebase/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../firebase/firebase.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../firebase/firestore.indexes.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../firebase/firestore.rules" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../firebase/functions/.eslintrc.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../firebase/functions/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../firebase/functions/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../firebase/functions/package-lock.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../firebase/functions/package.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../firebase/storage.rules" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/components/Loading.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/components/SearchableList.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/screens/CategoryResult/CategoryResult.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/screens/SearchPage/SearchPage.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.flutter-plugins-dependencies" beforeDir="false" afterPath="$PROJECT_DIR$/.flutter-plugins-dependencies" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/.gradle/5.6.2/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/android/.gradle/5.6.2/executionHistory/executionHistory.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/.gradle/5.6.2/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/android/.gradle/5.6.2/executionHistory/executionHistory.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/.gradle/5.6.2/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/android/.gradle/5.6.2/fileHashes/fileHashes.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/.gradle/5.6.2/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/android/.gradle/5.6.2/fileHashes/fileHashes.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/android/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/constants/variables/ROUTES.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/constants/variables/ROUTES.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/constants/variables/common.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/constants/variables/common.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/layouts/BaseLayout.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/layouts/BaseLayout.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/main.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/screens/HomePage/HomePage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/screens/HomePage/HomePage.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/models/Firebase.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/services/firebase/FirestoreClient.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/models/Product.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/models/Product.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/screens/HomePage/components/CategoryGrid.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/screens/HomePage/components/CategoryGrid.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/screens/HomePage/components/CategoryItem.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/screens/HomePage/components/CategoryItem.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/screens/ProductList/ProductList.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/screens/ProductList/components/ListItem.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/components/ListItem.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/services/firebase/config.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/services/firebase/config.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/services/router.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/services/router.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -81,43 +105,59 @@
       <screen x="0" y="23" width="1440" height="819" />
     </state>
     <state x="457" y="185" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.23.1440.819@0.23.1440.819" timestamp="1596137897447" />
-    <state x="143" y="92" key="DiffContextDialog" timestamp="1596111896744">
+    <state x="48" y="23" key="DiffContextDialog" timestamp="1596173156506">
       <screen x="0" y="23" width="1440" height="819" />
     </state>
-    <state x="143" y="92" key="DiffContextDialog/0.23.1440.819@0.23.1440.819" timestamp="1596111896744" />
-    <state width="1396" height="275" key="GridCell.Tab.0.bottom" timestamp="1596141227367">
+    <state x="48" y="23" key="DiffContextDialog/0.23.1440.819@0.23.1440.819" timestamp="1596173156506" />
+    <state width="1396" height="32" key="GridCell.Tab.0.bottom" timestamp="1596173332076">
       <screen x="0" y="23" width="1440" height="819" />
     </state>
     <state width="1396" height="219" key="GridCell.Tab.0.bottom/0.0.1440.900@0.0.1440.900" timestamp="1596116071403" />
-    <state width="1396" height="275" key="GridCell.Tab.0.bottom/0.23.1440.819@0.23.1440.819" timestamp="1596141227367" />
-    <state width="1396" height="275" key="GridCell.Tab.0.center" timestamp="1596141227367">
+    <state width="1396" height="32" key="GridCell.Tab.0.bottom/0.23.1440.819@0.23.1440.819" timestamp="1596173332076" />
+    <state width="1396" height="32" key="GridCell.Tab.0.center" timestamp="1596173332075">
       <screen x="0" y="23" width="1440" height="819" />
     </state>
     <state width="1396" height="219" key="GridCell.Tab.0.center/0.0.1440.900@0.0.1440.900" timestamp="1596116071402" />
-    <state width="1396" height="275" key="GridCell.Tab.0.center/0.23.1440.819@0.23.1440.819" timestamp="1596141227367" />
-    <state width="1396" height="275" key="GridCell.Tab.0.left" timestamp="1596141227367">
+    <state width="1396" height="32" key="GridCell.Tab.0.center/0.23.1440.819@0.23.1440.819" timestamp="1596173332075" />
+    <state width="1396" height="32" key="GridCell.Tab.0.left" timestamp="1596173332075">
       <screen x="0" y="23" width="1440" height="819" />
     </state>
     <state width="1396" height="219" key="GridCell.Tab.0.left/0.0.1440.900@0.0.1440.900" timestamp="1596116071401" />
-    <state width="1396" height="275" key="GridCell.Tab.0.left/0.23.1440.819@0.23.1440.819" timestamp="1596141227367" />
-    <state width="1396" height="275" key="GridCell.Tab.0.right" timestamp="1596141227367">
+    <state width="1396" height="32" key="GridCell.Tab.0.left/0.23.1440.819@0.23.1440.819" timestamp="1596173332075" />
+    <state width="1396" height="32" key="GridCell.Tab.0.right" timestamp="1596173332075">
       <screen x="0" y="23" width="1440" height="819" />
     </state>
     <state width="1396" height="219" key="GridCell.Tab.0.right/0.0.1440.900@0.0.1440.900" timestamp="1596116071402" />
-    <state width="1396" height="275" key="GridCell.Tab.0.right/0.23.1440.819@0.23.1440.819" timestamp="1596141227367" />
-    <state x="486" y="75" key="RollbackChangesDialog" timestamp="1596111900046">
+    <state width="1396" height="32" key="GridCell.Tab.0.right/0.23.1440.819@0.23.1440.819" timestamp="1596173332075" />
+    <state x="143" y="93" key="MergeDialog" timestamp="1596141976735">
       <screen x="0" y="23" width="1440" height="819" />
     </state>
-    <state x="486" y="75" key="RollbackChangesDialog/0.23.1440.819@0.23.1440.819" timestamp="1596111900046" />
+    <state x="143" y="93" key="MergeDialog/0.23.1440.819@0.23.1440.819" timestamp="1596141976735" />
+    <state x="427" y="145" key="MultipleFileMergeDialog" timestamp="1596141976772">
+      <screen x="0" y="23" width="1440" height="819" />
+    </state>
+    <state x="427" y="145" key="MultipleFileMergeDialog/0.23.1440.819@0.23.1440.819" timestamp="1596141976772" />
+    <state x="110" y="42" key="RollbackChangesDialog" timestamp="1596173181112">
+      <screen x="0" y="23" width="1440" height="819" />
+    </state>
+    <state x="110" y="42" key="RollbackChangesDialog/0.23.1440.819@0.23.1440.819" timestamp="1596173181112" />
     <state x="228" y="70" key="SettingsEditor" timestamp="1596100002395">
       <screen x="0" y="23" width="1440" height="819" />
     </state>
     <state x="228" y="70" key="SettingsEditor/0.23.1440.819@0.23.1440.819" timestamp="1596100002395" />
-    <state x="380" y="173" width="837" height="582" key="find.popup" timestamp="1596115722004">
-      <screen x="0" y="0" width="1440" height="900" />
+    <state x="100" y="123" width="1238" height="616" key="com.android.tools.idea.avdmanager.AvdListDialog" timestamp="1596172270535">
+      <screen x="0" y="23" width="1440" height="819" />
+    </state>
+    <state x="100" y="123" width="1238" height="616" key="com.android.tools.idea.avdmanager.AvdListDialog/0.23.1440.819@0.23.1440.819" timestamp="1596172270535" />
+    <state x="383" y="263" key="com.intellij.ide.util.TipDialog" timestamp="1596171869678">
+      <screen x="0" y="23" width="1440" height="819" />
+    </state>
+    <state x="383" y="263" key="com.intellij.ide.util.TipDialog/0.23.1440.819@0.23.1440.819" timestamp="1596171869678" />
+    <state x="375" y="172" width="687" height="518" key="find.popup" timestamp="1596173079579">
+      <screen x="0" y="23" width="1440" height="819" />
     </state>
     <state x="380" y="173" width="837" height="582" key="find.popup/0.0.1440.900@0.0.1440.900" timestamp="1596115722004" />
-    <state x="375" y="172" width="687" height="518" key="find.popup/0.23.1440.819@0.23.1440.819" timestamp="1595787435374" />
+    <state x="375" y="172" width="687" height="518" key="find.popup/0.23.1440.819@0.23.1440.819" timestamp="1596173079579" />
     <state width="600" height="440" key="javadoc.popup" timestamp="1596128099153">
       <screen x="0" y="23" width="1440" height="819" />
     </state>

@@ -19,7 +19,7 @@ class SingleCategory extends StatelessWidget {
               FlatButton(
                 child: Text(this.cat.name),
                 onPressed: () {
-                  Navigator.pushNamed(context, productList, arguments: cat.id);
+                  Navigator.pushNamed(context, categoryResult, arguments: cat);
                 },
               ),
             ],

@@ -1,40 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:myna/models/Category.dart';
 import 'package:myna/models/Product.dart';
 
-class FirestoreClient {
+class productFirestoreClient {
   final Firestore _firestore;
-  Map<String, dynamic> constants = {"strLenTriggerSearch": 3};
+  productFirestoreClient(this._firestore);
 
-  FirestoreClient(this._firestore);
-
-  Future initConstants() async {
-    await _firestore
-        .collection("constant")
-        .getDocuments()
-        .then((QuerySnapshot snapshot) {
-      snapshot.documents.forEach((f) {
-        constants[f.documentID] = f.data["value"];
-      });
-    }).catchError((onError) {
-      print(onError);
-      Future.error(onError);
-    });
-  }
-
-  Future storeGetCategories() async {
-    List<Category> categories = [];
-    await _firestore
-        .collection("category")
-        .getDocuments()
-        .then((QuerySnapshot snapshot) {
-      snapshot.documents.forEach((f) => categories.add(Category(f)));
-    }).catchError((onError) {
-      print(onError);
-      Future.error(onError);
-    });
-    return categories;
-  }
 
   Future storeGetProductsOnCategories(String catId) async {
     List<Product> products = [];

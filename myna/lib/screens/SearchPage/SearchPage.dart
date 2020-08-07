@@ -13,6 +13,6 @@ class SearchPage extends StatelessWidget {
                 .dependOnInheritedWidgetOfExactType<MyInheritedWidget>()
                 .firebaseInstance
                 .firestoreClient
-                .storeGetProductsOnSearch));
+                .productClient.storeGetProductsOnSearch));
   }
 }

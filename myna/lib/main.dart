@@ -35,8 +35,8 @@ class MyInheritedWidget extends InheritedWidget {
 
   @override
   bool updateShouldNotify(MyInheritedWidget old) {
-    if (firebaseInstance.firestoreClient.constants !=
-        old.firebaseInstance.firestoreClient.constants) return true;
+    if (firebaseInstance.firestoreClient.constantClient.constants !=
+        old.firebaseInstance.firestoreClient.constantClient.constants) return true;
     return false;
   }
 }

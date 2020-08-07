@@ -3,8 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:myna/services/firebase/FirestoreClient.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:myna/services/firebase/FirestoreClients.dart';
 
 //https://medium.com/firebase-tips-tricks/how-to-use-cloud-firestore-in-flutter-9ea80593ca40
 class FirebaseCommon {
@@ -15,7 +14,7 @@ class FirebaseCommon {
     FirebaseApp _app = await setupFirebase();
     _firebaseAuth = FirebaseAuth.fromApp(_app);
     firestoreClient = FirestoreClient(Firestore(app: _app));
-    await firestoreClient.initConstants();
+    await firestoreClient.constantClient.initConstants();
   }
 
   Future setupFirebase() async {

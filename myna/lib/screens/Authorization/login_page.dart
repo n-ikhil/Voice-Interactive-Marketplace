@@ -2,7 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:myna/constants/variables/common.dart';
+import 'package:myna/models/UserDetail.dart';
 import 'package:myna/screens/Authorization/primary_button.dart';
+import '../../main.dart';
 import '../../services/firebase/auth.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -66,14 +68,27 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+  Future<void> registerUserDatabase(String userEmail) async {
+    UserDetail data = UserDetail(userEmail, "NA", "NA", "NA", "NA", 0);
+    await context
+        .dependOnInheritedWidgetOfExactType<MyInheritedWidget>()
+        .firebaseInstance
+        .firestoreClient
+        .userClient
+        .updateUserData(data);
+  }
+
   void validateAndSubmit() async {
     if (validateAndSave()) {
       try {
-        String userId = _formType == FormType.login
+        String userEmail = _formType == FormType.login
             ? await widget.auth.signIn(_email, _password)
             : await widget.auth.createUser(_email, _password);
+
+        await registerUserDatabase(userEmail);
+
         setState(() {
-          _authHint = 'Signed In\n\nUser id: $userId';
+          _authHint = 'Signed In\n\nUser id: $userEmail';
         });
         var user = await FirebaseAuth.instance.currentUser();
         print("verification status : ${user.isEmailVerified}");

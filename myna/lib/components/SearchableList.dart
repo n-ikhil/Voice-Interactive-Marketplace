@@ -76,7 +76,7 @@ class _SearchableListState extends State<SearchableList> {
         .dependOnInheritedWidgetOfExactType<MyInheritedWidget>()
         .firebaseInstance
         .firestoreClient
-        .constants["strLenTriggerSearch"];
+        .constantClient.constants["strLenTriggerSearch"];
   }
 
   @override

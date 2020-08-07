@@ -18,7 +18,7 @@ class _CategoryResultState extends State<CategoryResult> {
         .dependOnInheritedWidgetOfExactType<MyInheritedWidget>()
         .firebaseInstance
         .firestoreClient
-        .storeGetProductsOnCategories(widget.category.id)
+        .productClient.storeGetProductsOnCategories(widget.category.id)
         .then((data) {
       this.setState(() {
         resList = data;

@@ -15,14 +15,14 @@ class Auth implements BaseAuth {
 
   Future<String> signIn(String email, String password) async {
     FirebaseUser user = (await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password)).user;
-    return user.uid;
+    return user.email;
   }
 
   Future<String> createUser(String email, String password) async {
     FirebaseUser user = (await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password)).user;
     try {
       await user.sendEmailVerification();
-      return user.uid;
+      return user.email;
     } catch (e) {
       print("An error occured while trying to send email verification");
       print(e.message);

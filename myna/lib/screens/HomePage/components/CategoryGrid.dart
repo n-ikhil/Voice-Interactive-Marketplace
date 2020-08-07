@@ -30,7 +30,7 @@ class _CategoryGridState extends State<CategoryGrid> {
       isError = false;
     });
     myInheritedWidget.firebaseInstance.firestoreClient
-        .storeGetCategories()
+        .categoryClient.storeGetCategories()
         .then((data) {
       setState(() {
         isError = false;

@@ -4,12 +4,15 @@ import 'package:myna/models/UserDetail.dart';
 
 class userProfileFirestoreClient {
   final Firestore _firestore;
+
   userProfileFirestoreClient(this._firestore);
 
   Future<void> updateUserData(UserDetail data) async {
     final CollectionReference userCollection =
         Firestore.instance.collection('user');
-    return await userCollection.document(data.EmailId).setData({
+    return await userCollection.document(data.UserId).setData({
+      "uid": data.UserId,
+      "email": data.EmailId,
       "nickName": data.nickName,
       "userFistName": data.userFistName,
       "userLastName": data.userLastName,
@@ -18,7 +21,37 @@ class userProfileFirestoreClient {
     });
   }
 
-  Future storeGetUserDetail(FirebaseUser user) async {
+  Future<void> initiateUserData(FirebaseUser user) async {
+    final CollectionReference userCollection =
+        Firestore.instance.collection('user');
+
+    var loginCredEmail = "NA";
+    var loginCredPhone = "NA";
+
+    if (user.email != null) {
+      loginCredEmail = user.email;
+    } else if (user.phoneNumber != null) {
+      loginCredPhone = user.phoneNumber;
+    }
+    return await userCollection.document(user.uid).get().then((value) => {
+          if (value.exists)
+            {null}
+          else
+            {
+              userCollection.document(user.uid).setData({
+                "uid": user.uid,
+                "email": loginCredEmail,
+                "nickName": "NA",
+                "userFistName": "NA",
+                "userLastName": "NA",
+                "address": "NA",
+                "mobileNo": loginCredPhone
+              })
+            }
+        });
+  }
+
+  Future<UserDetail> getUserDetail(FirebaseUser user) async {
     UserDetail userData;
     await _firestore
         .collection("user")

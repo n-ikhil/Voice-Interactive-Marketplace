@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:myna/constants/variables/ROUTES.dart';
+import 'package:myna/layouts/BaseLayout.dart';
+import 'package:myna/screens/HomePage/components/CategoryGrid.dart';
 import 'package:myna/services/firebase/auth.dart';
-import '../../layouts/BaseLayout.dart';
-import './components/CategoryGrid.dart';
 
 class HomePage extends StatelessWidget {
-  HomePage({this.onSignOut});
-  final VoidCallback onSignOut;
+  HomePage({this.SignOut, this.auth});
+  final VoidCallback SignOut;
+  final BaseAuth auth;
 
   @override
   Widget build(BuildContext context) {
     return BaseLayout(
-        onSignOut: onSignOut,
+        SignOut: SignOut,
+        auth: auth,
+        context: context,
         childWidget: Column(
           children: [
             CategoryGrid(),

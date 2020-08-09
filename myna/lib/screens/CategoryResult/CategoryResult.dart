@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myna/components/SearchableList.dart';
-import '../../main.dart';
+import 'package:myna/main.dart';
 
 class CategoryResult extends StatefulWidget {
   final category;

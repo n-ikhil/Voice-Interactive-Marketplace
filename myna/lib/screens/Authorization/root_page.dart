@@ -3,9 +3,6 @@ import 'package:myna/screens/HomePage/HomePage.dart';
 import 'package:myna/services/firebase/auth.dart';
 import 'package:myna/screens/Authorization/login_page.dart';
 
-//   youknowme293@gmail.com 123456
-//   dhrubrahul11@gmail.com
-
 class RootPage extends StatefulWidget {
   RootPage({Key key, this.auth}) : super(key: key);
   final BaseAuth auth;
@@ -24,10 +21,10 @@ class _RootPageState extends State<RootPage> {
 
   initState() {
     super.initState();
-    widget.auth.currentUser().then((userId) {
+    widget.auth.currentUser().then((user) {
       setState(() {
         authStatus =
-            userId != null ? AuthStatus.signedIn : AuthStatus.notSignedIn;
+            user.email != null ? AuthStatus.signedIn : AuthStatus.notSignedIn;
       });
     });
   }
@@ -50,7 +47,9 @@ class _RootPageState extends State<RootPage> {
         );
       case AuthStatus.signedIn:
         return HomePage(
-            onSignOut: () => _updateAuthStatus(AuthStatus.notSignedIn));
+          SignOut: () => _updateAuthStatus(AuthStatus.notSignedIn),
+          auth: widget.auth,
+        );
     }
   }
 }

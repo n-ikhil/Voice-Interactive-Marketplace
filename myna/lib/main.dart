@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:myna/constants/variables/ROUTES.dart';
+import 'package:myna/constants/variables/common.dart';
+import 'package:myna/models/widgetAndThemes/theme.dart';
 import 'package:myna/services/firebase/config.dart';
 import 'package:myna/services/router.dart';
-import './constants/variables/ROUTES.dart';
-import './constants/variables/common.dart';
-import './theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

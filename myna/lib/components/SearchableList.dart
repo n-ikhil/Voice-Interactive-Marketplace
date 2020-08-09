@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:myna/components/ListItem.dart';
 import 'package:myna/components/Loading.dart';
 import 'package:myna/constants/variables/ROUTES.dart';
-import './ListItem.dart';
-import '../main.dart';
+import 'package:myna/main.dart';
 
 // https://medium.com/@thedome6/how-to-create-a-searchable-filterable-listview-in-flutter-4faf3e300477
 

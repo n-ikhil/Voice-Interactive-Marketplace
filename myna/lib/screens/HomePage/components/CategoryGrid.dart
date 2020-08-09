@@ -1,9 +1,8 @@
 import 'package:myna/components/Loading.dart';
-
-import '../../../main.dart';
-import './CategoryItem.dart';
 import 'package:flutter/material.dart';
-import '../../../models/Category.dart';
+import 'package:myna/main.dart';
+import 'package:myna/models/Category.dart';
+import 'package:myna/screens/HomePage/components/CategoryItem.dart';
 
 class CategoryGrid extends StatefulWidget {
   @override

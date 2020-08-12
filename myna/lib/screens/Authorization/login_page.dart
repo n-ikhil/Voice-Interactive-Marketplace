@@ -23,7 +23,7 @@ class LoginPage extends StatefulWidget {
 enum FormType { login, register, reset }
 
 class _LoginPageState extends State<LoginPage> {
-  static final formKey = GlobalKey<FormState>();
+  static final formKeyLogin = GlobalKey<FormState>();
   final _phoneController = TextEditingController();
   FirebaseUser currentUser;
   String _email;
@@ -42,7 +42,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   bool validateAndSave() {
-    final form = formKey.currentState;
+    final form = formKeyLogin.currentState;
     if (form.validate()) {
       form.save();
       return true;
@@ -144,7 +144,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void moveToRegister() {
-    formKey.currentState.reset();
+    formKeyLogin.currentState.reset();
     resetVisibility();
     setState(() {
       _formType = FormType.register;
@@ -152,7 +152,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void moveToLogin() {
-    formKey.currentState.reset();
+    formKeyLogin.currentState.reset();
     resetVisibility();
     setState(() {
       _formType = FormType.login;
@@ -160,7 +160,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void moveToReset() {
-    formKey.currentState.reset();
+    formKeyLogin.currentState.reset();
     resetVisibility();
     setState(() {
       showPasswordField = false;
@@ -188,7 +188,7 @@ class _LoginPageState extends State<LoginPage> {
                         Container(
                             padding: const EdgeInsets.all(16.0),
                             child: Form(
-                                key: formKey,
+                                key: formKeyLogin,
                                 child: Column(
                                   crossAxisAlignment:
                                       CrossAxisAlignment.stretch,

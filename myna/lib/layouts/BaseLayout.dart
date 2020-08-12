@@ -60,6 +60,8 @@ class _BaseLayoutState extends State<BaseLayout> {
     }
     userDetailViewArg argSend = userDetailViewArg(
         title: "View Profile", user: _currentUser, editDetail: _onEditDetail);
+    Navigator.pop(context);
+
     Navigator.pushNamed(context, userDetailViewPage, arguments: argSend);
   }
 
@@ -69,7 +71,10 @@ class _BaseLayoutState extends State<BaseLayout> {
       auth: widget.auth,
       showDetail: _onShowDetail,
     );
+    Navigator.pop(context);
+
     Navigator.pushNamed(context, userDetailFormPage, arguments: argSend);
+
   }
 
 

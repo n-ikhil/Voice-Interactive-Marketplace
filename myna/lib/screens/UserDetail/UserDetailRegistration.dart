@@ -23,7 +23,7 @@ class userDetailForm extends StatefulWidget {
 }
 
 class userDetailFormState extends State<userDetailForm> {
-  static final formKey = GlobalKey<FormState>();
+  static final formKeyUserDetail = GlobalKey<FormState>();
 
   String _nickName = '';
   String _userFirstName = '';
@@ -32,7 +32,7 @@ class userDetailFormState extends State<userDetailForm> {
   String _mobileNo = "0";
 
   bool validateAndSave() {
-    final form = formKey.currentState;
+    final form = formKeyUserDetail.currentState;
     if (form.validate()) {
       form.save();
       return true;
@@ -47,8 +47,27 @@ class userDetailFormState extends State<userDetailForm> {
     );
   }
 
+  FirebaseUser _currentUser;
+  UserDetail userData;
+
+  getDetails() async {
+    if (_currentUser == null || userData == null) {
+      await widget.auth.currentUser().then((value) => _currentUser = value);
+      await sharedServices()
+          .FirestoreClientInstance
+          .userClient
+          .getUserDetail(_currentUser)
+          .then((value) => setState(() {
+                userData = value;
+                print(userData.EmailId + "================");
+              }));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    getDetails();
+
     return Scaffold(
         appBar: AppBar(
           title: Text(widget.title),
@@ -64,7 +83,7 @@ class userDetailFormState extends State<userDetailForm> {
                         Container(
                             padding: const EdgeInsets.all(16.0),
                             child: Form(
-                                key: formKey,
+                                key: formKeyUserDetail,
                                 child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.stretch,
@@ -79,42 +98,67 @@ class userDetailFormState extends State<userDetailForm> {
       padded(
           child: TextFormField(
         key: Key('nickname'),
-        decoration: InputDecoration(labelText: 'Nick Name'),
+        decoration: InputDecoration(
+            helperStyle: TextStyle(color: Colors.brown, fontSize: 15),
+            helperText: userData != null ? userData.nickName : null,
+            labelText:
+                userData != null ? 'Change Nick Name' : 'Enter Nick Name',
+            hintText: "Nick_Name"),
         autocorrect: false,
-        validator: (val) => val.isEmpty ? 'Nick Name can\'t be empty.' : null,
-        onSaved: (val) => _nickName = val,
+//            validator: (val) => val.isEmpty ? 'field did not changed.' : null,
+            onSaved: (val) => _nickName =  val.isEmpty ? userData.nickName :val,
       )),
       padded(
           child: TextFormField(
         key: Key('userFirstName'),
-        decoration: InputDecoration(labelText: 'First Name'),
+        decoration: InputDecoration(
+            helperStyle: TextStyle(color: Colors.brown, fontSize: 15),
+            helperText: userData != null ? userData.userFirstName : null,
+            labelText:
+                userData != null ? 'Change First Name' : 'Enter First Name',
+            hintText: "First_Name"),
         autocorrect: false,
-        validator: (val) => val.isEmpty ? 'field can\'t be empty.' : null,
-        onSaved: (val) => _userFirstName = val,
+//            validator: (val) => val.isEmpty ? 'field did not changed.' : null,
+            onSaved: (val) => _userFirstName =  val.isEmpty ? userData.userFirstName :val,
       )),
       padded(
           child: TextFormField(
         key: Key('userLastName'),
-        decoration: InputDecoration(labelText: 'Last Name'),
+        decoration: InputDecoration(
+            helperStyle: TextStyle(color: Colors.brown, fontSize: 15),
+            helperText: userData != null ? userData.userLastName : null,
+            labelText:
+                userData != null ? 'Change Last Name' : 'Enter Last Name',
+            hintText: "Last_Name"),
         autocorrect: false,
-        validator: (val) => val.isEmpty ? 'field can\'t be empty.' : null,
-        onSaved: (val) => _userLastName = val,
+//            validator: (val) => val.isEmpty ? 'field did not changed.' : null,
+            onSaved: (val) => _userLastName =  val.isEmpty ? userData.userLastName :val,
       )),
       padded(
           child: TextFormField(
         key: Key('MobileNumber'),
-        decoration: InputDecoration(labelText: 'Mobile No.'),
+        decoration: InputDecoration(
+            helperStyle: TextStyle(color: Colors.brown, fontSize: 15),
+            helperText: userData != null ? userData.mobileNo : null,
+            labelText:
+                userData != null ? 'Change  Mobile Number' : 'Enter Mobile Number',
+            hintText: "mobileNo"),
         autocorrect: false,
-        validator: (val) => val.isEmpty ? 'field can\'t be empty.' : null,
-        onSaved: (val) => _mobileNo = val,
+//            validator: (val) => val.isEmpty ? 'field did not changed.' : null,
+            onSaved: (val) => _mobileNo =  val.isEmpty ? userData.mobileNo :val,
       )),
       padded(
           child: TextFormField(
         key: Key('PermanentAdd'),
-        decoration: InputDecoration(labelText: 'Permanent Address'),
+        decoration: InputDecoration(
+            helperStyle: TextStyle(color: Colors.brown, fontSize: 15),
+            helperText: userData != null ? userData.Address : null,
+            labelText:
+                userData != null ? 'Change Permanent Address' : 'Enter Permanent Address',
+            hintText: "Address"),
         autocorrect: false,
-        validator: (val) => val.isEmpty ? 'field can\'t be empty.' : null,
-        onSaved: (val) => _Address = val,
+//        validator: (val) => val.isEmpty ? 'field did not changed.' : null,
+        onSaved: (val) => _Address =  val.isEmpty ? userData.Address :val,
       )),
     ];
   }
@@ -139,8 +183,7 @@ class userDetailFormState extends State<userDetailForm> {
   void validateAndSubmit() async {
     if (validateAndSave()) {
       try {
-        var user = await widget.auth.currentUser();
-        UserDetail userData = UserDetail(user.uid, user.email, _nickName,
+        UserDetail userData = UserDetail(_currentUser.uid, _currentUser.email, _nickName,
             _userFirstName, _userLastName, _Address, _mobileNo);
         await updateUserDatabase(userData);
         print("DOne");

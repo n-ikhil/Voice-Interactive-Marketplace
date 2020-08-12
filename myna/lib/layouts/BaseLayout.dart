@@ -25,6 +25,7 @@ class BaseLayout extends StatefulWidget {
 
 class _BaseLayoutState extends State<BaseLayout> {
   FirebaseUser _currentUser;
+  UserDetail userData;
 
   getUserPhoto() {
     var url = widget.auth != null ? widget.auth.getImageUrl() : null;
@@ -41,6 +42,11 @@ class _BaseLayoutState extends State<BaseLayout> {
         ),
       );
     }
+  }
+
+  @override
+  initState()   {
+    super.initState();
   }
 
   getUserEmail() {
@@ -66,28 +72,25 @@ class _BaseLayoutState extends State<BaseLayout> {
     Navigator.pushNamed(context, userDetailFormPage, arguments: argSend);
   }
 
-  UserDetail userData;
 
-  getUser() async {
-    setState(() async {
-      _currentUser = await widget.auth.currentUser().then((value) => value);
-    });
-  }
 
-  getDetails() async{
-    getUser();
-    setState(() async {
-      userData = await sharedServices()
+  getDetails() async {
+    if(_currentUser ==null || userData == null){
+      await widget.auth.currentUser().then((value) => _currentUser = value);
+      await sharedServices()
           .FirestoreClientInstance
           .userClient
           .getUserDetail(_currentUser)
-          .then((value) => value);
-    });
+          .then((value) => setState(() {
+                userData = value;
+                print(userData.EmailId + "================");
+              }));
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    getDetails();
+     getDetails();
     void _signOut() async {
       try {
         await widget.auth.signOut();
@@ -116,8 +119,12 @@ class _BaseLayoutState extends State<BaseLayout> {
           child: ListView(
             children: <Widget>[
               UserAccountsDrawerHeader(
-                accountName: Text(userData.nickName),
-                accountEmail: Text(userData.EmailId),
+                accountName: userData != null
+                    ? Text(userData.nickName)
+                    : Text("nickName"),
+                accountEmail: userData != null
+                    ? Text(userData.EmailId)
+                    : Text("nickName"),
                 currentAccountPicture: FutureBuilder<Widget>(
                     future: getUserPhoto(),
                     builder:

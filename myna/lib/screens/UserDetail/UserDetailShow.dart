@@ -2,8 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:myna/models/UserDetail.dart';
 import 'package:myna/models/arguments/userDetailViewArg.dart';
+import 'package:myna/services/IndependentFunctions/UserProfile.dart';
 
-import '../../main.dart';
 
 class userDetailView extends StatefulWidget {
   userDetailView({this.arg}) : super(key: arg.key) {
@@ -30,10 +30,23 @@ class userDetailViewState extends State<userDetailView> {
     super.initState();
   }
 
+  getData(BuildContext context) async {
+    if (detail == null) {
+      detail = await UserProfile().fetchUserData(context, _user);
+      if (detail != null) {
+        print("done");
+        setState(() {
+          detail = detail;
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     _user = widget.user;
-    assignData();
+    getData(context);
+
     TextStyle textStyle = TextStyle(fontSize: 20, fontWeight: FontWeight.w300);
     showText(String str) {
       return Text(str, style: textStyle);
@@ -55,7 +68,8 @@ class userDetailViewState extends State<userDetailView> {
                         padding: EdgeInsets.all(10),
                         child: Container(
                           color: Colors.lightGreen[100],
-                          child: Icon( Icons.add_a_photo,
+                          child: Icon(
+                            Icons.add_a_photo,
                             color: Colors.brown,
                             size: 40,
                           ),
@@ -100,22 +114,5 @@ class userDetailViewState extends State<userDetailView> {
                     ],
                   )),
                 ))));
-  }
-
-  Future<UserDetail> fetchUserData() async {
-    if (_user != null) {
-      return await context
-          .dependOnInheritedWidgetOfExactType<MyInheritedWidget>()
-          .firebaseInstance
-          .firestoreClient
-          .userClient
-          .getUserDetail(_user);
-    } else {
-      return null;
-    }
-  }
-
-  assignData() async {
-    await fetchUserData().then((value) => {detail = value});
   }
 }

@@ -5,7 +5,6 @@ class SharedPreferencesFunctions {
   static String sharedPreferenceUserLoggedInKey = "ISLOGGEDIN";
   static String sharedPreferenceUserNameKey = "USERNAMEKEY";
   static String sharedPreferenceUserEmailKey = "USEREMAILKEY";
-  static FirebaseCommon firebaseCommonObj;
 
 
   /// saving data to sharedpreference

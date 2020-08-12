@@ -3,12 +3,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:myna/constants/variables/common.dart';
-import 'package:myna/main.dart';
-import 'package:myna/models/UserDetail.dart';
 import 'package:myna/components/mobileLoginHelper.dart';
 import 'package:myna/screens/Authorization/primary_button.dart';
 import 'package:myna/services/firebase/auth.dart';
 import 'package:myna/services/router.dart';
+import 'package:myna/services/sharedservices.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key key, this.title, this.auth, this.onSignIn}) : super(key: key);
@@ -71,10 +70,8 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> registerUserDatabase(FirebaseUser user) async {
-    await context
-        .dependOnInheritedWidgetOfExactType<MyInheritedWidget>()
-        .firebaseInstance
-        .firestoreClient
+    await sharedServices()
+        .FirestoreClientInstance
         .userClient
         .initiateUserData(user);
   }
@@ -375,7 +372,8 @@ class _LoginPageState extends State<LoginPage> {
               setState(() {
                 _mobileNo = _phoneController.text.trim();
               });
-              mobileLoginHelper().mobileSignInHandler(context, _mobileNo, widget.onSignIn,  auth);
+              mobileLoginHelper().mobileSignInHandler(
+                  context, _mobileNo, widget.onSignIn, auth);
             }
           },
           child: Text(

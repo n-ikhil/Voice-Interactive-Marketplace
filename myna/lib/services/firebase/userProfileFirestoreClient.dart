@@ -3,9 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:myna/models/UserDetail.dart';
 
 class userProfileFirestoreClient {
-  final Firestore _firestore;
+  final CollectionReference _firestoreCollection;
 
-  userProfileFirestoreClient(this._firestore);
+  userProfileFirestoreClient(this._firestoreCollection);
 
   Future<void> updateUserData(UserDetail data) async {
     final CollectionReference userCollection =
@@ -52,18 +52,9 @@ class userProfileFirestoreClient {
   }
 
   Future<UserDetail> getUserDetail(FirebaseUser user) async {
-    UserDetail userData;
-    await _firestore
-        .collection("user")
-        .where("category", isEqualTo: user.email)
-        .getDocuments()
-        .then((QuerySnapshot snapshot) {
-      snapshot.documents.forEach((f) {
-        userData = UserDetail.fromSnapshot(f);
-      });
-    }).catchError((onError) {
-      print(onError);
-      Future.error(onError);
+    UserDetail userData ;
+    await _firestoreCollection.document(user.uid).get().then((value) => {
+      userData = UserDetail.fromSnapshot(value)
     });
     return userData;
   }

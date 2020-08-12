@@ -11,9 +11,9 @@ class UserDetail {
 
   UserDetail(this._UserId, this._EmailId, this._nickName, this._userFirstName,
       this._userLastName, this._Address, this._mobileNo);
-
   UserDetail.fromSnapshot(DocumentSnapshot data) {
-    this._EmailId = data.documentID;
+    this._UserId = data.data["uid"];
+    this._EmailId = data.data["email"];
     this._nickName = data.data["nickName"];
     this._userFirstName = data.data["userFistName"];
     this._userLastName = data.data["userLastName"];

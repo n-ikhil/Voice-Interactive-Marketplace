@@ -2,14 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:myna/models/Product.dart';
 
 class productFirestoreClient {
-  final Firestore _firestore;
-  productFirestoreClient(this._firestore);
+  final CollectionReference _firestoreCollection;
+  productFirestoreClient(this._firestoreCollection);
 
 
   Future storeGetProductsOnCategories(String catId) async {
     List<Product> products = [];
-    await _firestore
-        .collection("product")
+    await _firestoreCollection
         .where("category", isEqualTo: catId)
         .getDocuments()
         .then((QuerySnapshot snapshot) {
@@ -27,8 +26,7 @@ class productFirestoreClient {
     List<Product> products = [];
     String endPrefix = prefix.substring(0, prefix.length - 1);
     endPrefix += String.fromCharCode(prefix.codeUnitAt(prefix.length - 1) + 1);
-    await _firestore
-        .collection("product")
+    await _firestoreCollection
         .where("name", isGreaterThanOrEqualTo: prefix)
         .where("name", isLessThan: endPrefix)
         .getDocuments()

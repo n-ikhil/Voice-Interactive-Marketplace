@@ -1,8 +1,8 @@
 import 'package:myna/components/Loading.dart';
 import 'package:flutter/material.dart';
-import 'package:myna/main.dart';
 import 'package:myna/models/Category.dart';
 import 'package:myna/screens/HomePage/components/CategoryItem.dart';
+import 'package:myna/services/sharedservices.dart';
 
 class CategoryGrid extends StatefulWidget {
   @override
@@ -22,14 +22,14 @@ class _CategoryGridState extends State<CategoryGrid> {
   }
 
   void loadCategories(context) {
-    final MyInheritedWidget myInheritedWidget =
-        context.dependOnInheritedWidgetOfExactType<MyInheritedWidget>();
     setState(() {
       loadedCategories = false;
       isError = false;
     });
-    myInheritedWidget.firebaseInstance.firestoreClient
-        .categoryClient.storeGetCategories()
+    sharedServices()
+        .FirestoreClientInstance
+        .categoryClient
+        .storeGetCategories()
         .then((data) {
       setState(() {
         isError = false;

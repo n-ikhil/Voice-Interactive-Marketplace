@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:myna/components/SearchableList.dart';
 import 'package:myna/constants/variables/common.dart';
-import 'package:myna/main.dart';
+import 'package:myna/services/sharedservices.dart';
 
 class SearchPage extends StatelessWidget {
   @override
@@ -9,10 +9,8 @@ class SearchPage extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(title: Text(APP_NAME)),
         body: SearchableList(
-            fetch: context
-                .dependOnInheritedWidgetOfExactType<MyInheritedWidget>()
-                .firebaseInstance
-                .firestoreClient
+            fetch: sharedServices()
+                .FirestoreClientInstance
                 .productClient.storeGetProductsOnSearch));
   }
 }

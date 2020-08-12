@@ -4,8 +4,7 @@ import 'package:myna/models/UserDetail.dart';
 import 'package:myna/screens/Authorization/primary_button.dart';
 import 'package:myna/models/arguments/userDetailFormArg.dart';
 import 'package:myna/services/firebase/auth.dart';
-
-import '../../main.dart';
+import 'package:myna/services/sharedservices.dart';
 
 class userDetailForm extends StatefulWidget {
   userDetailForm({this.arg}) : super(key: arg.key) {
@@ -18,6 +17,7 @@ class userDetailForm extends StatefulWidget {
   String title;
   BaseAuth auth;
   VoidCallback _callback;
+
   @override
   userDetailFormState createState() => userDetailFormState();
 }
@@ -130,10 +130,8 @@ class userDetailFormState extends State<userDetailForm> {
   }
 
   Future<void> updateUserDatabase(UserDetail data) async {
-     await context
-        .dependOnInheritedWidgetOfExactType<MyInheritedWidget>()
-        .firebaseInstance
-        .firestoreClient
+    await sharedServices()
+        .FirestoreClientInstance
         .userClient
         .updateUserData(data);
   }
@@ -142,7 +140,8 @@ class userDetailFormState extends State<userDetailForm> {
     if (validateAndSave()) {
       try {
         var user = await widget.auth.currentUser();
-        UserDetail userData = UserDetail(user.uid,user.email,_nickName, _userFirstName, _userLastName, _Address, _mobileNo);
+        UserDetail userData = UserDetail(user.uid, user.email, _nickName,
+            _userFirstName, _userLastName, _Address, _mobileNo);
         await updateUserDatabase(userData);
         print("DOne");
         widget._callback();

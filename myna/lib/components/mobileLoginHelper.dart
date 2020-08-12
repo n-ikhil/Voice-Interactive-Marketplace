@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
-import '../main.dart';
+import 'package:myna/services/sharedservices.dart';
 
 class mobileLoginHelper {
   final _codeController = TextEditingController();
@@ -13,10 +12,8 @@ class mobileLoginHelper {
 
   Future<void> registerUserDatabase(
       BuildContext context, FirebaseUser user) async {
-    await context
-        .dependOnInheritedWidgetOfExactType<MyInheritedWidget>()
-        .firebaseInstance
-        .firestoreClient
+    await sharedServices()
+        .FirestoreClientInstance
         .userClient
         .initiateUserData(user);
   }

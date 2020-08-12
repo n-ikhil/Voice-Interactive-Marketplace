@@ -6,22 +6,28 @@ import 'package:myna/models/UserDetail.dart';
 import 'package:myna/models/arguments/userDetailFormArg.dart';
 import 'package:myna/models/arguments/userDetailViewArg.dart';
 import 'package:myna/services/firebase/auth.dart';
-import 'package:myna/services/router.dart';
+import 'package:myna/services/sharedservices.dart';
 import '../constants/variables/common.dart';
-import 'dart:convert';
-import 'package:myna/main.dart';
 
-class BaseLayout extends StatelessWidget {
+class BaseLayout extends StatefulWidget {
   final Widget childWidget;
   final VoidCallback SignOut;
   final BaseAuth auth;
   final BuildContext context;
+
+  const BaseLayout(
+      {Key key, this.childWidget, this.SignOut, this.auth, this.context})
+      : super(key: key);
+
+  @override
+  _BaseLayoutState createState() => _BaseLayoutState();
+}
+
+class _BaseLayoutState extends State<BaseLayout> {
   FirebaseUser _currentUser;
 
-  BaseLayout({this.SignOut, this.auth, this.childWidget, this.context});
-
   getUserPhoto() {
-    var url = auth != null ? auth.getImageUrl() : null;
+    var url = widget.auth != null ? widget.auth.getImageUrl() : null;
     if (url != null) {
       return url.then((value) => ClipOval(
           child: Image.network(value,
@@ -38,57 +44,54 @@ class BaseLayout extends StatelessWidget {
   }
 
   getUserEmail() {
-    var email = auth != null ? auth.currentUserEmail() : null;
+    var email = widget.auth != null ? widget.auth.currentUserEmail() : null;
     return email;
   }
 
-//
-//  getUserDetail() async {
-//    var user = auth != null ? auth.currentUser() : null;
-//    if (user != null) {
-//      return user.then((value) => context
-//          .dependOnInheritedWidgetOfExactType<MyInheritedWidget>()
-//          .firebaseInstance
-//          .firestoreClient
-//          .userClient
-//          .getUserDetail(value)) ;
-//    }
-//    return null;
-//  }
-//
-//  getUserNickName() {
-//    if (getUserDetail() != null) {
-//      return getUserDetail().then((value) => Text(value.nickName));
-//    }
-//  }
-
   _onShowDetail() {
+    if (_currentUser == null) {
+      print("===============user null");
+    }
     userDetailViewArg argSend = userDetailViewArg(
-        title: "View Profile",
-        user: _currentUser,
-        editDetail: _onEditDetail);
+        title: "View Profile", user: _currentUser, editDetail: _onEditDetail);
     Navigator.pushNamed(context, userDetailViewPage, arguments: argSend);
   }
 
   _onEditDetail() {
     userDetailFormArg argSend = userDetailFormArg(
-        title: "Update Profile",
-        auth: this.auth,
-        showDetail: _onShowDetail,
+      title: "Update Profile",
+      auth: widget.auth,
+      showDetail: _onShowDetail,
     );
     Navigator.pushNamed(context, userDetailFormPage, arguments: argSend);
   }
 
-  getUser(Auth auth) {
-    auth.currentUser().then((value) => {_currentUser = value});
+  UserDetail userData;
+
+  getUser() async {
+    setState(() async {
+      _currentUser = await widget.auth.currentUser().then((value) => value);
+    });
+  }
+
+  getDetails() async{
+    getUser();
+    setState(() async {
+      userData = await sharedServices()
+          .FirestoreClientInstance
+          .userClient
+          .getUserDetail(_currentUser)
+          .then((value) => value);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    getDetails();
     void _signOut() async {
       try {
-        await auth.signOut();
-        SignOut();
+        await widget.auth.signOut();
+        widget.SignOut();
       } catch (e) {
         print(e);
       }
@@ -113,17 +116,8 @@ class BaseLayout extends StatelessWidget {
           child: ListView(
             children: <Widget>[
               UserAccountsDrawerHeader(
-                accountName: Text("no Auth"),
-//                accountName: FutureBuilder<Widget>(
-//                    future: getUserNickName(),
-//                    builder:
-//                        (BuildContext context, AsyncSnapshot<Widget> snapshot) {
-//                      if (snapshot.hasData) {
-//                        return snapshot.data;
-//                      }
-//                      return Container(child: CircularProgressIndicator());
-//                    }),
-                accountEmail: Text("ashishrawat2911@gmail.com"),
+                accountName: Text(userData.nickName),
+                accountEmail: Text(userData.EmailId),
                 currentAccountPicture: FutureBuilder<Widget>(
                     future: getUserPhoto(),
                     builder:
@@ -162,7 +156,7 @@ class BaseLayout extends StatelessWidget {
 
         //this will just add the Navigation Drawer Icon
 
-        body: this.childWidget,
+        body: widget.childWidget,
         bottomNavigationBar: RaisedButton(
           onPressed: null,
           child: Icon(Icons.record_voice_over),

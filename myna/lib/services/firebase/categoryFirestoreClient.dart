@@ -2,13 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:myna/models/Category.dart';
 
 class categoryFirestoreClient {
-  final Firestore _firestore;
-  categoryFirestoreClient(this._firestore);
+  final CollectionReference _firestoreCollection;
+  categoryFirestoreClient(this._firestoreCollection);
 
   Future storeGetCategories() async {
     List<Category> categories = [];
-    await _firestore
-        .collection("category")
+    await _firestoreCollection
         .getDocuments()
         .then((QuerySnapshot snapshot) {
       snapshot.documents.forEach((f) => categories.add(Category(f)));

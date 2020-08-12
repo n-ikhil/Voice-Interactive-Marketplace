@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:myna/components/ListItem.dart';
 import 'package:myna/components/Loading.dart';
 import 'package:myna/constants/variables/ROUTES.dart';
-import './ListItem.dart';
-import '../main.dart';
+import 'package:myna/services/sharedservices.dart';
 
 // https://medium.com/@thedome6/how-to-create-a-searchable-filterable-listview-in-flutter-4faf3e300477
 
@@ -72,11 +72,10 @@ class _SearchableListState extends State<SearchableList> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    strLenTriggerSearch = context
-        .dependOnInheritedWidgetOfExactType<MyInheritedWidget>()
-        .firebaseInstance
-        .firestoreClient
-        .constantClient.constants["strLenTriggerSearch"];
+    strLenTriggerSearch = sharedServices()
+        .FirestoreClientInstance
+        .constantClient
+        .constants["strLenTriggerSearch"];
   }
 
   @override

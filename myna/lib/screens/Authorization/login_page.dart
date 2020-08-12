@@ -1,12 +1,13 @@
+import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:myna/constants/variables/common.dart';
-import 'package:myna/models/UserDetail.dart';
+import 'package:myna/components/mobileLoginHelper.dart';
 import 'package:myna/screens/Authorization/primary_button.dart';
-import '../../main.dart';
-import '../../services/firebase/auth.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:myna/services/firebase/auth.dart';
+import 'package:myna/services/router.dart';
+import 'package:myna/services/sharedservices.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key key, this.title, this.auth, this.onSignIn}) : super(key: key);
@@ -23,15 +24,22 @@ enum FormType { login, register, reset }
 
 class _LoginPageState extends State<LoginPage> {
   static final formKey = GlobalKey<FormState>();
-
+  final _phoneController = TextEditingController();
+  FirebaseUser currentUser;
   String _email;
   String _password;
+  String _mobileNo;
   FormType _formType = FormType.login;
-  String _authHint = '';
   bool showErrorMessage = false;
   bool showRecoverPasswordOption = false;
   bool showPasswordField = true;
+  bool showMobileNumField = false;
   String message = "";
+
+  SignInSuccess(FirebaseUser user) {
+    registerUserDatabase(user);
+    widget.onSignIn();
+  }
 
   bool validateAndSave() {
     final form = formKey.currentState;
@@ -50,9 +58,6 @@ class _LoginPageState extends State<LoginPage> {
         message = "Check your inbox";
         moveToLogin();
       } catch (resetError) {
-        setState(() {
-          _authHint = 'Sign In/Up Error\n\n${resetError.toString()}';
-        });
         if (resetError is PlatformException) {
           setState(() {
             showErrorMessage = true;
@@ -61,39 +66,35 @@ class _LoginPageState extends State<LoginPage> {
         }
         print(resetError);
       }
-    } else {
-      setState(() {
-        _authHint = '';
-      });
-    }
+    } else {}
   }
 
-  Future<void> registerUserDatabase(String userEmail) async {
-    UserDetail data = UserDetail(userEmail, "NA", "NA", "NA", "NA", 0);
-    await context
-        .dependOnInheritedWidgetOfExactType<MyInheritedWidget>()
-        .firebaseInstance
-        .firestoreClient
+  Future<void> registerUserDatabase(FirebaseUser user) async {
+    await sharedServices()
+        .FirestoreClientInstance
         .userClient
-        .updateUserData(data);
+        .initiateUserData(user);
   }
 
   void validateAndSubmit() async {
+    setState(() {
+      showMobileNumField = false;
+    });
     if (validateAndSave()) {
       try {
-        String userEmail = _formType == FormType.login
+        FirebaseUser user = _formType == FormType.login
             ? await widget.auth.signIn(_email, _password)
             : await widget.auth.createUser(_email, _password);
 
-        await registerUserDatabase(userEmail);
-
         setState(() {
-          _authHint = 'Signed In\n\nUser id: $userEmail';
+          currentUser = user;
         });
-        var user = await FirebaseAuth.instance.currentUser();
-        print("verification status : ${user.isEmailVerified}");
-        if (user.isEmailVerified) {
-          widget.onSignIn();
+
+        await registerUserDatabase(currentUser);
+
+        print("verification status : ${currentUser.isEmailVerified}");
+        if (currentUser.isEmailVerified) {
+          SignInSuccess(currentUser);
         } else {
           setState(() {
             showErrorMessage = true;
@@ -101,9 +102,6 @@ class _LoginPageState extends State<LoginPage> {
           });
         }
       } catch (signUpError) {
-        setState(() {
-          _authHint = 'Sign In/Up Error\n\n${signUpError.toString()}';
-        });
         if (signUpError is PlatformException) {
           setState(() {
             showErrorMessage = true;
@@ -121,10 +119,19 @@ class _LoginPageState extends State<LoginPage> {
           }
         }
       }
-    } else {
-      setState(() {
-        _authHint = '';
-      });
+    } else {}
+  }
+
+  signInWithGmailOnly() async {
+    FirebaseUser user = await auth.handleSignIn();
+    setState(() {
+      currentUser = user;
+    });
+    if (currentUser != null) {
+      log(currentUser.email);
+      print("currentUser.email");
+      print(currentUser.email);
+      SignInSuccess(currentUser);
     }
   }
 
@@ -141,7 +148,6 @@ class _LoginPageState extends State<LoginPage> {
     resetVisibility();
     setState(() {
       _formType = FormType.register;
-      _authHint = '';
     });
   }
 
@@ -150,7 +156,6 @@ class _LoginPageState extends State<LoginPage> {
     resetVisibility();
     setState(() {
       _formType = FormType.login;
-      _authHint = '';
     });
   }
 
@@ -162,12 +167,43 @@ class _LoginPageState extends State<LoginPage> {
     });
     setState(() {
       _formType = FormType.reset;
-      _authHint = '';
     });
   }
 
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          title: Text(widget.title),
+          automaticallyImplyLeading: false,
+        ),
+        body: SingleChildScrollView(
+            child: Container(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(children: [
+                  Card(
+                      child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                        Container(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Form(
+                                key: formKey,
+                                child: Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
+                                  children: usernameAndPassword() +
+                                      submitWidgets() +
+                                      emailVerificationWidget() +
+                                      forgetPasswordWidget() +
+                                      mobileSignIn() +
+                                      googleSignIn(),
+                                ))),
+                      ])),
+                ]))));
+  }
+
   List<Widget> emailVerificationWidget() {
-    print("Hint ERR : $_authHint");
     return [
       Visibility(
         visible: showErrorMessage,
@@ -264,43 +300,90 @@ class _LoginPageState extends State<LoginPage> {
     return null;
   }
 
-  _launchURL() async {
-    const url = 'http://flutter.dev';
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
+  List<Widget> googleSignIn() {
+    return [
+      SizedBox(
+        height: 16,
+      ),
+      Container(
+          padding: EdgeInsets.symmetric(vertical: 16),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(30),
+              color: Color(0xFF1188AA)),
+          width: MediaQuery.of(context).size.width,
+          child: GestureDetector(
+            onTap: () {
+              print("googleSignIn");
+              setState(() {
+                showMobileNumField = false;
+              });
+              signInWithGmailOnly();
+            },
+            child: Text(
+              "Sign In with Google",
+              style: TextStyle(fontSize: 20, color: Colors.white),
+              textAlign: TextAlign.center,
+            ),
+          )),
+    ];
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text(widget.title),
+  List<Widget> mobileSignIn() {
+    return [
+      SizedBox(
+        height: 16,
+      ),
+      Visibility(
+          visible: showMobileNumField,
+          child: padded(
+              child: TextFormField(
+            decoration: InputDecoration(
+                enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(8)),
+                    borderSide: BorderSide(color: Colors.grey[200])),
+                focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(8)),
+                    borderSide: BorderSide(color: Colors.grey[300])),
+                filled: true,
+                fillColor: Colors.grey[100],
+                hintText: "Mobile Number"),
+            controller: _phoneController,
+            key: Key('mobile'),
+            autocorrect: false,
+            validator: (val) => val.isEmpty ? 'Field can\'t be empty.' : null,
+//            onSaved: (val) => _mobileNo = val,
+          ))),
+      SizedBox(
+        height: 16,
+      ),
+      Container(
+        padding: EdgeInsets.symmetric(vertical: 16),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(30), color: Color(0xFF8888AA)),
+        width: MediaQuery.of(context).size.width,
+        child: GestureDetector(
+          onTap: () {
+            if (!showMobileNumField) {
+              setState(() {
+                showMobileNumField = true;
+              });
+            } else {
+              showMobileNumField = true;
+              setState(() {
+                _mobileNo = _phoneController.text.trim();
+              });
+              mobileLoginHelper().mobileSignInHandler(
+                  context, _mobileNo, widget.onSignIn, auth);
+            }
+          },
+          child: Text(
+            "Sign In with Mobile No.",
+            style: TextStyle(fontSize: 20, color: Colors.white),
+            textAlign: TextAlign.center,
+          ),
         ),
-        body: SingleChildScrollView(
-            child: Container(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(children: [
-                  Card(
-                      child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                        Container(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Form(
-                                key: formKey,
-                                child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.stretch,
-                                  children: usernameAndPassword() +
-                                      submitWidgets() +
-                                      emailVerificationWidget() +
-                                      forgetPasswordWidget(),
-                                ))),
-                      ])),
-                ]))));
+      ),
+    ];
   }
 
   Widget padded({Widget child}) {

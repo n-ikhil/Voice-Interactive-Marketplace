@@ -52,10 +52,11 @@ class userProfileFirestoreClient {
   }
 
   Future<UserDetail> getUserDetail(FirebaseUser user) async {
-    UserDetail userData ;
-    await _firestoreCollection.document(user.uid).get().then((value) => {
-      userData = UserDetail.fromSnapshot(value)
-    });
+    UserDetail userData;
+    await _firestoreCollection
+        .document(user.uid)
+        .get()
+        .then((value) => {userData = UserDetail.fromSnapshot(value)});
     return userData;
   }
 }

@@ -45,7 +45,7 @@ class _BaseLayoutState extends State<BaseLayout> {
   }
 
   @override
-  initState()   {
+  initState() {
     super.initState();
   }
 
@@ -74,13 +74,10 @@ class _BaseLayoutState extends State<BaseLayout> {
     Navigator.pop(context);
 
     Navigator.pushNamed(context, userDetailFormPage, arguments: argSend);
-
   }
 
-
-
   getDetails() async {
-    if(_currentUser ==null || userData == null){
+    if (_currentUser == null || userData == null) {
       await widget.auth.currentUser().then((value) => _currentUser = value);
       await sharedServices()
           .FirestoreClientInstance
@@ -95,7 +92,7 @@ class _BaseLayoutState extends State<BaseLayout> {
 
   @override
   Widget build(BuildContext context) {
-     getDetails();
+    getDetails();
     void _signOut() async {
       try {
         await widget.auth.signOut();

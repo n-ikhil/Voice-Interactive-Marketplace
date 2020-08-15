@@ -21,18 +21,18 @@ class _ChatRoomState extends State<ChatRoom> {
       builder: (context, snapshot) {
         return snapshot.hasData
             ? ListView.builder(
-            itemCount: snapshot.data.documents.length,
-            shrinkWrap: true,
-            itemBuilder: (context, index) {
-              return ChatRoomsTile(
-                userName: snapshot.data.documents[index].data['chatroomid']
-                    .toString()
-                    .replaceAll("_", "")
-                    .replaceAll(Constants.myName, ""),
-                chatRoomId:
-                snapshot.data.documents[index].data["chatroomid"],
-              );
-            })
+                itemCount: snapshot.data.documents.length,
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  return ChatRoomsTile(
+                    userName: snapshot.data.documents[index].data['chatroomid']
+                        .toString()
+                        .replaceAll("_", "")
+                        .replaceAll(Constants.myName, ""),
+                    chatRoomId:
+                        snapshot.data.documents[index].data["chatroomid"],
+                  );
+                })
             : Container();
       },
     );
@@ -45,7 +45,8 @@ class _ChatRoomState extends State<ChatRoom> {
   }
 
   getUserInfogetChats() async {
-    Constants.myName = await SharedPreferencesFunctions.getUserNameSharedPreference();
+    Constants.myName =
+        await SharedPreferencesFunctions.getUserNameSharedPreference();
     DatabaseMethods().getUserChats(Constants.myName).then((snapshots) {
       setState(() {
         chatRooms = snapshots;
@@ -60,7 +61,7 @@ class _ChatRoomState extends State<ChatRoom> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'gs chat app',
+          APP_NAME,
           style: TextStyle(fontSize: 20),
         ),
         elevation: 0.0,
@@ -94,8 +95,8 @@ class ChatRoomsTile extends StatelessWidget {
             context,
             MaterialPageRoute(
                 builder: (context) => Chat(
-                  chatRoomId: chatRoomId,
-                )));
+                      chatRoomId: chatRoomId,
+                    )));
       },
       child: Container(
         color: Colors.black26,

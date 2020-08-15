@@ -2,12 +2,24 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:myna/services/firebase/FirestoreClients.dart';
 import 'package:myna/services/firebase/auth.dart';
 import 'package:translator/translator.dart';
+import 'package:geolocator/geolocator.dart';
 
 class sharedServices {
   FirestoreClient FirestoreClientInstance;
   FirebaseUser _currentUser;
 
   FirebaseUser get currentUser => _currentUser;
+
+  static Future getCurrentLocation() async {
+    String pcode = "140001"; // ropar default
+    final Geolocator geolocator = Geolocator()..forceAndroidLocationManager;
+    Position _currentPosition = await geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.low);
+    List<Placemark> p = await geolocator.placemarkFromCoordinates(
+        _currentPosition.latitude, _currentPosition.longitude);
+    Placemark place = p[0];
+    return place;
+  }
 
   sharedServices() {
     FirestoreClientInstance = FirestoreClient();

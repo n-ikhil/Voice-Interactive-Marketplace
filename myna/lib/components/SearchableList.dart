@@ -59,7 +59,7 @@ class _SearchableListState extends State<SearchableList> {
                                     .contains(filter.toLowerCase())
                                 ? ListItem(resList[index].name, () {
                                     Navigator.pushNamed(context, itemList,
-                                        arguments: {"id": resList[index].id});
+                                        arguments: resList[index].id);
                                   })
                                 : Container();
                       }))

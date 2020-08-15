@@ -1,11 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:myna/components/Loading.dart';
 import 'package:myna/constants/variables/common.dart';
 import 'package:myna/models/Category.dart';
+import 'package:myna/models/Item.dart';
 import 'package:myna/models/Product.dart';
-import 'package:myna/models/UserDetail.dart';
-import 'package:myna/services/IndependentFunctions/UserProfile.dart';
 import 'package:myna/services/sharedservices.dart';
 
 class NewItem extends StatefulWidget {
@@ -17,28 +18,42 @@ class _NewItemState extends State<NewItem> {
   // UserDetail curUser;
   Category curCategory;
   Product curProduct;
-  bool isPublic = true;
+  bool isRentable = false;
   bool showSpinner = false;
-  sharedServices _sharedServices;
+  sharedServices _sharedServices = sharedServices();
+  Placemark place;
 
   List<Category> allCats = [];
   List<Product> allProds = [];
 
   FirebaseUser curUser;
 
+  TextEditingController _newPriceTextController;
   TextEditingController _newCategoryTextController;
   TextEditingController _newProductTextController;
+  TextEditingController _newDescriptionTextController;
+  TextEditingController _newContactTextController;
+
   @override
   void initState() {
+    _newPriceTextController = TextEditingController();
     _newCategoryTextController = TextEditingController();
     _newProductTextController = TextEditingController();
-    this._sharedServices = sharedServices();
+    _newDescriptionTextController = TextEditingController();
+    _newContactTextController = TextEditingController();
+
+    // this._sharedServices = sharedServices();
     super.initState();
     loadCategories();
-    curUser = _sharedServices.currentUser;
-    print(curUser);
-    print("newitemmai");
-    print(sharedServices);
+    loadCurrentLocation();
+  }
+
+  void loadCurrentLocation() {
+    sharedServices.getCurrentLocation().then((onValue) {
+      this.setState(() {
+        place = onValue;
+      });
+    });
   }
 
   void loadCategories() {
@@ -83,10 +98,39 @@ class _NewItemState extends State<NewItem> {
     });
   }
 
-  void submitForm() {
+  void submitForm() async {
+    if (place == null) {
+      print("place not found; exiting submision");
+    }
+    setState(() {
+      showSpinner = true;
+    });
+    curUser = _sharedServices.currentUser;
     print(curCategory);
     print(curProduct);
     print(curUser);
+    String postalCode = place.postalCode;
+    print("current postal code $postalCode");
+    Item _newItem = Item.asForm(
+        productID: curProduct.id,
+        ownerID: curUser.uid,
+        postalCode: postalCode,
+        isRentable: isRentable,
+        contact: _newContactTextController.text,
+        description: _newDescriptionTextController.text,
+        place: place.subAdministrativeArea + " " + place.subLocality,
+        price: int.parse(_newPriceTextController.text));
+    await _sharedServices.FirestoreClientInstance.itemClient
+        .storeSaveItem(_newItem)
+        .then((_) {
+      print("saved the item");
+      Navigator.pop(context);
+    }).catchError((onError) {
+      print("error saving");
+    });
+    setState(() {
+      showSpinner = false;
+    });
   }
 
   @override
@@ -130,12 +174,34 @@ class _NewItemState extends State<NewItem> {
                     DropdownMenuItem(value: prod, child: Text(prod.name)))
                 .toList(),
           ),
+          TextField(
+            controller: _newPriceTextController,
+            decoration: InputDecoration(labelText: "Expected price"),
+            keyboardType: TextInputType.number,
+            inputFormatters: <TextInputFormatter>[
+              WhitelistingTextInputFormatter.digitsOnly
+            ], // Only numbers can be entered
+          ),
+          TextField(
+            controller: _newContactTextController,
+            decoration: InputDecoration(labelText: "contact number"),
+            keyboardType: TextInputType.number,
+            inputFormatters: <TextInputFormatter>[
+              WhitelistingTextInputFormatter.digitsOnly
+            ], // Only numbers can be entered
+          ),
+          TextField(
+            controller: _newDescriptionTextController,
+            decoration: InputDecoration(
+                labelText:
+                    "description of item"), // Only numbers can be entered
+          ),
           CheckboxListTile(
-            title: Text("show contact to public"),
-            value: isPublic,
+            title: Text("Availible for rent"),
+            value: isRentable,
             onChanged: (bool newValue) {
               setState(() {
-                isPublic = newValue;
+                isRentable = newValue;
               });
             },
             controlAffinity: ListTileControlAffinity.trailing,
@@ -177,15 +243,14 @@ class _NewItemState extends State<NewItem> {
                       allCats = [...allCats, cat];
                       showSpinner = false;
                     });
-                    Navigator.pop(context);
                   }).catchError((onError) {
                     print(onError);
                     print("new category not written");
                     setState(() {
                       showSpinner = false;
                     });
-                    Navigator.pop(context);
                   });
+                  Navigator.pop(context);
                 },
               ),
             ],
@@ -234,11 +299,11 @@ class _NewItemState extends State<NewItem> {
                       allProds = [...allProds, curProduct];
                       showSpinner = false;
                     });
-                    Navigator.pop(context);
                     setState(() {
                       showSpinner = false;
                     });
                   });
+                  Navigator.pop(context);
                 },
               ),
             ],

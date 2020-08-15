@@ -17,7 +17,10 @@ class SingleCategory extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               FlatButton(
-                child: Text(this.cat.name),
+                child: Text(
+                  this.cat.name,
+                  overflow: TextOverflow.ellipsis,
+                ),
                 onPressed: () {
                   Navigator.pushNamed(context, categoryResult, arguments: cat);
                 },

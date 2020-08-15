@@ -35,6 +35,21 @@ class mobileLoginHelper {
           AuthResult result = await _auth.signInWithCredential(credential);
           FirebaseUser user = result.user;
           if (user != null) {
+            await showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (BuildContext context) {
+                return Dialog(
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      CircularProgressIndicator(),
+                      Text("Loading"),
+                    ],
+                  ),
+                );
+              },
+            );
             SignInSuccess(context, user, _callback);
             print("Done");
           } else {

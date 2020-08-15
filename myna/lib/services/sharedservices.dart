@@ -10,6 +10,14 @@ class sharedServices {
 
   sharedServices() {
     FirestoreClientInstance = FirestoreClient();
-    Auth().currentUser().then((value) => _currentUser = value);
+    Auth().currentUser().then((value) {
+      _currentUser = value;
+      print(_currentUser);
+      print("nahi");
+      return value;
+    }).catchError((onError) {
+      print("ferk");
+      print(onError);
+    });
   }
 }

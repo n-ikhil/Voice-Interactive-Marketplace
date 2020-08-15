@@ -1,13 +1,24 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Item {
   String productID;
-  String categoryID;
   String ownerID;
-  bool isPrivate;
+  bool isPublic;
+  bool isRentable;
+  String postalCode;
 
-  Item(data) {
-    this.productID = data.productID;
-    this.categoryID = data.categoryID;
-    this.ownerID = data.ownerID;
-    this.isPrivate = data.isPrivate;
+  Item(DocumentSnapshot data) {
+    this.productID = data.data["productID"];
+    this.ownerID = data.data["ownerID"];
+    this.isPublic = data.data["isPublic"];
+    this.isRentable = data.data["isRentable"];
+    this.postalCode = data.data["postalCode"];
   }
+
+  Item.asForm(
+      {this.productID,
+      this.ownerID,
+      this.postalCode,
+      this.isPublic,
+      this.isRentable});
 }

@@ -36,7 +36,7 @@ dependencies:
 
   #used specially for Gmail sign in
   google_sign_in: ^4.1.1
-
+  geolocator: ^5.3.0
   # form management
 
 dev_dependencies:

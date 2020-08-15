@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:myna/constants/variables/common.dart';
 
-class ItemDetail extends StatelessWidget {
+class ItemDetail extends StatefulWidget {
+  final String itemID;
+  ItemDetail(this.itemID) : super();
+  @override
+  _ItemDetailState createState() => _ItemDetailState();
+}
+
+class _ItemDetailState extends State<ItemDetail> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(APP_NAME),
-      ),
-      body: Container(child: Text("item details")),
-    );
+    return Container();
   }
 }

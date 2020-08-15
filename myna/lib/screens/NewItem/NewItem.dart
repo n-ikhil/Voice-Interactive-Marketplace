@@ -3,9 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:myna/components/Loading.dart';
 import 'package:myna/constants/variables/common.dart';
 import 'package:myna/models/Category.dart';
+import 'package:myna/models/Item.dart';
 import 'package:myna/models/Product.dart';
-import 'package:myna/models/UserDetail.dart';
-import 'package:myna/services/IndependentFunctions/UserProfile.dart';
 import 'package:myna/services/sharedservices.dart';
 
 class NewItem extends StatefulWidget {
@@ -18,6 +17,7 @@ class _NewItemState extends State<NewItem> {
   Category curCategory;
   Product curProduct;
   bool isPublic = true;
+  bool isRentable = false;
   bool showSpinner = false;
   sharedServices _sharedServices;
 
@@ -35,10 +35,8 @@ class _NewItemState extends State<NewItem> {
     this._sharedServices = sharedServices();
     super.initState();
     loadCategories();
-    curUser = _sharedServices.currentUser;
     print(curUser);
-    print("newitemmai");
-    print(sharedServices);
+    print("init state new item");
   }
 
   void loadCategories() {
@@ -83,10 +81,33 @@ class _NewItemState extends State<NewItem> {
     });
   }
 
-  void submitForm() {
+  void submitForm() async {
+    setState(() {
+      showSpinner = true;
+    });
+    curUser = _sharedServices.currentUser;
     print(curCategory);
     print(curProduct);
     print(curUser);
+    String postalCode = await sharedServices.getPostalCode();
+    print("current postal code $postalCode");
+    Item _newItem = Item.asForm(
+        productID: curProduct.id,
+        ownerID: curUser.uid,
+        isPublic: isPublic,
+        postalCode: postalCode,
+        isRentable: isRentable);
+    await _sharedServices.FirestoreClientInstance.itemClient
+        .storeSaveItem(_newItem)
+        .then((_) {
+      print("saved the item");
+      Navigator.pop(context);
+    }).catchError((onError) {
+      print("error saving");
+    });
+    setState(() {
+      showSpinner = false;
+    });
   }
 
   @override
@@ -131,11 +152,21 @@ class _NewItemState extends State<NewItem> {
                 .toList(),
           ),
           CheckboxListTile(
-            title: Text("show contact to public"),
+            title: Text("Show contact to public"),
             value: isPublic,
             onChanged: (bool newValue) {
               setState(() {
                 isPublic = newValue;
+              });
+            },
+            controlAffinity: ListTileControlAffinity.trailing,
+          ),
+          CheckboxListTile(
+            title: Text("Availible for rent"),
+            value: isRentable,
+            onChanged: (bool newValue) {
+              setState(() {
+                isRentable = newValue;
               });
             },
             controlAffinity: ListTileControlAffinity.trailing,
@@ -177,15 +208,14 @@ class _NewItemState extends State<NewItem> {
                       allCats = [...allCats, cat];
                       showSpinner = false;
                     });
-                    Navigator.pop(context);
                   }).catchError((onError) {
                     print(onError);
                     print("new category not written");
                     setState(() {
                       showSpinner = false;
                     });
-                    Navigator.pop(context);
                   });
+                  Navigator.pop(context);
                 },
               ),
             ],
@@ -234,11 +264,11 @@ class _NewItemState extends State<NewItem> {
                       allProds = [...allProds, curProduct];
                       showSpinner = false;
                     });
-                    Navigator.pop(context);
                     setState(() {
                       showSpinner = false;
                     });
                   });
+                  Navigator.pop(context);
                 },
               ),
             ],

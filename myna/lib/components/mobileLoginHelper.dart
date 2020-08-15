@@ -1,8 +1,7 @@
 import 'dart:async';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:myna/screens/Authorization/login_page.dart';
+import 'package:myna/constants/variables/common.dart';
 import 'package:myna/services/sharedservices.dart';
 
 class mobileLoginHelper {
@@ -10,7 +9,18 @@ class mobileLoginHelper {
 
   SignInSuccess(
       BuildContext context, FirebaseUser user, VoidCallback fun) async {
+     // ignore: unawaited_futures
+     showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      },
+    );
     await registerUserDatabase(context, user);
+    Navigator.of(context).pop();
     fun();
   }
 
@@ -32,8 +42,56 @@ class mobileLoginHelper {
     }
 
     onException(AuthException exception) async {
+      //for loading message pop
+      Navigator.of(context).pop();
+
       print("exception code: ${exception.code}");
       print("exception message: ${exception.message}");
+       // ignore: unawaited_futures
+       showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) {
+            return AlertDialog(
+              backgroundColor: CANVAS_COLOR,
+              title: Text(
+                "LogIn Fail",
+                style: TextStyle(
+                  color: Colors.red,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Text(
+                    "ERR_Code : ${exception.code}",
+                    style: TextStyle(
+                      color: Colors.brown,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    "Message : ${exception.message}",
+                    style: TextStyle(
+                      color: Colors.blue,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+                ],
+              ),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text("back"),
+                  textColor: Colors.white,
+                  color: Colors.blue,
+                  onPressed: () async {
+                    Navigator.of(context).pop();
+                  },
+                )
+              ],
+            );
+          });
     }
 
     await _auth.verifyPhoneNumber(
@@ -41,6 +99,16 @@ class mobileLoginHelper {
         timeout: const Duration(seconds: 60),
         verificationCompleted: (AuthCredential credential) async {
           Navigator.of(context).pop();
+          // ignore: unawaited_futures
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (BuildContext context) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            },
+          );
           AuthResult result = await _auth.signInWithCredential(credential);
           FirebaseUser user = result.user;
           if (user != null) {
@@ -52,6 +120,9 @@ class mobileLoginHelper {
         },
         verificationFailed: await onException,
         codeSent: (String verificationId, [int forceResendingToken]) {
+//          for loading message pop
+          Navigator.of(context).pop();
+
           showDialog(
               context: context,
               barrierDismissible: false,
@@ -62,7 +133,14 @@ class mobileLoginHelper {
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       TextField(
+                        autofocus: true,
+                        showCursor: true,
+                        cursorColor: Colors.green,
                         controller: _codeController,
+                      ),
+                      Text(
+                        "Auto-Detecting",
+                        style: TextStyle(fontSize: 15),
                       ),
                     ],
                   ),

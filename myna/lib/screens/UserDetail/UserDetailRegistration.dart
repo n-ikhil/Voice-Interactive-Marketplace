@@ -106,7 +106,7 @@ class userDetailFormState extends State<userDetailForm> {
             hintText: "Nick_Name"),
         autocorrect: false,
 //            validator: (val) => val.isEmpty ? 'field did not changed.' : null,
-            onSaved: (val) => _nickName =  val.isEmpty ? userData.nickName :val,
+        onSaved: (val) => _nickName = val.isEmpty ? userData.nickName : val,
       )),
       padded(
           child: TextFormField(
@@ -119,7 +119,8 @@ class userDetailFormState extends State<userDetailForm> {
             hintText: "First_Name"),
         autocorrect: false,
 //            validator: (val) => val.isEmpty ? 'field did not changed.' : null,
-            onSaved: (val) => _userFirstName =  val.isEmpty ? userData.userFirstName :val,
+        onSaved: (val) =>
+            _userFirstName = val.isEmpty ? userData.userFirstName : val,
       )),
       padded(
           child: TextFormField(
@@ -132,7 +133,8 @@ class userDetailFormState extends State<userDetailForm> {
             hintText: "Last_Name"),
         autocorrect: false,
 //            validator: (val) => val.isEmpty ? 'field did not changed.' : null,
-            onSaved: (val) => _userLastName =  val.isEmpty ? userData.userLastName :val,
+        onSaved: (val) =>
+            _userLastName = val.isEmpty ? userData.userLastName : val,
       )),
       padded(
           child: TextFormField(
@@ -140,12 +142,13 @@ class userDetailFormState extends State<userDetailForm> {
         decoration: InputDecoration(
             helperStyle: TextStyle(color: Colors.brown, fontSize: 15),
             helperText: userData != null ? userData.mobileNo : null,
-            labelText:
-                userData != null ? 'Change  Mobile Number' : 'Enter Mobile Number',
+            labelText: userData != null
+                ? 'Change  Mobile Number'
+                : 'Enter Mobile Number',
             hintText: "mobileNo"),
         autocorrect: false,
 //            validator: (val) => val.isEmpty ? 'field did not changed.' : null,
-            onSaved: (val) => _mobileNo =  val.isEmpty ? userData.mobileNo :val,
+        onSaved: (val) => _mobileNo = val.isEmpty ? userData.mobileNo : val,
       )),
       padded(
           child: TextFormField(
@@ -153,12 +156,13 @@ class userDetailFormState extends State<userDetailForm> {
         decoration: InputDecoration(
             helperStyle: TextStyle(color: Colors.brown, fontSize: 15),
             helperText: userData != null ? userData.Address : null,
-            labelText:
-                userData != null ? 'Change Permanent Address' : 'Enter Permanent Address',
+            labelText: userData != null
+                ? 'Change Permanent Address'
+                : 'Enter Permanent Address',
             hintText: "Address"),
         autocorrect: false,
 //        validator: (val) => val.isEmpty ? 'field did not changed.' : null,
-        onSaved: (val) => _Address =  val.isEmpty ? userData.Address :val,
+        onSaved: (val) => _Address = val.isEmpty ? userData.Address : val,
       )),
     ];
   }
@@ -183,8 +187,8 @@ class userDetailFormState extends State<userDetailForm> {
   void validateAndSubmit() async {
     if (validateAndSave()) {
       try {
-        UserDetail userData = UserDetail(_currentUser.uid, _currentUser.email, _nickName,
-            _userFirstName, _userLastName, _Address, _mobileNo);
+        UserDetail userData = UserDetail(_currentUser.uid, _currentUser.email,
+            _nickName, _userFirstName, _userLastName, _Address, _mobileNo);
         await updateUserDatabase(userData);
         print("DOne");
         widget._callback();

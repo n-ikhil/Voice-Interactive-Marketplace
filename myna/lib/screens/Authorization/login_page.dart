@@ -83,6 +83,17 @@ class _LoginPageState extends State<LoginPage> {
       showMobileNumField = false;
     });
     if (validateAndSave()) {
+      // ignore: unawaited_futures
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        },
+      );
+
       try {
         FirebaseUser user = _formType == FormType.login
             ? await widget.auth.signIn(_email, _password)
@@ -120,20 +131,41 @@ class _LoginPageState extends State<LoginPage> {
             });
           }
         }
+      } finally {
+        //for loading message pop
+        Navigator.of(context).pop();
       }
     } else {}
   }
 
   signInWithGmailOnly() async {
-    FirebaseUser user = await auth.handleSignIn();
-    setState(() {
-      currentUser = user;
-    });
-    if (currentUser != null) {
-      log(currentUser.email);
-      print("currentUser.email");
-      print(currentUser.email);
-      SignInSuccess(currentUser);
+    // ignore: unawaited_futures
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      },
+    );
+
+    try {
+      FirebaseUser user = await auth.handleSignIn();
+      setState(() {
+        currentUser = user;
+      });
+      if (currentUser != null) {
+        log(currentUser.email);
+        print("currentUser.email");
+        print(currentUser.email);
+        SignInSuccess(currentUser);
+      }
+    } catch (e) {
+      print(e.toString());
+    } finally {
+      //for loading message pop
+      Navigator.of(context).pop();
     }
   }
 
@@ -245,6 +277,7 @@ class _LoginPageState extends State<LoginPage> {
         key: Key('email'),
         decoration: InputDecoration(labelText: 'Email'),
         autocorrect: false,
+        cursorColor: Colors.green,
         validator: (val) => val.isEmpty ? 'Email can\'t be empty.' : null,
         onSaved: (val) => _email = val,
       )),
@@ -255,6 +288,7 @@ class _LoginPageState extends State<LoginPage> {
             key: Key('password'),
             decoration: InputDecoration(labelText: 'Password'),
             obscureText: true,
+            cursorColor: Colors.green,
             autocorrect: false,
             validator: (val) =>
                 val.isEmpty ? 'Password can\'t be empty.' : null,
@@ -354,6 +388,8 @@ class _LoginPageState extends State<LoginPage> {
                 hintText: "(+Code){+91 default}10digits"),
             controller: _phoneController,
             key: Key('mobile'),
+            autofocus: true,
+            cursorColor: Colors.green,
             autocorrect: false,
             validator: (val) => val.isEmpty ? 'Field can\'t be empty.' : null,
 //            onSaved: (val) => _mobileNo = val,
@@ -373,7 +409,7 @@ class _LoginPageState extends State<LoginPage> {
                 showMobileNumField = true;
               });
             } else {
-              showMobileNumField = true;
+//              showMobileNumField = true;
               setState(() {
                 if (_phoneController.text.trim()[0] == '+') {
                   _mobileNo = _phoneController.text.trim();
@@ -381,6 +417,17 @@ class _LoginPageState extends State<LoginPage> {
                   _mobileNo = "+91" + _phoneController.text.trim();
                 }
               });
+
+              showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (BuildContext context) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                },
+              );
+
               mobileLoginHelper().mobileSignInHandler(
                   context, _mobileNo, widget.onSignIn, auth);
             }

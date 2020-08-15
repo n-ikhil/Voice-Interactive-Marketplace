@@ -4,7 +4,6 @@ import 'package:myna/models/UserDetail.dart';
 import 'package:myna/models/arguments/userDetailViewArg.dart';
 import 'package:myna/services/IndependentFunctions/UserProfile.dart';
 
-
 class userDetailView extends StatefulWidget {
   userDetailView({this.arg}) : super(key: arg.key) {
     this.title = arg.title;

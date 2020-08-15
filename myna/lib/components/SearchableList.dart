@@ -69,13 +69,12 @@ class _SearchableListState extends State<SearchableList> {
     );
   }
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
+  void getStrLenTriggerSearch() {
     strLenTriggerSearch = sharedServices()
         .FirestoreClientInstance
         .constantClient
         .constants["strLenTriggerSearch"];
+    super.initState();
   }
 
   @override
@@ -90,6 +89,7 @@ class _SearchableListState extends State<SearchableList> {
   @override
   initState() {
     super.initState();
+    getStrLenTriggerSearch();
     if (widget.list != null) {
       resList = widget.list;
       loadState = 2;

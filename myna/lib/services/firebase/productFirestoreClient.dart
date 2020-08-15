@@ -1,10 +1,28 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:myna/models/Category.dart';
 import 'package:myna/models/Product.dart';
 
 class productFirestoreClient {
   final CollectionReference _firestoreCollection;
   productFirestoreClient(this._firestoreCollection);
 
+  Future storeSaveProduct(Category cat, String str) async {
+    str.toLowerCase();
+    Product p;
+    await _firestoreCollection
+        .document(str)
+        .setData({"name": str, "category": cat.id}).then((_) async {
+      print("succes in writing product");
+      await _firestoreCollection.document(str).get().then((onValue) {
+        p = Product(onValue);
+      }).catchError((onError) {
+        Future.error(onError);
+      });
+    }).catchError((onError) {
+      Future.error(onError);
+    });
+    return p;
+  }
 
   Future storeGetProductsOnCategories(String catId) async {
     List<Product> products = [];

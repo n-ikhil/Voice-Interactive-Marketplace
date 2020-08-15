@@ -16,12 +16,12 @@ class _CategoryGridState extends State<CategoryGrid> {
   List<Category> categories;
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    loadCategories(context);
+  void initState() {
+    super.initState();
+    this.loadCategories();
   }
 
-  void loadCategories(context) {
+  void loadCategories() {
     setState(() {
       loadedCategories = false;
       isError = false;
@@ -49,7 +49,7 @@ class _CategoryGridState extends State<CategoryGrid> {
   Widget build(BuildContext context) {
     //loadCategories();
     return SizedBox(
-        height: 500,
+        height: 400,
         width: double.infinity,
         child: loadedCategories
             ? Container(
@@ -71,7 +71,7 @@ class _CategoryGridState extends State<CategoryGrid> {
                               child: Center(child: Text("Reload  (dev)")),
                               onPressed: () {
                                 this.setState(() {
-                                  loadCategories(context);
+                                  loadCategories();
                                 });
                               },
                             )

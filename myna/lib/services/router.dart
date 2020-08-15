@@ -20,15 +20,19 @@ class Router {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case homePage:
-//        return MaterialPageRoute(builder: (_) => HomePage());
+        return MaterialPageRoute(builder: (_) => HomePage());
       case newItemPage:
         return MaterialPageRoute(builder: (_) => NewItem());
       case userDetailFormPage:
         return MaterialPageRoute(
-            builder: (_) => userDetailForm(arg: settings.arguments,));
+            builder: (_) => userDetailForm(
+                  arg: settings.arguments,
+                ));
       case userDetailViewPage:
         return MaterialPageRoute(
-            builder: (_) => userDetailView(arg: settings.arguments,));
+            builder: (_) => userDetailView(
+                  arg: settings.arguments,
+                ));
       case itemDetail:
         return MaterialPageRoute(builder: (_) => ItemDetail());
       case itemList:
@@ -40,7 +44,7 @@ class Router {
         return MaterialPageRoute(builder: (_) => SearchPage());
       case credentialPage:
         return MaterialPageRoute(builder: (_) => RootPage(auth: auth));
-        case chatRoom:
+      case chatRoom:
         return MaterialPageRoute(builder: (_) => ChatRoom());
 
       default:

@@ -6,6 +6,8 @@ class Item {
   bool isPublic;
   bool isRentable;
   String postalCode;
+  String place;
+  int price;
 
   Item(DocumentSnapshot data) {
     this.productID = data.data["productID"];
@@ -13,6 +15,8 @@ class Item {
     this.isPublic = data.data["isPublic"];
     this.isRentable = data.data["isRentable"];
     this.postalCode = data.data["postalCode"];
+    this.price = data.data["price"];
+    this.place = data.data["place"];
   }
 
   Item.asForm(
@@ -20,5 +24,7 @@ class Item {
       this.ownerID,
       this.postalCode,
       this.isPublic,
-      this.isRentable});
+      this.isRentable,
+      this.price,
+      this.place});
 }

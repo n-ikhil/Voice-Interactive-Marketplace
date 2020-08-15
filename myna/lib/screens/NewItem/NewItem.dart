@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:myna/components/Loading.dart';
 import 'package:myna/constants/variables/common.dart';
 import 'package:myna/models/Category.dart';
@@ -20,23 +22,33 @@ class _NewItemState extends State<NewItem> {
   bool isRentable = false;
   bool showSpinner = false;
   sharedServices _sharedServices;
+  Placemark place;
 
   List<Category> allCats = [];
   List<Product> allProds = [];
 
   FirebaseUser curUser;
 
+  TextEditingController _newPriceTextController;
   TextEditingController _newCategoryTextController;
   TextEditingController _newProductTextController;
   @override
   void initState() {
+    _newPriceTextController = TextEditingController();
     _newCategoryTextController = TextEditingController();
     _newProductTextController = TextEditingController();
     this._sharedServices = sharedServices();
     super.initState();
     loadCategories();
-    print(curUser);
-    print("init state new item");
+    loadCurrentLocation();
+  }
+
+  void loadCurrentLocation() {
+    sharedServices.getCurrentLocation().then((onValue) {
+      this.setState(() {
+        place = onValue;
+      });
+    });
   }
 
   void loadCategories() {
@@ -82,6 +94,9 @@ class _NewItemState extends State<NewItem> {
   }
 
   void submitForm() async {
+    if (place == null) {
+      print("place not found; exiting submision");
+    }
     setState(() {
       showSpinner = true;
     });
@@ -89,14 +104,16 @@ class _NewItemState extends State<NewItem> {
     print(curCategory);
     print(curProduct);
     print(curUser);
-    String postalCode = await sharedServices.getPostalCode();
+    String postalCode = place.postalCode;
     print("current postal code $postalCode");
     Item _newItem = Item.asForm(
         productID: curProduct.id,
         ownerID: curUser.uid,
         isPublic: isPublic,
         postalCode: postalCode,
-        isRentable: isRentable);
+        isRentable: isRentable,
+        place: place.subAdministrativeArea + " " + place.subLocality,
+        price: int.parse(_newPriceTextController.text));
     await _sharedServices.FirestoreClientInstance.itemClient
         .storeSaveItem(_newItem)
         .then((_) {
@@ -150,6 +167,14 @@ class _NewItemState extends State<NewItem> {
                 .map((prod) =>
                     DropdownMenuItem(value: prod, child: Text(prod.name)))
                 .toList(),
+          ),
+          TextField(
+            controller: _newPriceTextController,
+            decoration: InputDecoration(labelText: "Expected price"),
+            keyboardType: TextInputType.number,
+            inputFormatters: <TextInputFormatter>[
+              WhitelistingTextInputFormatter.digitsOnly
+            ], // Only numbers can be entered
           ),
           CheckboxListTile(
             title: Text("Show contact to public"),

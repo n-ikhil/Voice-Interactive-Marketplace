@@ -3,7 +3,7 @@ import 'package:myna/constants/variables/common.dart';
 
 class ItemList extends StatefulWidget {
   final String pid;
-  ItemList(this.pid) : super();
+  ItemList(this.pid);
   @override
   _ItemListState createState() => _ItemListState();
 }

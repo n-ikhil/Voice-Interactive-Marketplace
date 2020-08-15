@@ -9,7 +9,7 @@ class sharedServices {
 
   FirebaseUser get currentUser => _currentUser;
 
-  static Future getPostalCode() async {
+  static Future getCurrentLocation() async {
     String pcode = "140001"; // ropar default
     final Geolocator geolocator = Geolocator()..forceAndroidLocationManager;
     Position _currentPosition = await geolocator.getCurrentPosition(
@@ -17,9 +17,7 @@ class sharedServices {
     List<Placemark> p = await geolocator.placemarkFromCoordinates(
         _currentPosition.latitude, _currentPosition.longitude);
     Placemark place = p[0];
-    pcode = place.postalCode;
-    print(pcode);
-    return pcode;
+    return place;
   }
 
   sharedServices() {

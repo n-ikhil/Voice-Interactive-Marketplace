@@ -1,7 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:myna/models/Category.dart';
 import 'package:myna/models/Item.dart';
-import 'package:myna/models/Product.dart';
 
 class itemFirestoreClient {
   final CollectionReference _firestoreCollection;
@@ -13,7 +11,9 @@ class itemFirestoreClient {
       "ownerID": newItem.ownerID,
       "isRentable": newItem.isRentable,
       "isPublic": newItem.isPublic,
-      "postalCode": newItem.postalCode
+      "postalCode": newItem.postalCode,
+      "price": newItem.price,
+      "place": newItem.place
     }).then((_) async {
       print("succes in writing item");
     }).catchError((onError) {

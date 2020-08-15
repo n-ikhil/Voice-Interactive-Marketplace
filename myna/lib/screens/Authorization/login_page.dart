@@ -55,7 +55,9 @@ class _LoginPageState extends State<LoginPage> {
       try {
         await widget.auth.resetPassword(_email);
         showErrorMessage = true;
-        message = "Check your inbox";
+        setState(() {
+          message = "Check your inbox";
+        });
         moveToLogin();
       } catch (resetError) {
         if (resetError is PlatformException) {
@@ -172,35 +174,38 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text(widget.title),
-          automaticallyImplyLeading: false,
-        ),
-        body: SingleChildScrollView(
-            child: Container(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(children: [
-                  Card(
-                      child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                        Container(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Form(
-                                key: formKeyLogin,
-                                child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.stretch,
-                                  children: usernameAndPassword() +
-                                      submitWidgets() +
-                                      emailVerificationWidget() +
-                                      forgetPasswordWidget() +
-                                      mobileSignIn() +
-                                      googleSignIn(),
-                                ))),
-                      ])),
-                ]))));
+    return WillPopScope(
+        onWillPop: () async => false,
+        child: Scaffold(
+//            resizeToAvoidBottomInset : false,
+            appBar: AppBar(
+              title: Text(widget.title),
+              automaticallyImplyLeading: false,
+            ),
+            body: SingleChildScrollView(
+                child: Container(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(children: [
+                      Card(
+                          child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                            Container(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Form(
+                                    key: formKeyLogin,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.stretch,
+                                      children: usernameAndPassword() +
+                                          submitWidgets() +
+                                          emailVerificationWidget() +
+                                          forgetPasswordWidget() +
+                                          mobileSignIn() +
+                                          googleSignIn(),
+                                    ))),
+                          ])),
+                    ])))));
   }
 
   List<Widget> emailVerificationWidget() {
@@ -346,7 +351,7 @@ class _LoginPageState extends State<LoginPage> {
                     borderSide: BorderSide(color: Colors.grey[300])),
                 filled: true,
                 fillColor: Colors.grey[100],
-                hintText: "Mobile Number"),
+                hintText: "(+Code){+91 default}10digits"),
             controller: _phoneController,
             key: Key('mobile'),
             autocorrect: false,
@@ -370,7 +375,11 @@ class _LoginPageState extends State<LoginPage> {
             } else {
               showMobileNumField = true;
               setState(() {
-                _mobileNo = _phoneController.text.trim();
+                if (_phoneController.text.trim()[0] == '+') {
+                  _mobileNo = _phoneController.text.trim();
+                } else {
+                  _mobileNo = "+91" + _phoneController.text.trim();
+                }
               });
               mobileLoginHelper().mobileSignInHandler(
                   context, _mobileNo, widget.onSignIn, auth);

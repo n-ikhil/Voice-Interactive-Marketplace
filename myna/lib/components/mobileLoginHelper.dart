@@ -1,12 +1,16 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:myna/screens/Authorization/login_page.dart';
 import 'package:myna/services/sharedservices.dart';
 
 class mobileLoginHelper {
   final _codeController = TextEditingController();
 
-  SignInSuccess(BuildContext context, FirebaseUser user, VoidCallback fun) {
-    registerUserDatabase(context, user);
+  SignInSuccess(
+      BuildContext context, FirebaseUser user, VoidCallback fun) async {
+    await registerUserDatabase(context, user);
     fun();
   }
 
@@ -27,6 +31,11 @@ class mobileLoginHelper {
       print("first: $e");
     }
 
+    onException(AuthException exception) async {
+      print("exception code: ${exception.code}");
+      print("exception message: ${exception.message}");
+    }
+
     await _auth.verifyPhoneNumber(
         phoneNumber: _mobileNo,
         timeout: const Duration(seconds: 60),
@@ -40,12 +49,8 @@ class mobileLoginHelper {
           } else {
             print("Error");
           }
-          Navigator.of(context).pop();
         },
-        verificationFailed: (AuthException exception) {
-          print("exception code: ${exception.code}");
-          print("exception message: ${exception.message}");
-        },
+        verificationFailed: await onException,
         codeSent: (String verificationId, [int forceResendingToken]) {
           showDialog(
               context: context,

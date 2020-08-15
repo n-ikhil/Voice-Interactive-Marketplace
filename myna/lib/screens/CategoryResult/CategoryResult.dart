@@ -15,8 +15,8 @@ class _CategoryResultState extends State<CategoryResult> {
   List<dynamic> resList;
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
+  void initState() {
+    super.initState();
     sharedServices()
         .FirestoreClientInstance
         .productClient

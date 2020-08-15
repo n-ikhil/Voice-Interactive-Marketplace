@@ -20,7 +20,7 @@ class Router {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case homePage:
-//        return MaterialPageRoute(builder: (_) => HomePage());
+        return MaterialPageRoute(builder: (_) => HomePage());
       case newItemPage:
         return MaterialPageRoute(builder: (_) => NewItem());
       case userDetailFormPage:

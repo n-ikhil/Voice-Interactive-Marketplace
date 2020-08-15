@@ -18,12 +18,14 @@ class HomePage extends StatelessWidget {
         childWidget: Column(
           children: [
             CategoryGrid(),
-            RaisedButton(
-              child: Text("Add new product here"),
-              onPressed: () {
-                Navigator.pushNamed(context, newItemPage);
-              },
-            ),
+            Center(
+              child: FloatingActionButton(
+                child: Icon(Icons.add),
+                onPressed: () {
+                  Navigator.pushNamed(context, newItemPage);
+                },
+              ),
+            )
           ],
           mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.start,

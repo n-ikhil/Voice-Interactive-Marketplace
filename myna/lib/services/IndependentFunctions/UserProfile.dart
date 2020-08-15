@@ -11,7 +11,10 @@ class UserProfile {
           .FirestoreClientInstance
           .userClient
           .getUserDetail(user)
-          .then((value) => value);
+          .then((value) => value)
+          .catchError((onError) {
+        print(onError);
+      });
     }
     return null;
   }

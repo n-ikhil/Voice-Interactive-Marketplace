@@ -103,6 +103,8 @@ class _BaseLayoutState extends State<BaseLayout> {
     }
 
     return Scaffold(
+        resizeToAvoidBottomInset: false,
+        // set it to false
         appBar: AppBar(
           title: Text(APP_NAME),
           actions: <Widget>[
@@ -127,15 +129,7 @@ class _BaseLayoutState extends State<BaseLayout> {
                 accountEmail: userData != null
                     ? Text(userData.EmailId)
                     : Text("nickName"),
-                currentAccountPicture: FutureBuilder<Widget>(
-                    future: getUserPhoto(),
-                    builder:
-                        (BuildContext context, AsyncSnapshot<Widget> snapshot) {
-                      if (snapshot.hasData) {
-                        return snapshot.data;
-                      }
-                      return Container(child: CircularProgressIndicator());
-                    }),
+                currentAccountPicture: null,
                 onDetailsPressed: () {
                   _onShowDetail();
                 },
@@ -165,7 +159,7 @@ class _BaseLayoutState extends State<BaseLayout> {
 
         //this will just add the Navigation Drawer Icon
 
-        body: widget.childWidget,
+        body: SingleChildScrollView(child: widget.childWidget),
         bottomNavigationBar: RaisedButton(
           onPressed: null,
           child: Icon(Icons.record_voice_over),

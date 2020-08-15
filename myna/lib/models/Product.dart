@@ -7,4 +7,9 @@ class Product {
     this.name = data.data["name"];
     this.id = data.documentID;
   }
+
+  Product.sample() {
+    this.name = "add new product";
+    this.id = "-1";
+  }
 }

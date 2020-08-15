@@ -88,7 +88,7 @@ class _LoginPageState extends State<LoginPage> {
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) {
-          return   Center(
+          return Center(
             child: CircularProgressIndicator(),
           );
         },
@@ -131,8 +131,7 @@ class _LoginPageState extends State<LoginPage> {
             });
           }
         }
-      }
-      finally{
+      } finally {
         //for loading message pop
         Navigator.of(context).pop();
       }
@@ -140,31 +139,31 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   signInWithGmailOnly() async {
-
- // ignore: unawaited_futures
- showDialog(
+    // ignore: unawaited_futures
+    showDialog(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
-        return   Center(
+        return Center(
           child: CircularProgressIndicator(),
         );
       },
     );
 
-    FirebaseUser user = await auth.handleSignIn();
-    setState(() {
-      currentUser = user;
-    });
-    if (currentUser != null) {
-      log(currentUser.email);
-      print("currentUser.email");
-      print(currentUser.email);
-      //for loading message pop
-      Navigator.of(context).pop();
-      SignInSuccess(currentUser);
-    }
-    else{
+    try {
+      FirebaseUser user = await auth.handleSignIn();
+      setState(() {
+        currentUser = user;
+      });
+      if (currentUser != null) {
+        log(currentUser.email);
+        print("currentUser.email");
+        print(currentUser.email);
+        SignInSuccess(currentUser);
+      }
+    } catch (e) {
+      print(e.toString());
+    } finally {
       //for loading message pop
       Navigator.of(context).pop();
     }
@@ -278,7 +277,6 @@ class _LoginPageState extends State<LoginPage> {
         key: Key('email'),
         decoration: InputDecoration(labelText: 'Email'),
         autocorrect: false,
-        autofocus: true,
         cursorColor: Colors.green,
         validator: (val) => val.isEmpty ? 'Email can\'t be empty.' : null,
         onSaved: (val) => _email = val,
@@ -411,7 +409,7 @@ class _LoginPageState extends State<LoginPage> {
                 showMobileNumField = true;
               });
             } else {
-              showMobileNumField = true;
+//              showMobileNumField = true;
               setState(() {
                 if (_phoneController.text.trim()[0] == '+') {
                   _mobileNo = _phoneController.text.trim();
@@ -424,7 +422,7 @@ class _LoginPageState extends State<LoginPage> {
                 context: context,
                 barrierDismissible: false,
                 builder: (BuildContext context) {
-                  return   Center(
+                  return Center(
                     child: CircularProgressIndicator(),
                   );
                 },

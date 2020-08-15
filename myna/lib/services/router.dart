@@ -37,7 +37,9 @@ class Router {
         return MaterialPageRoute(
             builder: (_) => ItemDetail(settings.arguments));
       case itemList:
-        return MaterialPageRoute(builder: (_) => ItemList(settings.arguments));
+        return MaterialPageRoute(builder: (_) {
+          return ItemList(settings.arguments);
+        });
       case categoryResult:
         return MaterialPageRoute(
             builder: (_) => CategoryResult(settings.arguments));

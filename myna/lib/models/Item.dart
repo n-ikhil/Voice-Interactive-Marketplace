@@ -8,6 +8,7 @@ class Item {
   String postalCode;
   String place;
   int price;
+  String id;
 
   Item(DocumentSnapshot data) {
     this.productID = data.data["productID"];
@@ -17,6 +18,7 @@ class Item {
     this.postalCode = data.data["postalCode"];
     this.price = data.data["price"];
     this.place = data.data["place"];
+    this.id = data.documentID;
   }
 
   Item.asForm(

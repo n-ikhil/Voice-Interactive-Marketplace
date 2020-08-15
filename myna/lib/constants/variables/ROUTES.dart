@@ -10,4 +10,3 @@ const searchPage = '/searchPage';
 const categoryResult = '/categoryResult';
 const credentialPage = '/credentialPage';
 const chatRoom = '/chatRoom';
-

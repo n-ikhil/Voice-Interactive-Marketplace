@@ -9,8 +9,9 @@ class itemFirestoreClient {
     await _firestoreCollection.add({
       "productID": newItem.productID,
       "ownerID": newItem.ownerID,
+      "description": newItem.description,
+      "contact": newItem.contact,
       "isRentable": newItem.isRentable,
-      "isPublic": newItem.isPublic,
       "postalCode": newItem.postalCode,
       "price": newItem.price,
       "place": newItem.place

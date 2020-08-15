@@ -48,9 +48,11 @@ class _CategoryGridState extends State<CategoryGrid> {
   @override
   Widget build(BuildContext context) {
     //loadCategories();
-    return SizedBox(
-        height: 400,
-        width: double.infinity,
+    return AspectRatio(
+        aspectRatio: 1,
+        // SizedBox(
+        // height: 400,
+        // width: double.infinity,
         child: loadedCategories
             ? Container(
                 child: CustomScrollView(

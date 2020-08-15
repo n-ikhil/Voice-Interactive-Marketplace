@@ -63,7 +63,8 @@ class _ItemListState extends State<ItemList> {
             ? LoadingWidget()
             : ListView(children: <Widget>[
                 CheckboxListTile(
-                  title: Text("Show results for " + place.locality),
+                  title: Text(
+                      "Show for : " + place.locality + "," + place.postalCode),
                   value: showInMyLocation,
                   onChanged: (bool newValue) {
                     setState(() {

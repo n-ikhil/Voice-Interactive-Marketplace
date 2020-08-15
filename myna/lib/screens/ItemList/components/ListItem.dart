@@ -9,7 +9,7 @@ class ListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: ListTile(
-        title: Text(this._item.place),
+        title: Text(this._item.description + " : " + this._item.place),
         trailing: Text('\u{20B9} ' + this._item.price.toString()),
         onTap: () {
           Navigator.pushNamed(context, itemDetail,

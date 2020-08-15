@@ -18,10 +18,9 @@ class _NewItemState extends State<NewItem> {
   // UserDetail curUser;
   Category curCategory;
   Product curProduct;
-  bool isPublic = true;
   bool isRentable = false;
   bool showSpinner = false;
-  sharedServices _sharedServices;
+  sharedServices _sharedServices = sharedServices();
   Placemark place;
 
   List<Category> allCats = [];
@@ -32,12 +31,18 @@ class _NewItemState extends State<NewItem> {
   TextEditingController _newPriceTextController;
   TextEditingController _newCategoryTextController;
   TextEditingController _newProductTextController;
+  TextEditingController _newDescriptionTextController;
+  TextEditingController _newContactTextController;
+
   @override
   void initState() {
     _newPriceTextController = TextEditingController();
     _newCategoryTextController = TextEditingController();
     _newProductTextController = TextEditingController();
-    this._sharedServices = sharedServices();
+    _newDescriptionTextController = TextEditingController();
+    _newContactTextController = TextEditingController();
+
+    // this._sharedServices = sharedServices();
     super.initState();
     loadCategories();
     loadCurrentLocation();
@@ -109,9 +114,10 @@ class _NewItemState extends State<NewItem> {
     Item _newItem = Item.asForm(
         productID: curProduct.id,
         ownerID: curUser.uid,
-        isPublic: isPublic,
         postalCode: postalCode,
         isRentable: isRentable,
+        contact: _newContactTextController.text,
+        description: _newDescriptionTextController.text,
         place: place.subAdministrativeArea + " " + place.subLocality,
         price: int.parse(_newPriceTextController.text));
     await _sharedServices.FirestoreClientInstance.itemClient
@@ -176,15 +182,19 @@ class _NewItemState extends State<NewItem> {
               WhitelistingTextInputFormatter.digitsOnly
             ], // Only numbers can be entered
           ),
-          CheckboxListTile(
-            title: Text("Show contact to public"),
-            value: isPublic,
-            onChanged: (bool newValue) {
-              setState(() {
-                isPublic = newValue;
-              });
-            },
-            controlAffinity: ListTileControlAffinity.trailing,
+          TextField(
+            controller: _newContactTextController,
+            decoration: InputDecoration(labelText: "contact number"),
+            keyboardType: TextInputType.number,
+            inputFormatters: <TextInputFormatter>[
+              WhitelistingTextInputFormatter.digitsOnly
+            ], // Only numbers can be entered
+          ),
+          TextField(
+            controller: _newDescriptionTextController,
+            decoration: InputDecoration(
+                labelText:
+                    "description of item"), // Only numbers can be entered
           ),
           CheckboxListTile(
             title: Text("Availible for rent"),

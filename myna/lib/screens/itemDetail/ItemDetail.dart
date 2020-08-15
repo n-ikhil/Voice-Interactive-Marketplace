@@ -3,6 +3,7 @@ import 'package:myna/components/Loading.dart';
 import 'package:myna/constants/variables/common.dart';
 import 'package:myna/models/Item.dart';
 import 'package:myna/services/sharedservices.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ItemDetail extends StatefulWidget {
   final Map<String, dynamic> args;
@@ -39,18 +40,42 @@ class _ItemDetailState extends State<ItemDetail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(APP_NAME)),
-      body: showSpinner
-          ? LoadingWidget()
-          : Center(
-              child: ListView(
-              children: <Widget>[
-                Text("Location : " + item.place),
-                Text("product price: \u{20B9} " + item.price.toString()),
-                Text("product name: " + item.productID),
-                Text("Can be rented ? " + (item.isRentable ? "yes" : "no")),
-              ],
-            )),
+      appBar: AppBar(title: Text((showSpinner ? APP_NAME : item.description))),
+      body: Center(
+        child: showSpinner
+            ? LoadingWidget()
+            : Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                // child: Column(
+                children: <Widget>[
+                  Text(item.description),
+                  Text(item.productID),
+                  Text(item.place),
+                  Text("\u{20B9} " + item.price.toString()),
+                  Text("Can be rented : " + (item.isRentable ? "yes" : "no")),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: <Widget>[
+                      RaisedButton(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(18.0),
+                        ),
+                        onPressed: () => print("launch chatting"),
+                        child: Icon(Icons.message),
+                      ),
+                      RaisedButton(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(18.0),
+                        ),
+                        onPressed: () => launch("tel:" + item.contact),
+                        child: Icon(Icons.call),
+                      ),
+                    ],
+                  ),
+                ],
+                // )
+              ),
+      ),
     );
   }
 }

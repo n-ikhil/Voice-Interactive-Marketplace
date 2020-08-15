@@ -31,13 +31,12 @@ dependencies:
   cupertino_icons: ^0.1.2
   shared_preferences: ^0.5.8
 
-#  to get user location data : https://pub.dev/packages/geolocation
-  geolocation: ^1.1.2
-
+  #  to get user location data : https://pub.dev/packages/geolocation
+  geolocator: ^5.3.2+2
   #used specially for Gmail sign in
   google_sign_in: ^4.1.1
 
-#  #googleTranslator
+  #  #googleTranslator
   translator: ^0.1.5
 
 

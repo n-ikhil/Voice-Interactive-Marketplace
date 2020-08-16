@@ -7,7 +7,9 @@ import 'package:myna/screens/SearchPage/SearchPage.dart';
 import 'package:myna/screens/Authorization/root_page.dart';
 import 'package:myna/screens/UserDetail/UserDetailRegistration.dart';
 import 'package:myna/screens/UserDetail/UserDetailShow.dart';
+import 'package:myna/screens/chat/chat.dart';
 import 'package:myna/screens/chat/chatRoomScreen.dart';
+import 'package:myna/screens/chat/conversationSetup.dart';
 import 'package:myna/screens/itemDetail/ItemDetail.dart';
 import '../constants/variables/ROUTES.dart';
 import 'firebase/auth.dart';
@@ -49,7 +51,14 @@ class Router {
         return MaterialPageRoute(builder: (_) => RootPage(auth: auth));
       case chatRoom:
         return MaterialPageRoute(builder: (_) => ChatRoom());
-
+      case Conversion:
+        // argument is  nickName of the other member of chat
+        String chatRoomId =
+            conversationSetup().setupDualConversion(settings.arguments);
+        return MaterialPageRoute(
+            builder: (_) => Chat(
+                  chatRoomId: chatRoomId,
+                ));
       default:
         return MaterialPageRoute(
             builder: (_) => Scaffold(

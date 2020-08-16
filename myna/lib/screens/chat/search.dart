@@ -45,8 +45,9 @@ class _SearchState extends State<Search> {
             itemCount: searchResultSnapshot.documents.length,
             itemBuilder: (context, index) {
               return userTile(
-                searchResultSnapshot.documents[index].data["name"],
+                searchResultSnapshot.documents[index].data["nickName"],
                 searchResultSnapshot.documents[index].data["email"],
+                searchResultSnapshot.documents[index].data["mobileNo"],
               );
             })
         : Container();
@@ -73,7 +74,7 @@ class _SearchState extends State<Search> {
                 )));
   }
 
-  Widget userTile(String name, String email) {
+  Widget userTile(String name, String email, String mobileNo) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
       child: Row(
@@ -81,14 +82,21 @@ class _SearchState extends State<Search> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              name == null ? Text("") :
               Text(
                 name,
                 style: TextStyle(color: Colors.black, fontSize: 16),
               ),
+              email == null ? Text("") :
               Text(
                 email,
                 style: TextStyle(color: Colors.black, fontSize: 16),
-              )
+              ),
+              mobileNo != null ?
+              Text(
+                mobileNo,
+                style: TextStyle(color: Colors.black, fontSize: 16),
+              ): Text(""),
             ],
           ),
           Spacer(),

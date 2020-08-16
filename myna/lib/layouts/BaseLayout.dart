@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:myna/constants/SharedPreferencesFunctions.dart';
 import 'package:myna/constants/variables/ROUTES.dart';
 import 'package:myna/constants/variables/common.dart';
 import 'package:myna/models/UserDetail.dart';
@@ -34,13 +35,8 @@ class _BaseLayoutState extends State<BaseLayout> {
           child: Image.network(value,
               width: 100, height: 100, fit: BoxFit.cover)));
     } else {
-      return CircleAvatar(
-        backgroundColor: Colors.blue,
-        child: Text(
-          "R",
-          style: TextStyle(fontSize: 40.0),
-        ),
-      );
+      return null;
+      ;
     }
   }
 
@@ -75,34 +71,51 @@ class _BaseLayoutState extends State<BaseLayout> {
 
     Navigator.pushNamed(context, userDetailFormPage, arguments: argSend);
   }
+
   refreshFunc() {
     sharedServices()
         .FirestoreClientInstance
         .userClient
         .getUserDetail(_currentUser)
         .then((value) => setState(() {
-      userData = value;
-      print(userData.EmailId + "================");
+              userData = value;
+              print(userData.EmailId + "================");
+              SharedPreferencesFunctions.saveUserNameSharedPreference(userData.nickName);
     }));
   }
 
   getDetails() async {
     if (_currentUser == null || userData == null) {
-      await widget.auth.currentUser().then((value) => _currentUser = value);
-      await refreshFunc();
+      try {
+        await widget.auth.currentUser().then((value) => _currentUser = value);
+        await refreshFunc();
+      } catch (e) {
+        print(e.toString());
+      }
     }
   }
-imageFunc(){
-  return  FutureBuilder<Widget>(
-      future: getUserPhoto(),
-      builder:
-          (BuildContext context, AsyncSnapshot<Widget> snapshot) {
-        if (snapshot.hasData) {
-          return snapshot.data;
-        }
-        return Container(child: CircularProgressIndicator());
-      });
-}
+
+  imageFunc() {
+    try {
+      return FutureBuilder<Widget>(
+          future: getUserPhoto(),
+          builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
+            if (snapshot.hasData) {
+              return snapshot.data;
+            }
+            return Container(child: CircularProgressIndicator());
+          });
+    } catch (e) {
+      return CircleAvatar(
+        backgroundColor: Colors.blue,
+        child: Text(
+          "R",
+          style: TextStyle(fontSize: 40.0),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     getDetails();

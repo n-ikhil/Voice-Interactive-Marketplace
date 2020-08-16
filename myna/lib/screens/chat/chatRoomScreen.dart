@@ -5,6 +5,7 @@ import 'package:myna/models/widgetAndThemes/theme.dart';
 import 'package:myna/screens/chat/chat.dart';
 import 'package:myna/screens/chat/search.dart';
 import 'package:myna/services/firebase/ChatService.dart';
+import 'package:myna/services/sharedservices.dart';
 
 class ChatRoom extends StatefulWidget {
   @override
@@ -12,7 +13,8 @@ class ChatRoom extends StatefulWidget {
 }
 
 class _ChatRoomState extends State<ChatRoom> {
-  DatabaseMethods databaseMethods = DatabaseMethods();
+  chatFirestoreClient databaseMethods =
+      sharedServices().FirestoreClientInstance.chatRoomClient;
   Stream chatRooms;
 
   Widget chatRoomsList() {
@@ -47,7 +49,11 @@ class _ChatRoomState extends State<ChatRoom> {
   getUserInfogetChats() async {
     Constants.myName =
         await SharedPreferencesFunctions.getUserNameSharedPreference();
-    DatabaseMethods().getUserChats(Constants.myName).then((snapshots) {
+    sharedServices()
+        .FirestoreClientInstance
+        .chatRoomClient
+        .getUserChats(Constants.myName)
+        .then((snapshots) {
       setState(() {
         chatRooms = snapshots;
         print(

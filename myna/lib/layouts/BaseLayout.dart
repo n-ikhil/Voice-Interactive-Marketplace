@@ -58,10 +58,10 @@ class _BaseLayoutState extends State<BaseLayout> {
     if (_currentUser == null) {
       print("===============user null");
     }
+    refreshFunc();
     userDetailViewArg argSend = userDetailViewArg(
         title: "View Profile", user: _currentUser, editDetail: _onEditDetail);
     Navigator.pop(context);
-
     Navigator.pushNamed(context, userDetailViewPage, arguments: argSend);
   }
 
@@ -75,21 +75,34 @@ class _BaseLayoutState extends State<BaseLayout> {
 
     Navigator.pushNamed(context, userDetailFormPage, arguments: argSend);
   }
+  refreshFunc() {
+    sharedServices()
+        .FirestoreClientInstance
+        .userClient
+        .getUserDetail(_currentUser)
+        .then((value) => setState(() {
+      userData = value;
+      print(userData.EmailId + "================");
+    }));
+  }
 
   getDetails() async {
     if (_currentUser == null || userData == null) {
       await widget.auth.currentUser().then((value) => _currentUser = value);
-      await sharedServices()
-          .FirestoreClientInstance
-          .userClient
-          .getUserDetail(_currentUser)
-          .then((value) => setState(() {
-                userData = value;
-                print(userData.EmailId + "================");
-              }));
+      await refreshFunc();
     }
   }
-
+imageFunc(){
+  return  FutureBuilder<Widget>(
+      future: getUserPhoto(),
+      builder:
+          (BuildContext context, AsyncSnapshot<Widget> snapshot) {
+        if (snapshot.hasData) {
+          return snapshot.data;
+        }
+        return Container(child: CircularProgressIndicator());
+      });
+}
   @override
   Widget build(BuildContext context) {
     getDetails();
@@ -113,10 +126,7 @@ class _BaseLayoutState extends State<BaseLayout> {
                 onPressed: () {
                   Navigator.pushNamed(context, searchPage);
                 }),
-            FlatButton(
-                onPressed: _signOut,
-                child: Text('Logout',
-                    style: TextStyle(fontSize: 17.0, color: Colors.white))),
+            FlatButton(onPressed: refreshFunc, child: Icon(Icons.refresh)),
           ],
         ),
         drawer: Drawer(
@@ -129,7 +139,7 @@ class _BaseLayoutState extends State<BaseLayout> {
                 accountEmail: userData != null
                     ? Text(userData.EmailId)
                     : Text("nickName"),
-                currentAccountPicture: null,
+                currentAccountPicture: imageFunc(),
                 onDetailsPressed: () {
                   _onShowDetail();
                 },
@@ -144,8 +154,17 @@ class _BaseLayoutState extends State<BaseLayout> {
               ListTile(
                 title: Text("Open Chat"),
                 trailing: Icon(Icons.arrow_forward),
-                onTap: () {
-                  Navigator.pushNamed(context, chatRoom);
+                onTap: () async {
+                  if (userData.nickName == 'NA' ||
+                      userData.nickName == null ||
+                      userData.nickName == '') {
+                    await getNickName();
+                  }
+                  if (userData.nickName != 'NA' &&
+                      userData.nickName != null &&
+                      userData.nickName != '') {
+                    await Navigator.pushNamed(context, chatRoom);
+                  }
                 },
               ),
               ListTile(
@@ -165,5 +184,60 @@ class _BaseLayoutState extends State<BaseLayout> {
           child: Icon(Icons.record_voice_over),
           color: Colors.red,
         ));
+  }
+
+  getNickName() {
+    final _codeController = TextEditingController();
+
+    return showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) {
+          return AlertDialog(
+            title: Text("Enter a nickName"),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                TextField(
+                  autofocus: true,
+                  showCursor: true,
+                  cursorColor: Colors.green,
+                  controller: _codeController,
+                ),
+              ],
+            ),
+            actions: <Widget>[
+              FlatButton(
+                child: Text("Confirm"),
+                textColor: Colors.white,
+                color: Colors.blue,
+                onPressed: () async {
+                  final name = _codeController.text.trim();
+                  if (name != null && name != 'NA' && name != '') {
+                    UserDetail detail = UserDetail(
+                        userData.UserId,
+                        userData.EmailId,
+                        name,
+                        userData.userFirstName,
+                        userData.userLastName,
+                        userData.Address,
+                        userData.mobileNo);
+                    await sharedServices()
+                        .FirestoreClientInstance
+                        .userClient
+                        .updateUserData(detail);
+                    refreshFunc();
+                    Navigator.of(context).pop();
+                    print("Done");
+                  } else {
+                    await Navigator.of(context).pop();
+                    getNickName();
+                    print("Enter valid Input except NA");
+                  }
+                },
+              )
+            ],
+          );
+        });
   }
 }

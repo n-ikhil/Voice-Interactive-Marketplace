@@ -61,7 +61,7 @@ class userDetailFormState extends State<userDetailForm> {
                 userData = value;
                 print(userData.EmailId + "================");
               }));
-    }
+    };
   }
 
   @override
@@ -189,7 +189,7 @@ class userDetailFormState extends State<userDetailForm> {
       try {
         UserDetail userData = UserDetail(_currentUser.uid, _currentUser.email,
             _nickName, _userFirstName, _userLastName, _Address, _mobileNo);
-        await updateUserDatabase(userData);
+        await updateUserDatabase(userData) ;
         print("DOne");
         widget._callback();
       } catch (DataRegisterError) {

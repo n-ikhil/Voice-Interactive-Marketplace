@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:myna/constants/variables/common.dart';
 import 'package:myna/models/widgetAndThemes/widget.dart';
 import 'package:myna/services/firebase/ChatService.dart';
+import 'package:myna/services/sharedservices.dart';
 import 'chat.dart';
 
 class Search extends StatefulWidget {
@@ -11,7 +12,8 @@ class Search extends StatefulWidget {
 }
 
 class _SearchState extends State<Search> {
-  DatabaseMethods databaseMethods = DatabaseMethods();
+  chatFirestoreClient databaseMethods =
+      sharedServices().FirestoreClientInstance.chatRoomClient;
   TextEditingController searchEditingController = TextEditingController();
   QuerySnapshot searchResultSnapshot;
 
@@ -39,14 +41,14 @@ class _SearchState extends State<Search> {
   Widget userList() {
     return haveUserSearched
         ? ListView.builder(
-        shrinkWrap: true,
-        itemCount: searchResultSnapshot.documents.length,
-        itemBuilder: (context, index) {
-          return userTile(
-            searchResultSnapshot.documents[index].data["name"],
-            searchResultSnapshot.documents[index].data["email"],
-          );
-        })
+            shrinkWrap: true,
+            itemCount: searchResultSnapshot.documents.length,
+            itemBuilder: (context, index) {
+              return userTile(
+                searchResultSnapshot.documents[index].data["name"],
+                searchResultSnapshot.documents[index].data["email"],
+              );
+            })
         : Container();
   }
 
@@ -67,8 +69,8 @@ class _SearchState extends State<Search> {
         context,
         MaterialPageRoute(
             builder: (context) => Chat(
-              chatRoomId: chatRoomId,
-            )));
+                  chatRoomId: chatRoomId,
+                )));
   }
 
   Widget userTile(String name, String email) {
@@ -128,61 +130,61 @@ class _SearchState extends State<Search> {
       appBar: appBarMain(context),
       body: isLoading
           ? Container(
-        child: Center(
-          child: CircularProgressIndicator(),
-        ),
-      )
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
+            )
           : Container(
-        child: Column(
-          children: [
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-              color: Color(0x54FFFFFF),
-              child: Row(
+              child: Column(
                 children: [
-                  Expanded(
-                    child: TextField(
-                      controller: searchEditingController,
-                      style: simpleTextStyle(),
-                      decoration: InputDecoration(
-                          hintText: "search name ...",
-                          hintStyle: TextStyle(
-                            color: Colors.black,
-                            fontSize: 16,
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                    color: Color(0x54FFFFFF),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            controller: searchEditingController,
+                            style: simpleTextStyle(),
+                            decoration: InputDecoration(
+                                hintText: "search name ...",
+                                hintStyle: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 16,
+                                ),
+                                border: InputBorder.none),
                           ),
-                          border: InputBorder.none),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            initiateSearch();
+                          },
+                          child: Container(
+                              height: 40,
+                              width: 40,
+                              decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                      colors: [
+                                        const Color(0x36FFFFFF),
+                                        const Color(0x0FFFFFFF)
+                                      ],
+                                      begin: FractionalOffset.topLeft,
+                                      end: FractionalOffset.bottomRight),
+                                  borderRadius: BorderRadius.circular(40)),
+                              padding: EdgeInsets.all(12),
+                              child: Image.asset(
+                                "images/search_icon.png",
+                                height: 25,
+                                width: 25,
+                              )),
+                        )
+                      ],
                     ),
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      initiateSearch();
-                    },
-                    child: Container(
-                        height: 40,
-                        width: 40,
-                        decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                                colors: [
-                                  const Color(0x36FFFFFF),
-                                  const Color(0x0FFFFFFF)
-                                ],
-                                begin: FractionalOffset.topLeft,
-                                end: FractionalOffset.bottomRight),
-                            borderRadius: BorderRadius.circular(40)),
-                        padding: EdgeInsets.all(12),
-                        child: Image.asset(
-                          "images/search_icon.png",
-                          height: 25,
-                          width: 25,
-                        )),
-                  )
+                  userList()
                 ],
               ),
             ),
-            userList()
-          ],
-        ),
-      ),
     );
   }
 }

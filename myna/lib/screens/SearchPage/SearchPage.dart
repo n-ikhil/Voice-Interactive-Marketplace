@@ -11,6 +11,7 @@ class SearchPage extends StatelessWidget {
         body: SearchableList(
             fetch: sharedServices()
                 .FirestoreClientInstance
-                .productClient.storeGetProductsOnSearch));
+                .productClient
+                .storeGetProductsOnSearch));
   }
 }

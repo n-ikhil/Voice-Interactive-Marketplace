@@ -25,15 +25,11 @@ class sharedServices {
     FirestoreClientInstance = FirestoreClient();
     Auth().currentUser().then((value) {
       _currentUser = value;
-      print(_currentUser);
-      print("nahi");
       return value;
     }).catchError((onError) {
-      print("ferk");
       print(onError);
     });
   }
-
 
   final translator = GoogleTranslator();
 
@@ -48,5 +44,6 @@ class sharedServices {
   String get userLanguage => _userLanguage;
 
   Future<Translation> multiLingualText(String inpStr) {
-   return translator.translate(inpStr, from: 'en', to: _userLanguage);}
+    return translator.translate(inpStr, from: 'en', to: _userLanguage);
+  }
 }

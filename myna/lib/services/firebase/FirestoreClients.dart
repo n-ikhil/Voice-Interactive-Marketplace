@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:myna/services/firebase/categoryFirestoreClient.dart';
 import 'package:myna/services/firebase/constantFirestoreClient.dart';
+import 'package:myna/services/firebase/firebaseStorage.dart';
 import 'package:myna/services/firebase/itemFirestoreClient.dart';
 import 'package:myna/services/firebase/productFirestoreClient.dart';
 import 'package:myna/services/firebase/userProfileFirestoreClient.dart';
@@ -11,6 +12,7 @@ class FirestoreClient {
   productFirestoreClient productClient;
   userProfileFirestoreClient userClient;
   itemFirestoreClient itemClient;
+  firebaseClientStorage storageClient;
 
   FirestoreClient() {
     constantClient =
@@ -22,5 +24,6 @@ class FirestoreClient {
     userClient =
         userProfileFirestoreClient(Firestore.instance.collection("user"));
     itemClient = itemFirestoreClient(Firestore.instance.collection("item"));
+    storageClient = firebaseClientStorage();
   }
 }

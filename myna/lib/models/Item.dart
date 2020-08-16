@@ -10,6 +10,7 @@ class Item {
   String id;
   String description;
   String contact;
+  String imgURL;
 
   Item(DocumentSnapshot data) {
     this.productID = data.data["productID"];
@@ -21,16 +22,17 @@ class Item {
     this.contact = data.data["contact"];
     this.description = data.data["description"];
     this.isRentable = data.data["isRentable"];
+    this.imgURL = data.data["imgURL"];
   }
 
-  Item.asForm({
-    this.productID,
-    this.ownerID,
-    this.postalCode,
-    this.isRentable,
-    this.price,
-    this.place,
-    this.contact,
-    this.description,
-  });
+  Item.asForm(
+      {this.productID,
+      this.ownerID,
+      this.postalCode,
+      this.isRentable,
+      this.price,
+      this.place,
+      this.contact,
+      this.description,
+      this.imgURL});
 }

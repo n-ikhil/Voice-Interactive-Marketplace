@@ -6,7 +6,7 @@ class itemFirestoreClient {
   itemFirestoreClient(this._firestoreCollection);
 
   Future storeSaveItem(Item newItem) async {
-    await _firestoreCollection.add({
+    var v = await _firestoreCollection.add({
       "productID": newItem.productID,
       "ownerID": newItem.ownerID,
       "description": newItem.description,
@@ -14,14 +14,16 @@ class itemFirestoreClient {
       "isRentable": newItem.isRentable,
       "postalCode": newItem.postalCode,
       "price": newItem.price,
-      "place": newItem.place
-    }).then((_) async {
+      "place": newItem.place,
+      "imgURL": newItem.imgURL
+    }).then((v) async {
       print("succes in writing item");
+      return v;
     }).catchError((onError) {
       print("item not written");
       Future.error(onError);
     });
-    return;
+    return v.documentID;
   }
 
   Future storeGetItemDetail(String itemID) async {

@@ -1,13 +1,16 @@
+import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:myna/components/Loading.dart';
 import 'package:myna/constants/variables/common.dart';
 import 'package:myna/models/Category.dart';
 import 'package:myna/models/Item.dart';
 import 'package:myna/models/Product.dart';
 import 'package:myna/services/sharedservices.dart';
+import 'package:intl/intl.dart';
 
 class NewItem extends StatefulWidget {
   @override
@@ -20,8 +23,10 @@ class _NewItemState extends State<NewItem> {
   Product curProduct;
   bool isRentable = false;
   bool showSpinner = false;
-  sharedServices _sharedServices = sharedServices();
+  sharedServices _sharedServices;
   Placemark place;
+  File _image;
+  String _imageName = "Add image";
 
   List<Category> allCats = [];
   List<Product> allProds = [];
@@ -36,6 +41,7 @@ class _NewItemState extends State<NewItem> {
 
   @override
   void initState() {
+    _sharedServices = sharedServices();
     _newPriceTextController = TextEditingController();
     _newCategoryTextController = TextEditingController();
     _newProductTextController = TextEditingController();
@@ -99,13 +105,30 @@ class _NewItemState extends State<NewItem> {
   }
 
   void submitForm() async {
+    curUser = _sharedServices.currentUser;
+
     if (place == null) {
       print("place not found; exiting submision");
     }
     setState(() {
       showSpinner = true;
     });
-    curUser = _sharedServices.currentUser;
+    String imgURL;
+    if (_image != null) {
+      print("saving  the image");
+      String curDateTime =
+          DateFormat('EEE|d|MMM-kk:mm:ss').format(DateTime.now());
+      imgURL = await _sharedServices.FirestoreClientInstance.storageClient
+          .uploadItemImage(_image, curUser.uid + ":" + curDateTime);
+      print("image saved with url $imgURL");
+      if (imgURL == null) {
+        setState(() {
+          showSpinner = false;
+        });
+        print("error uploading the image");
+        return;
+      }
+    }
     print(curCategory);
     print(curProduct);
     print(curUser);
@@ -119,10 +142,11 @@ class _NewItemState extends State<NewItem> {
         contact: _newContactTextController.text,
         description: _newDescriptionTextController.text,
         place: place.subAdministrativeArea + " " + place.subLocality,
-        price: int.parse(_newPriceTextController.text));
+        price: int.parse(_newPriceTextController.text),
+        imgURL: imgURL);
     await _sharedServices.FirestoreClientInstance.itemClient
         .storeSaveItem(_newItem)
-        .then((_) {
+        .then((documentID) {
       print("saved the item");
       Navigator.pop(context);
     }).catchError((onError) {
@@ -206,6 +230,10 @@ class _NewItemState extends State<NewItem> {
             },
             controlAffinity: ListTileControlAffinity.trailing,
           ),
+          FlatButton.icon(
+              onPressed: this.getImage,
+              icon: Icon(Icons.image),
+              label: Text(_imageName)),
           FlatButton.icon(
               onPressed: this.submitForm,
               icon: Icon(Icons.add),
@@ -310,5 +338,13 @@ class _NewItemState extends State<NewItem> {
           ),
         ),
         context: context);
+  }
+
+  Future getImage() async {
+    File image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    setState(() {
+      _imageName = (image.path.split(Platform.pathSeparator).last);
+      _image = image;
+    });
   }
 }

@@ -31,6 +31,7 @@ class _ItemDetailState extends State<ItemDetail> {
         .storeGetItemDetail(widget.args["id"])
         .then((onValue) {
       item = onValue;
+      print(item.imgURL);
     });
     setState(() {
       showSpinner = false;
@@ -41,41 +42,43 @@ class _ItemDetailState extends State<ItemDetail> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text((showSpinner ? APP_NAME : item.description))),
-      body: Center(
-        child: showSpinner
-            ? LoadingWidget()
-            : Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                // child: Column(
-                children: <Widget>[
-                  Text(item.description),
-                  Text(item.productID),
-                  Text(item.place),
-                  Text("\u{20B9} " + item.price.toString()),
-                  Text("Can be rented : " + (item.isRentable ? "yes" : "no")),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: <Widget>[
-                      RaisedButton(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(18.0),
-                        ),
-                        onPressed: () => print("launch chatting"),
-                        child: Icon(Icons.message),
+      body: showSpinner
+          ? LoadingWidget()
+          : Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              // child: Column(
+              children: <Widget>[
+                Image.network(
+                  item.imgURL,
+                ),
+                Text(item.description),
+                Text(item.productID),
+                Text(item.place),
+                Text("\u{20B9} " + item.price.toString()),
+                Text("Can be rented : " + (item.isRentable ? "yes" : "no")),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: <Widget>[
+                    RaisedButton(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18.0),
                       ),
-                      RaisedButton(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(18.0),
-                        ),
-                        onPressed: () => launch("tel:" + item.contact),
-                        child: Icon(Icons.call),
+                      onPressed: () => print("launch chatting"),
+                      child: Icon(Icons.message),
+                    ),
+                    RaisedButton(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18.0),
                       ),
-                    ],
-                  ),
-                ],
-                // )
-              ),
-      ),
+                      onPressed: () => launch("tel:" + item.contact),
+                      child: Icon(Icons.call),
+                    ),
+                  ],
+                ),
+              ],
+              // )
+            ),
     );
   }
 }

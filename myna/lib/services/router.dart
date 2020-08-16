@@ -14,6 +14,7 @@ import 'package:myna/screens/chat/conversationSetup.dart';
 import 'package:myna/screens/itemDetail/ItemDetail.dart';
 import 'package:myna/services/SharedObjects.dart';
 import 'package:provider/provider.dart';
+import 'package:myna/speech/speech.dart';
 import '../constants/variables/ROUTES.dart';
 import 'firebase/auth.dart';
 
@@ -32,6 +33,9 @@ class Router {
                 Consumer<SharedObjects>(builder: (context, myModel, child) {
                   return NewItem(myModel);
                 }));
+
+      case speechPage:
+        return MaterialPageRoute(builder: (_) => SpeechTextCon());
       case userDetailFormPage:
         return MaterialPageRoute(
             builder: (_) => userDetailForm(

@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
@@ -9,10 +8,13 @@ import 'package:myna/constants/variables/common.dart';
 import 'package:myna/models/Category.dart';
 import 'package:myna/models/Item.dart';
 import 'package:myna/models/Product.dart';
-import 'package:myna/services/sharedservices.dart';
+import 'package:myna/models/UserDetail.dart';
+import 'package:myna/services/SharedObjects.dart';
 import 'package:intl/intl.dart';
 
 class NewItem extends StatefulWidget {
+  final SharedObjects myModel;
+  NewItem(this.myModel);
   @override
   _NewItemState createState() => _NewItemState();
 }
@@ -23,7 +25,6 @@ class _NewItemState extends State<NewItem> {
   Product curProduct;
   bool isRentable = false;
   bool showSpinner = false;
-  sharedServices _sharedServices;
   Placemark place;
   File _image;
   String _imageName = "Add image";
@@ -31,7 +32,7 @@ class _NewItemState extends State<NewItem> {
   List<Category> allCats = [];
   List<Product> allProds = [];
 
-  FirebaseUser curUser;
+  UserDetail curUser;
 
   TextEditingController _newPriceTextController;
   TextEditingController _newCategoryTextController;
@@ -41,25 +42,15 @@ class _NewItemState extends State<NewItem> {
 
   @override
   void initState() {
-    _sharedServices = sharedServices();
+    curUser = widget.myModel.currentUser;
+    place = widget.myModel.currentLocation.place;
     _newPriceTextController = TextEditingController();
     _newCategoryTextController = TextEditingController();
     _newProductTextController = TextEditingController();
     _newDescriptionTextController = TextEditingController();
     _newContactTextController = TextEditingController();
-
-    // this._sharedServices = sharedServices();
     super.initState();
     loadCategories();
-    loadCurrentLocation();
-  }
-
-  void loadCurrentLocation() {
-    sharedServices.getCurrentLocation().then((onValue) {
-      this.setState(() {
-        place = onValue;
-      });
-    });
   }
 
   void loadCategories() {
@@ -67,8 +58,9 @@ class _NewItemState extends State<NewItem> {
       showSpinner = true;
     });
     this
-        ._sharedServices
-        .FirestoreClientInstance
+        .widget
+        .myModel
+        .firestoreClientInstance
         .categoryClient
         .storeGetCategories()
         .then((onValue) {
@@ -88,8 +80,9 @@ class _NewItemState extends State<NewItem> {
       showSpinner = true;
     });
     this
-        ._sharedServices
-        .FirestoreClientInstance
+        .widget
+        .myModel
+        .firestoreClientInstance
         .productClient
         .storeGetProductsOnCategories(id)
         .then((onValue) {
@@ -105,7 +98,7 @@ class _NewItemState extends State<NewItem> {
   }
 
   void submitForm() async {
-    curUser = _sharedServices.currentUser;
+    curUser = widget.myModel.currentUser;
 
     if (place == null) {
       print("place not found; exiting submision");
@@ -118,8 +111,8 @@ class _NewItemState extends State<NewItem> {
       print("saving  the image");
       String curDateTime =
           DateFormat('EEE|d|MMM-kk:mm:ss').format(DateTime.now());
-      imgURL = await _sharedServices.FirestoreClientInstance.storageClient
-          .uploadItemImage(_image, curUser.uid + ":" + curDateTime);
+      imgURL = await widget.myModel.firestoreClientInstance.storageClient
+          .uploadItemImage(_image, curUser.userID + ":" + curDateTime);
       print("image saved with url $imgURL");
       if (imgURL == null) {
         setState(() {
@@ -136,7 +129,7 @@ class _NewItemState extends State<NewItem> {
     print("current postal code $postalCode");
     Item _newItem = Item.asForm(
         productID: curProduct.id,
-        ownerID: curUser.uid,
+        ownerID: curUser.userID,
         postalCode: postalCode,
         isRentable: isRentable,
         contact: _newContactTextController.text,
@@ -144,7 +137,7 @@ class _NewItemState extends State<NewItem> {
         place: place.subAdministrativeArea + " " + place.subLocality,
         price: int.parse(_newPriceTextController.text),
         imgURL: imgURL);
-    await _sharedServices.FirestoreClientInstance.itemClient
+    await widget.myModel.firestoreClientInstance.itemClient
         .storeSaveItem(_newItem)
         .then((documentID) {
       print("saved the item");
@@ -260,7 +253,7 @@ class _NewItemState extends State<NewItem> {
                   setState(() {
                     showSpinner = true;
                   });
-                  _sharedServices.FirestoreClientInstance.categoryClient
+                  widget.myModel.firestoreClientInstance.categoryClient
                       .storeSaveCategory(_newCategoryTextController.text)
                       .then((cat) {
                     print("At main");
@@ -318,7 +311,7 @@ class _NewItemState extends State<NewItem> {
                   setState(() {
                     showSpinner = true;
                   });
-                  _sharedServices.FirestoreClientInstance.productClient
+                  widget.myModel.firestoreClientInstance.productClient
                       .storeSaveProduct(
                           curCategory, _newProductTextController.text)
                       .then((onValue) {

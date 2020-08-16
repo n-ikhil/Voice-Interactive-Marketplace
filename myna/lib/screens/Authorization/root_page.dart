@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:myna/screens/HomePage/HomePage.dart';
+import 'package:myna/services/SharedObjects.dart';
 import 'package:myna/services/firebase/auth.dart';
 import 'package:myna/screens/Authorization/login_page.dart';
+import 'package:provider/provider.dart';
 
 class RootPage extends StatefulWidget {
   RootPage({Key key, this.auth}) : super(key: key);

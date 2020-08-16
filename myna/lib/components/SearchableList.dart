@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:myna/components/ListItem.dart';
 import 'package:myna/components/Loading.dart';
 import 'package:myna/constants/variables/ROUTES.dart';
-import 'package:myna/services/sharedservices.dart';
+import 'package:myna/services/SharedObjects.dart';
 
 // https://medium.com/@thedome6/how-to-create-a-searchable-filterable-listview-in-flutter-4faf3e300477
 
 class SearchableList extends StatefulWidget {
   final List<dynamic> list;
   final Function fetch;
-
-  SearchableList({this.list, this.fetch});
+  final SharedObjects myModel;
+  SearchableList({this.list, this.fetch, this.myModel});
 
   @override
   State<StatefulWidget> createState() => _SearchableListState();
@@ -59,7 +59,7 @@ class _SearchableListState extends State<SearchableList> {
                                     .contains(filter.toLowerCase())
                                 ? ListItem(resList[index].name, () {
                                     Navigator.pushNamed(context, itemList,
-                                        arguments: resList[index].id);
+                                        arguments: {"id": resList[index].id});
                                   })
                                 : Container();
                       }))
@@ -70,9 +70,7 @@ class _SearchableListState extends State<SearchableList> {
   }
 
   void getStrLenTriggerSearch() {
-    strLenTriggerSearch = sharedServices()
-        .FirestoreClientInstance
-        .constantClient
+    strLenTriggerSearch = widget.myModel.firestoreClientInstance.constantClient
         .constants["strLenTriggerSearch"];
     super.initState();
   }

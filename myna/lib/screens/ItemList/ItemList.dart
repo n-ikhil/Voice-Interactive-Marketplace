@@ -3,11 +3,12 @@ import 'package:geolocator/geolocator.dart';
 import 'package:myna/components/Loading.dart';
 import 'package:myna/models/Item.dart';
 import 'package:myna/screens/ItemList/components/ListItem.dart';
-import 'package:myna/services/sharedservices.dart';
+import 'package:myna/services/SharedObjects.dart';
 
 class ItemList extends StatefulWidget {
   final Map<String, dynamic> args;
-  ItemList(this.args);
+  final SharedObjects myModel;
+  ItemList(this.args, this.myModel);
   @override
   _ItemListState createState() => _ItemListState();
 }
@@ -17,8 +18,6 @@ class _ItemListState extends State<ItemList> {
   bool showInMyLocation = false;
   List<Item> items = [];
   Placemark place;
-
-  sharedServices _sharedServices = sharedServices();
 
   @override
   void initState() {
@@ -31,11 +30,10 @@ class _ItemListState extends State<ItemList> {
     setState(() {
       showSpinner = true;
     });
-    await sharedServices.getCurrentLocation().then((onValue) {
-      place = onValue;
-    });
+
+    place = widget.myModel.currentLocation.place;
     if (showInMyLocation) {
-      await _sharedServices.FirestoreClientInstance.itemClient
+      await widget.myModel.firestoreClientInstance.itemClient
           .storeGetItem(widget.args["id"], place.postalCode)
           .then((onValue) {
         setState(() {
@@ -44,7 +42,7 @@ class _ItemListState extends State<ItemList> {
         });
       });
     } else {
-      await _sharedServices.FirestoreClientInstance.itemClient
+      await widget.myModel.firestoreClientInstance.itemClient
           .storeGetItemPublic(widget.args["id"])
           .then((onValue) {
         setState(() {

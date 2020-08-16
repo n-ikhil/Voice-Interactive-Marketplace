@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:myna/components/Loading.dart';
 import 'package:myna/constants/variables/common.dart';
 import 'package:myna/models/Item.dart';
-import 'package:myna/services/sharedservices.dart';
+import 'package:myna/services/SharedObjects.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ItemDetail extends StatefulWidget {
   final Map<String, dynamic> args;
-  ItemDetail(this.args);
+  final SharedObjects myModel;
+  ItemDetail(this.args, this.myModel);
   @override
   _ItemDetailState createState() => _ItemDetailState();
 }
@@ -15,11 +17,9 @@ class ItemDetail extends StatefulWidget {
 class _ItemDetailState extends State<ItemDetail> {
   Item item;
   bool showSpinner = false;
-  sharedServices _sharedServices;
   @override
   void initState() {
     super.initState();
-    _sharedServices = sharedServices();
     loadItemDetail();
   }
 
@@ -27,7 +27,7 @@ class _ItemDetailState extends State<ItemDetail> {
     setState(() {
       showSpinner = true;
     });
-    await _sharedServices.FirestoreClientInstance.itemClient
+    await widget.myModel.firestoreClientInstance.itemClient
         .storeGetItemDetail(widget.args["id"])
         .then((onValue) {
       item = onValue;

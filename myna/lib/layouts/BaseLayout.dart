@@ -1,12 +1,11 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:myna/constants/variables/ROUTES.dart';
 import 'package:myna/constants/variables/common.dart';
 import 'package:myna/models/UserDetail.dart';
 import 'package:myna/models/arguments/userDetailFormArg.dart';
 import 'package:myna/models/arguments/userDetailViewArg.dart';
+import 'package:myna/services/SharedObjects.dart';
 import 'package:myna/services/firebase/auth.dart';
-import 'package:myna/services/sharedservices.dart';
 import '../constants/variables/common.dart';
 
 class BaseLayout extends StatefulWidget {
@@ -14,9 +13,15 @@ class BaseLayout extends StatefulWidget {
   final VoidCallback SignOut;
   final BaseAuth auth;
   final BuildContext context;
+  final SharedObjects myModel;
 
   const BaseLayout(
-      {Key key, this.childWidget, this.SignOut, this.auth, this.context})
+      {Key key,
+      this.childWidget,
+      this.SignOut,
+      this.auth,
+      this.context,
+      this.myModel})
       : super(key: key);
 
   @override
@@ -24,7 +29,6 @@ class BaseLayout extends StatefulWidget {
 }
 
 class _BaseLayoutState extends State<BaseLayout> {
-  FirebaseUser _currentUser;
   UserDetail userData;
 
   getUserPhoto() {
@@ -55,11 +59,8 @@ class _BaseLayoutState extends State<BaseLayout> {
   }
 
   _onShowDetail() {
-    if (_currentUser == null) {
-      print("===============user null");
-    }
-    userDetailViewArg argSend = userDetailViewArg(
-        title: "View Profile", user: _currentUser, editDetail: _onEditDetail);
+    userDetailViewArg argSend =
+        userDetailViewArg(title: "View Profile", editDetail: _onEditDetail);
     Navigator.pop(context);
 
     Navigator.pushNamed(context, userDetailViewPage, arguments: argSend);
@@ -77,17 +78,7 @@ class _BaseLayoutState extends State<BaseLayout> {
   }
 
   getDetails() async {
-    if (_currentUser == null || userData == null) {
-      await widget.auth.currentUser().then((value) => _currentUser = value);
-      await sharedServices()
-          .FirestoreClientInstance
-          .userClient
-          .getUserDetail(_currentUser)
-          .then((value) => setState(() {
-                userData = value;
-                print(userData.EmailId + "================");
-              }));
-    }
+    await widget.myModel.updateLoginStatus();
   }
 
   @override
@@ -127,7 +118,7 @@ class _BaseLayoutState extends State<BaseLayout> {
                     ? Text(userData.nickName)
                     : Text("nickName"),
                 accountEmail: userData != null
-                    ? Text(userData.EmailId)
+                    ? Text(userData.emailID)
                     : Text("nickName"),
                 currentAccountPicture: null,
                 onDetailsPressed: () {

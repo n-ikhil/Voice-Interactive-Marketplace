@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:myna/models/UserDetail.dart';
 import 'package:myna/screens/Authorization/primary_button.dart';
 import 'package:myna/models/arguments/userDetailFormArg.dart';
+import 'package:myna/services/firebase/FirestoreClients.dart';
 import 'package:myna/services/firebase/auth.dart';
-import 'package:myna/services/sharedservices.dart';
 
 class userDetailForm extends StatefulWidget {
   userDetailForm({this.arg}) : super(key: arg.key) {
@@ -53,13 +53,12 @@ class userDetailFormState extends State<userDetailForm> {
   getDetails() async {
     if (_currentUser == null || userData == null) {
       await widget.auth.currentUser().then((value) => _currentUser = value);
-      await sharedServices()
-          .FirestoreClientInstance
+      await FirestoreClient()
           .userClient
           .getUserDetail(_currentUser)
           .then((value) => setState(() {
                 userData = value;
-                print(userData.EmailId + "================");
+                print(userData.emailID + "================");
               }));
     }
   }
@@ -155,14 +154,14 @@ class userDetailFormState extends State<userDetailForm> {
         key: Key('PermanentAdd'),
         decoration: InputDecoration(
             helperStyle: TextStyle(color: Colors.brown, fontSize: 15),
-            helperText: userData != null ? userData.Address : null,
+            helperText: userData != null ? userData.address : null,
             labelText: userData != null
                 ? 'Change Permanent Address'
                 : 'Enter Permanent Address',
             hintText: "Address"),
         autocorrect: false,
 //        validator: (val) => val.isEmpty ? 'field did not changed.' : null,
-        onSaved: (val) => _Address = val.isEmpty ? userData.Address : val,
+        onSaved: (val) => _Address = val.isEmpty ? userData.address : val,
       )),
     ];
   }
@@ -178,10 +177,7 @@ class userDetailFormState extends State<userDetailForm> {
   }
 
   Future<void> updateUserDatabase(UserDetail data) async {
-    await sharedServices()
-        .FirestoreClientInstance
-        .userClient
-        .updateUserData(data);
+    await FirestoreClient().userClient.updateUserData(data);
   }
 
   void validateAndSubmit() async {

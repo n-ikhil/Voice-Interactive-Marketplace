@@ -20,6 +20,7 @@ class HomePage extends StatelessWidget {
             CategoryGrid(),
             Center(
               child: FloatingActionButton(
+                heroTag: "btn1",
                 child: Icon(Icons.add),
                 onPressed: () {
                   Navigator.pushNamed(context, newItemPage);
@@ -28,9 +29,10 @@ class HomePage extends StatelessWidget {
             ),
             Center(
               child: FloatingActionButton(
+                heroTag: 'btn2',
                 child: Icon(Icons.mic),
                 onPressed: () {
-                  Navigator.pushNamed(context, newItemPage);
+                  Navigator.pushNamed(context, speechPage);
                 },
               ),
             )

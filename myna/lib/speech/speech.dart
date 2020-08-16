@@ -26,11 +26,14 @@ class _SpeechState extends State<Speech> {
   @override
   void initState() {
     super.initState();
+    print("entered init state");
   }
 
   Future<void> initSpeechState() async {
+    print("object entered successfully");
     bool hasSpeech = await speech.initialize(
         onError: errorListener, onStatus: statusListener);
+
     if (hasSpeech) {
       _localeNames = await speech.locales();
 
@@ -68,6 +71,7 @@ class _SpeechState extends State<Speech> {
                     FlatButton(
                       child: Text('Initialize'),
                       onPressed: _hasSpeech ? null : initSpeechState,
+                      // onPressed: initSpeechState,
                     ),
                   ],
                 ),
@@ -151,7 +155,12 @@ class _SpeechState extends State<Speech> {
                               borderRadius:
                                   BorderRadius.all(Radius.circular(50)),
                             ),
-                            child: IconButton(icon: Icon(Icons.mic)),
+                            child: IconButton(
+                              icon: Icon(Icons.mic),
+                              onPressed: () {
+                                print("woteseting");
+                              },
+                            ),
                           ),
                         ),
                       ),
@@ -242,7 +251,7 @@ class _SpeechState extends State<Speech> {
   }
 
   void errorListener(SpeechRecognitionError error) {
-    // print("Received error status: $error, listening: ${speech.isListening}");
+    print("Received error status: $error, listening: ${speech.isListening}");
     setState(() {
       lastError = "${error.errorMsg} - ${error.permanent}";
     });

@@ -3,10 +3,6 @@ import 'package:myna/speech_to_text/speech_to_text.dart';
 import 'package:myna/speech_to_text/speech_recognition_result.dart';
 import 'package:myna/speech_to_text/speech_recognition_error.dart';
 
-void main() {
-  runApp(new MyApp());
-}
-
 List<Language> languages = [
   const Language('System', 'default'),
   const Language('Francais', 'fr_FR'),
@@ -23,12 +19,12 @@ class Language {
   const Language(this.name, this.code);
 }
 
-class MyApp extends StatefulWidget {
+class Port extends StatefulWidget {
   @override
-  _MyAppState createState() => new _MyAppState();
+  _PortState createState() => new _PortState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _PortState extends State<Port> {
   SpeechToText _speech;
 
   bool _speechRecognitionAvailable = false;
@@ -47,7 +43,7 @@ class _MyAppState extends State<MyApp> {
 
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> activateSpeechRecognizer() async {
-    print('_MyAppState.activateSpeechRecognizer... ');
+    print('_PortState.activateSpeechRecognizer... ');
     _speech = SpeechToText();
     // _speech.setCurrentLocaleHandler(onCurrentLocale);
     // _speech.setRecognitionStartedHandler(onRecognitionStarted);
@@ -158,7 +154,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   void onCurrentLocale(String locale) {
-    print('_MyAppState.onCurrentLocale... $locale');
+    print('_PortState.onCurrentLocale... $locale');
     setState(
         () => selectedLang = languages.firstWhere((l) => l.code == locale));
   }

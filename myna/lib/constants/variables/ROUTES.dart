@@ -2,6 +2,7 @@ const homePage = '/';
 const loginPage = '/login';
 const registerPage = '/register';
 const newItemPage = '/newItem';
+const speechPage = '/speech';
 const userDetailFormPage = '/userDetailForm';
 const userDetailViewPage = '/userDetailView';
 const itemDetail = '/itemDetail';

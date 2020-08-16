@@ -25,6 +25,14 @@ class HomePage extends StatelessWidget {
                   Navigator.pushNamed(context, newItemPage);
                 },
               ),
+            ),
+            Center(
+              child: FloatingActionButton(
+                child: Icon(Icons.mic),
+                onPressed: () {
+                  Navigator.pushNamed(context, newItemPage);
+                },
+              ),
             )
           ],
           mainAxisSize: MainAxisSize.max,

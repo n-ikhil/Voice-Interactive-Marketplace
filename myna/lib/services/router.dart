@@ -9,6 +9,7 @@ import 'package:myna/screens/UserDetail/UserDetailRegistration.dart';
 import 'package:myna/screens/UserDetail/UserDetailShow.dart';
 import 'package:myna/screens/chat/chatRoomScreen.dart';
 import 'package:myna/screens/itemDetail/ItemDetail.dart';
+import 'package:myna/speech/speech.dart';
 import '../constants/variables/ROUTES.dart';
 import 'firebase/auth.dart';
 
@@ -23,6 +24,8 @@ class Router {
         return MaterialPageRoute(builder: (_) => HomePage());
       case newItemPage:
         return MaterialPageRoute(builder: (_) => NewItem());
+      case speechPage:
+        return MaterialPageRoute(builder: (_) => Speech());
       case userDetailFormPage:
         return MaterialPageRoute(
             builder: (_) => userDetailForm(

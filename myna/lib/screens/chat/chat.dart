@@ -2,12 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:myna/models/widgetAndThemes/widget.dart';
 import 'package:myna/constants/variables/common.dart';
-import 'package:myna/services/firebase/ChatService.dart';
+import 'package:myna/services/SharedObjects.dart';
 
 class Chat extends StatefulWidget {
   final String chatRoomId;
-
-  Chat({this.chatRoomId});
+  final SharedObjects myModel;
+  Chat({this.chatRoomId, this.myModel});
 
   @override
   _ChatState createState() => _ChatState();
@@ -23,14 +23,14 @@ class _ChatState extends State<Chat> {
       builder: (context, snapshot) {
         return snapshot.hasData
             ? ListView.builder(
-            itemCount: snapshot.data.documents.length,
-            itemBuilder: (context, index) {
-              return MessageTile(
-                message: snapshot.data.documents[index].data["message"],
-                sendByMe: Constants.myName ==
-                    snapshot.data.documents[index].data["sendBy"],
-              );
-            })
+                itemCount: snapshot.data.documents.length,
+                itemBuilder: (context, index) {
+                  return MessageTile(
+                    message: snapshot.data.documents[index].data["message"],
+                    sendByMe: Constants.myName ==
+                        snapshot.data.documents[index].data["sendBy"],
+                  );
+                })
             : Container();
       },
     );
@@ -43,8 +43,8 @@ class _ChatState extends State<Chat> {
         "message": messageEditingController.text,
         'time': DateTime.now().millisecondsSinceEpoch,
       };
-
-      DatabaseMethods().addMessage(widget.chatRoomId, chatMessageMap);
+      widget.myModel.firestoreClientInstance.chatRoomClient
+          .addMessage(widget.chatRoomId, chatMessageMap);
 
       setState(() {
         messageEditingController.text = "";
@@ -54,7 +54,9 @@ class _ChatState extends State<Chat> {
 
   @override
   void initState() {
-    DatabaseMethods().getChats(widget.chatRoomId).then((val) {
+    widget.myModel.firestoreClientInstance.chatRoomClient
+        .getChats(widget.chatRoomId)
+        .then((val) {
       setState(() {
         chats = val;
       });
@@ -80,16 +82,16 @@ class _ChatState extends State<Chat> {
                   children: [
                     Expanded(
                         child: TextField(
-                          controller: messageEditingController,
-                          style: simpleTextStyle(),
-                          decoration: InputDecoration(
-                              hintText: "Message ...",
-                              hintStyle: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                              ),
-                              border: InputBorder.none),
-                        )),
+                      controller: messageEditingController,
+                      style: simpleTextStyle(),
+                      decoration: InputDecoration(
+                          hintText: "Message ...",
+                          hintStyle: TextStyle(
+                            color: Colors.blueGrey,
+                            fontSize: 16,
+                          ),
+                          border: InputBorder.none),
+                    )),
                     SizedBox(
                       width: 16,
                     ),
@@ -141,27 +143,27 @@ class MessageTile extends StatelessWidget {
       alignment: sendByMe ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
         margin:
-        sendByMe ? EdgeInsets.only(left: 30) : EdgeInsets.only(right: 30),
+            sendByMe ? EdgeInsets.only(left: 30) : EdgeInsets.only(right: 30),
         padding: EdgeInsets.only(top: 17, bottom: 17, left: 20, right: 20),
         decoration: BoxDecoration(
             borderRadius: sendByMe
                 ? BorderRadius.only(
-                topLeft: Radius.circular(23),
-                topRight: Radius.circular(23),
-                bottomLeft: Radius.circular(23))
+                    topLeft: Radius.circular(23),
+                    topRight: Radius.circular(23),
+                    bottomLeft: Radius.circular(23))
                 : BorderRadius.only(
-                topLeft: Radius.circular(23),
-                topRight: Radius.circular(23),
-                bottomRight: Radius.circular(23)),
+                    topLeft: Radius.circular(23),
+                    topRight: Radius.circular(23),
+                    bottomRight: Radius.circular(23)),
             gradient: LinearGradient(
               colors: sendByMe
-                  ? [const Color(0xff007EF4), const Color(0xff2A75BC)]
-                  : [const Color(0x1AFFFFFF), const Color(0x1AFFFFFF)],
+                  ? [const Color(0x99119944), const Color(0xff2A75BC)]
+                  : [const Color(0x66119944), const Color(0x1AFFFFFF)],
             )),
         child: Text(message,
             textAlign: TextAlign.start,
             style: TextStyle(
-                color: Colors.white,
+                color: Colors.black87,
                 fontSize: 16,
                 fontFamily: 'OverpassRegular',
                 fontWeight: FontWeight.w300)),

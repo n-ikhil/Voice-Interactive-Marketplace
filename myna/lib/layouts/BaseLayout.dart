@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myna/constants/SharedPreferencesFunctions.dart';
 import 'package:myna/constants/variables/ROUTES.dart';
 import 'package:myna/constants/variables/common.dart';
 import 'package:myna/models/UserDetail.dart';
@@ -77,8 +78,38 @@ class _BaseLayoutState extends State<BaseLayout> {
     Navigator.pushNamed(context, userDetailFormPage, arguments: argSend);
   }
 
+  refreshFunc() {
+    widget.myModel.updateLoginStatus().then((_) {
+      userData = widget.myModel.currentUser;
+      SharedPreferencesFunctions.saveUserNameSharedPreference(
+          userData.nickName);
+    });
+  }
+
   getDetails() async {
     await widget.myModel.updateLoginStatus();
+    refreshFunc();
+  }
+
+  imageFunc() {
+    try {
+      return FutureBuilder<Widget>(
+          future: getUserPhoto(),
+          builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
+            if (snapshot.hasData) {
+              return snapshot.data;
+            }
+            return Container(child: CircularProgressIndicator());
+          });
+    } catch (e) {
+      return CircleAvatar(
+        backgroundColor: Colors.blue,
+        child: Text(
+          "R",
+          style: TextStyle(fontSize: 40.0),
+        ),
+      );
+    }
   }
 
   @override
@@ -104,10 +135,7 @@ class _BaseLayoutState extends State<BaseLayout> {
                 onPressed: () {
                   Navigator.pushNamed(context, searchPage);
                 }),
-            FlatButton(
-                onPressed: _signOut,
-                child: Text('Logout',
-                    style: TextStyle(fontSize: 17.0, color: Colors.white))),
+            FlatButton(onPressed: refreshFunc, child: Icon(Icons.refresh)),
           ],
         ),
         drawer: Drawer(
@@ -120,7 +148,7 @@ class _BaseLayoutState extends State<BaseLayout> {
                 accountEmail: userData != null
                     ? Text(userData.emailID)
                     : Text("nickName"),
-                currentAccountPicture: null,
+                currentAccountPicture: imageFunc(),
                 onDetailsPressed: () {
                   _onShowDetail();
                 },
@@ -135,8 +163,17 @@ class _BaseLayoutState extends State<BaseLayout> {
               ListTile(
                 title: Text("Open Chat"),
                 trailing: Icon(Icons.arrow_forward),
-                onTap: () {
-                  Navigator.pushNamed(context, chatRoom);
+                onTap: () async {
+                  if (userData.nickName == 'NA' ||
+                      userData.nickName == null ||
+                      userData.nickName == '') {
+                    await getNickName();
+                  }
+                  if (userData.nickName != 'NA' &&
+                      userData.nickName != null &&
+                      userData.nickName != '') {
+                    await Navigator.pushNamed(context, chatRoom);
+                  }
                 },
               ),
               ListTile(
@@ -156,5 +193,60 @@ class _BaseLayoutState extends State<BaseLayout> {
           child: Icon(Icons.record_voice_over),
           color: Colors.red,
         ));
+  }
+
+  getNickName() {
+    final _codeController = TextEditingController();
+
+    return showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) {
+          return AlertDialog(
+            title: Text("Enter a nickName"),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                TextField(
+                  autofocus: true,
+                  showCursor: true,
+                  cursorColor: Colors.green,
+                  controller: _codeController,
+                ),
+              ],
+            ),
+            actions: <Widget>[
+              FlatButton(
+                child: Text("Confirm"),
+                textColor: Colors.white,
+                color: Colors.blue,
+                onPressed: () async {
+                  final name = _codeController.text.trim();
+                  if (name != null && name != 'NA' && name != '') {
+                    UserDetail detail = UserDetail(
+                        userData.UserId,
+                        userData.EmailId,
+                        name,
+                        userData.userFirstName,
+                        userData.userLastName,
+                        userData.Address,
+                        userData.mobileNo);
+                    await sharedServices()
+                        .FirestoreClientInstance
+                        .userClient
+                        .updateUserData(detail);
+                    refreshFunc();
+                    Navigator.of(context).pop();
+                    print("Done");
+                  } else {
+                    await Navigator.of(context).pop();
+                    getNickName();
+                    print("Enter valid Input except NA");
+                  }
+                },
+              )
+            ],
+          );
+        });
   }
 }

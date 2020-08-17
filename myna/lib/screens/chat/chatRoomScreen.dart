@@ -4,15 +4,16 @@ import 'package:myna/constants/variables/common.dart';
 import 'package:myna/models/widgetAndThemes/theme.dart';
 import 'package:myna/screens/chat/chat.dart';
 import 'package:myna/screens/chat/search.dart';
-import 'package:myna/services/firebase/ChatService.dart';
+import 'package:myna/services/SharedObjects.dart';
 
 class ChatRoom extends StatefulWidget {
+  final SharedObjects myModel;
+  ChatRoom({this.myModel});
   @override
   _ChatRoomState createState() => _ChatRoomState();
 }
 
 class _ChatRoomState extends State<ChatRoom> {
-  DatabaseMethods databaseMethods = DatabaseMethods();
   Stream chatRooms;
 
   Widget chatRoomsList() {
@@ -47,7 +48,9 @@ class _ChatRoomState extends State<ChatRoom> {
   getUserInfogetChats() async {
     Constants.myName =
         await SharedPreferencesFunctions.getUserNameSharedPreference();
-    DatabaseMethods().getUserChats(Constants.myName).then((snapshots) {
+    widget.myModel.firestoreClientInstance.chatRoomClient
+        .getUserChats(Constants.myName)
+        .then((snapshots) {
       setState(() {
         chatRooms = snapshots;
         print(
@@ -113,7 +116,7 @@ class ChatRoomsTile extends StatelessWidget {
               child: Text(userName.substring(0, 1),
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                      color: Colors.white,
+                      color: Colors.black38,
                       fontSize: 16,
                       fontFamily: 'OverpassRegular',
                       fontWeight: FontWeight.w300)),
@@ -124,7 +127,7 @@ class ChatRoomsTile extends StatelessWidget {
             Text(userName,
                 textAlign: TextAlign.start,
                 style: TextStyle(
-                    color: Colors.white,
+                    color: Colors.black38,
                     fontSize: 16,
                     fontFamily: 'OverpassRegular',
                     fontWeight: FontWeight.w300))

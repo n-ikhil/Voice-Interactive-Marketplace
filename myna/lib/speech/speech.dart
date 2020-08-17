@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'dart:ffi';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:speech_to_text/speech_recognition_error.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
+import 'package:translator/translator.dart';
 
 class SpeechTextCon extends StatefulWidget {
   @override
@@ -17,6 +19,7 @@ class _SpeechTextConState extends State<SpeechTextCon> {
   double minSoundLevel = 50000;
   double maxSoundLevel = -50000;
   String lastWords = "";
+  String convertedWords = "";
   String lastError = "";
   String lastStatus = "";
   String _currentLocaleId = "";
@@ -27,6 +30,16 @@ class _SpeechTextConState extends State<SpeechTextCon> {
   void initState() {
     print('entered to initstate');
     super.initState();
+  }
+
+  void translatedtext(String lastWords) async {
+    final translator = GoogleTranslator();
+    var translation = await translator.translate(lastWords,
+        from: _currentLocaleId.split("_")[0], to: 'en');
+
+    setState(() {
+      convertedWords = translation.toString();
+    });
   }
 
   Future<void> initSpeechState() async {
@@ -127,11 +140,21 @@ class _SpeechTextConState extends State<SpeechTextCon> {
                     children: <Widget>[
                       Container(
                         color: Theme.of(context).selectedRowColor,
+                        //padding: EdgeInsets.all(10),
                         child: Center(
                           child: Text(
-                            lastWords,
+                            convertedWords,
                             textAlign: TextAlign.center,
                           ),
+                        ),
+                      ),
+                      Container(
+                        color: Theme.of(context).selectedRowColor,
+                        //padding: EdgeInsets.all(10),
+                        margin: EdgeInsets.only(top: 20, left: 100),
+                        child: Text(
+                          lastWords,
+                          textAlign: TextAlign.center,
                         ),
                       ),
                       Positioned.fill(
@@ -180,6 +203,14 @@ class _SpeechTextConState extends State<SpeechTextCon> {
             ),
           ),
           Container(
+            child: RaisedButton(
+              child: Text('translate'),
+              onPressed: () {
+                translatedtext(lastWords);
+              },
+            ),
+          ),
+          Container(
             padding: EdgeInsets.symmetric(vertical: 20),
             color: Theme.of(context).backgroundColor,
             child: Center(
@@ -201,6 +232,7 @@ class _SpeechTextConState extends State<SpeechTextCon> {
 
   void startListening() {
     lastWords = "";
+    convertedWords = "";
     lastError = "";
     speech.listen(
         onResult: resultListener,
@@ -228,7 +260,7 @@ class _SpeechTextConState extends State<SpeechTextCon> {
     });
   }
 
-  void resultListener(SpeechRecognitionResult result) {
+  void resultListener(SpeechRecognitionResult result) async {
     setState(() {
       lastWords = "${result.recognizedWords} - ${result.finalResult}";
     });
@@ -259,6 +291,7 @@ class _SpeechTextConState extends State<SpeechTextCon> {
   }
 
   _switchLang(selectedVal) {
+    print(selectedVal.split("_")[0]);
     setState(() {
       _currentLocaleId = selectedVal;
     });

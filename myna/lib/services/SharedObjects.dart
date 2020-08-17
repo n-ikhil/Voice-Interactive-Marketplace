@@ -26,6 +26,7 @@ class CurrentLocation {
 
 class SharedObjects with ChangeNotifier {
   bool isLoggedIn;
+  BaseAuth auth;
   FirestoreClient firestoreClientInstance; // all the client
   UserDetail
       _currentUser; // the current user includes both fire auth and firestore detail
@@ -37,6 +38,10 @@ class SharedObjects with ChangeNotifier {
     isLoggedIn = false;
     firestoreClientInstance = FirestoreClient(); //sync
     currentLocation = CurrentLocation();
+  }
+
+  void addAuthInstance(authInst) {
+    this.auth = authInst;
   }
 
   Future updateLoginStatus() async {

@@ -98,6 +98,10 @@ class _NewItemState extends State<NewItem> {
   }
 
   void submitForm() async {
+    // if (widget.myModel.currentUser.nickName == null) {
+    //   print("please add nick name before adding item");
+    //   return;
+    // }
     curUser = widget.myModel.currentUser;
 
     if (place == null) {
@@ -130,6 +134,7 @@ class _NewItemState extends State<NewItem> {
     Item _newItem = Item.asForm(
         productID: curProduct.id,
         ownerID: curUser.userID,
+        ownerNickName: widget.myModel.currentUser.nickName,
         postalCode: postalCode,
         isRentable: isRentable,
         contact: _newContactTextController.text,

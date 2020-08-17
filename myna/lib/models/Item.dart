@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Item {
   String productID;
   String ownerID;
+  String ownerNickName;
   bool isRentable;
   String postalCode;
   String place;
@@ -15,6 +16,7 @@ class Item {
   Item(DocumentSnapshot data) {
     this.productID = data.data["productID"];
     this.ownerID = data.data["ownerID"];
+    this.ownerID = data.data["ownerNickName"];
     this.postalCode = data.data["postalCode"];
     this.price = data.data["price"];
     this.place = data.data["place"];
@@ -34,5 +36,6 @@ class Item {
       this.place,
       this.contact,
       this.description,
-      this.imgURL});
+      this.imgURL,
+      this.ownerNickName});
 }

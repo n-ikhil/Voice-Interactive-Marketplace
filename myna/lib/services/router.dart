@@ -24,8 +24,8 @@ BaseAuth auth = Auth();
 class Router {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
-      case homePage:
-        return MaterialPageRoute(builder: (_) => HomePage());
+      // case homePage:
+      //   return MaterialPageRoute(builder: (_) => HomePage());
       case newItemPage:
         return MaterialPageRoute(
             builder: (_) =>
@@ -85,8 +85,8 @@ class Router {
         return MaterialPageRoute(
             builder: (_) =>
                 Consumer<SharedObjects>(builder: (context, myModel, child) {
-                  String chatRoomId = conversationSetup().setupDualConversion(
-                      args["id"], myModel.currentUser.userID);
+                  String chatRoomId = conversationSetup()
+                      .setupDualConversion(args["id"], myModel.currentUser);
 
                   return Chat(
                     chatRoomId: chatRoomId,

@@ -42,7 +42,6 @@ class _BaseLayoutState extends State<BaseLayout> {
     userDetailViewArg argSend =
         userDetailViewArg(title: "View Profile", editDetail: _onEditDetail);
     Navigator.pop(context);
-
     Navigator.pushNamed(context, userDetailViewPage, arguments: argSend);
   }
 
@@ -67,7 +66,7 @@ class _BaseLayoutState extends State<BaseLayout> {
 
   getDetails() async {
     await widget.myModel.updateLoginStatus();
-
+    widget.myModel.addAuthInstance(widget.auth);
     refreshFunc();
   }
 
@@ -79,6 +78,12 @@ class _BaseLayoutState extends State<BaseLayout> {
         await widget.auth.signOut();
         widget.SignOut();
       } catch (e) {
+        try {
+          await widget.myModel.auth.signOut();
+          widget.SignOut();
+        } catch (e) {
+          print(e);
+        }
         print(e);
         print("what");
       }

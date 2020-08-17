@@ -66,9 +66,13 @@ class _ItemDetailState extends State<ItemDetail> {
                           borderRadius: BorderRadius.circular(18.0),
                         ),
                         onPressed: () {
+                          // if (widget.myModel.currentUser.nickName == null) {
+                          //   print("please add nick name before adding item");
+                          //   return;
+                          // }
                           Navigator.pushNamed(context, conversation,
                               arguments: {
-                                "id": item.ownerID,
+                                "id": item,
                               });
                         },
                         child: Icon(Icons.message),

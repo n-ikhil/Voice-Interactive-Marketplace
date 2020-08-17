@@ -26,9 +26,9 @@ class _ChatRoomState extends State<ChatRoom> {
                 shrinkWrap: true,
                 itemBuilder: (context, index) {
                   return ChatRoomsTile(
-                    userName: snapshot.data.documents[index].data['users']
-                        .toString()
-                        .replaceAll(widget.myModel.currentUser.userID, ""),
+                    userName: snapshot.data.documents[index].data['aliasName']
+                        .toString(),
+                    // .replaceAll(widget.myModel.currentUser.userID, ""),
                     chatRoomId:
                         snapshot.data.documents[index].data["chatroomid"],
                   );

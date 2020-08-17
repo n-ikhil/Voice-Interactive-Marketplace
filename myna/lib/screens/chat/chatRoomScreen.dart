@@ -3,7 +3,6 @@ import 'package:myna/constants/SharedPreferencesFunctions.dart';
 import 'package:myna/constants/variables/common.dart';
 import 'package:myna/models/widgetAndThemes/theme.dart';
 import 'package:myna/screens/chat/chat.dart';
-import 'package:myna/screens/chat/search.dart';
 import 'package:myna/services/SharedObjects.dart';
 
 class ChatRoom extends StatefulWidget {
@@ -29,7 +28,7 @@ class _ChatRoomState extends State<ChatRoom> {
                     userName: snapshot.data.documents[index].data['chatroomid']
                         .toString()
                         .replaceAll("_", "")
-                        .replaceAll(Constants.myName, ""),
+                        .replaceAll(Constants.muUid, ""),
                     chatRoomId:
                         snapshot.data.documents[index].data["chatroomid"],
                   );
@@ -46,15 +45,15 @@ class _ChatRoomState extends State<ChatRoom> {
   }
 
   getUserInfogetChats() async {
-    Constants.myName =
-        await SharedPreferencesFunctions.getUserNameSharedPreference();
+    Constants.muUid =
+        await SharedPreferencesFunctions.getUserIdSharedPreference();
     widget.myModel.firestoreClientInstance.chatRoomClient
-        .getUserChats(Constants.myName)
+        .getUserChats(Constants.muUid)
         .then((snapshots) {
       setState(() {
         chatRooms = snapshots;
         print(
-            "we got the data + ${chatRooms.toString()} this is name  ${Constants.myName}");
+            "we got the data + ${chatRooms.toString()} this is name  ${Constants.muUid}");
       });
     });
   }
@@ -72,13 +71,6 @@ class _ChatRoomState extends State<ChatRoom> {
       ),
       body: Container(
         child: chatRoomsList(),
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.search),
-        onPressed: () {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => Search()));
-        },
       ),
     );
   }

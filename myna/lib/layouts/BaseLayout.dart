@@ -32,31 +32,10 @@ class BaseLayout extends StatefulWidget {
 class _BaseLayoutState extends State<BaseLayout> {
   UserDetail userData;
 
-  getUserPhoto() {
-    var url = widget.auth != null ? widget.auth.getImageUrl() : null;
-    if (url != null) {
-      return url.then((value) => ClipOval(
-          child: Image.network(value,
-              width: 100, height: 100, fit: BoxFit.cover)));
-    } else {
-      return CircleAvatar(
-        backgroundColor: Colors.blue,
-        child: Text(
-          "R",
-          style: TextStyle(fontSize: 40.0),
-        ),
-      );
-    }
-  }
 
   @override
   initState() {
     super.initState();
-  }
-
-  getUserEmail() {
-    var email = widget.auth != null ? widget.auth.currentUserEmail() : null;
-    return email;
   }
 
   _onShowDetail() {
@@ -82,34 +61,15 @@ class _BaseLayoutState extends State<BaseLayout> {
     widget.myModel.updateLoginStatus().then((_) {
       userData = widget.myModel.currentUser;
       SharedPreferencesFunctions.saveUserNameSharedPreference(
-          userData.nickName);
+          userData.userID);
     });
   }
 
   getDetails() async {
     await widget.myModel.updateLoginStatus();
-    refreshFunc();
-  }
-
-  imageFunc() {
-    try {
-      return FutureBuilder<Widget>(
-          future: getUserPhoto(),
-          builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
-            if (snapshot.hasData) {
-              return snapshot.data;
-            }
-            return Container(child: CircularProgressIndicator());
-          });
-    } catch (e) {
-      return CircleAvatar(
-        backgroundColor: Colors.blue,
-        child: Text(
-          "R",
-          style: TextStyle(fontSize: 40.0),
-        ),
-      );
-    }
+    setState(() {
+      refreshFunc();
+    });
   }
 
   @override
@@ -144,10 +104,10 @@ class _BaseLayoutState extends State<BaseLayout> {
               UserAccountsDrawerHeader(
                 accountName: userData != null
                     ? Text(userData.nickName)
-                    : Text("nickName"),
+                    : Text("userData Loading"),
                 accountEmail: userData != null
                     ? Text(userData.emailID)
-                    : Text("nickName"),
+                    : Text("userData Loading"),
                 currentAccountPicture: imageFunc(),
                 onDetailsPressed: () {
                   _onShowDetail();
@@ -163,17 +123,8 @@ class _BaseLayoutState extends State<BaseLayout> {
               ListTile(
                 title: Text("Open Chat"),
                 trailing: Icon(Icons.arrow_forward),
-                onTap: () async {
-                  if (userData.nickName == 'NA' ||
-                      userData.nickName == null ||
-                      userData.nickName == '') {
-                    await getNickName();
-                  }
-                  if (userData.nickName != 'NA' &&
-                      userData.nickName != null &&
-                      userData.nickName != '') {
-                    await Navigator.pushNamed(context, chatRoom);
-                  }
+                onTap: ()   {
+                      Navigator.pushNamed(context, chatRoom);
                 },
               ),
               ListTile(
@@ -195,56 +146,40 @@ class _BaseLayoutState extends State<BaseLayout> {
         ));
   }
 
-  getNickName() {
-    final _codeController = TextEditingController();
-
-    return showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) {
-          return AlertDialog(
-            title: Text("Enter a nickName"),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                TextField(
-                  autofocus: true,
-                  showCursor: true,
-                  cursorColor: Colors.green,
-                  controller: _codeController,
-                ),
-              ],
-            ),
-            actions: <Widget>[
-              FlatButton(
-                child: Text("Confirm"),
-                textColor: Colors.white,
-                color: Colors.blue,
-                onPressed: () async {
-                  final name = _codeController.text.trim();
-                  if (name != null && name != 'NA' && name != '') {
-                    UserDetail detail = UserDetail(
-                        userData.userID,
-                        userData.emailID,
-                        name,
-                        userData.userFirstName,
-                        userData.userLastName,
-                        userData.address,
-                        userData.mobileNo);
-                    await widget.myModel.firestoreClientInstance.userClient
-                        .updateUserData(detail);
-                    refreshFunc();
-                    Navigator.of(context).pop();
-                    print("Done");
-                  } else {
-                    await Navigator.of(context).pop();
-                    getNickName();
-                    print("Enter valid Input except NA");
-                  }
-                },
-              )
-            ],
-          );
-        });
+  getUserPhoto() {
+    var url = widget.auth != null ? widget.auth.getImageUrl() : null;
+    if (url != null) {
+      return url.then((value) => ClipOval(
+          child: Image.network(value,
+              width: 100, height: 100, fit: BoxFit.cover)));
+    } else {
+      return CircleAvatar(
+        backgroundColor: Colors.blue,
+        child: Text(
+          "R",
+          style: TextStyle(fontSize: 40.0),
+        ),
+      );
+    }
+  }
+  imageFunc() {
+    try {
+      return FutureBuilder<Widget>(
+          future: getUserPhoto(),
+          builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
+            if (snapshot.hasData) {
+              return snapshot.data;
+            }
+            return Container(child: CircularProgressIndicator());
+          });
+    } catch (e) {
+      return CircleAvatar(
+        backgroundColor: Colors.blue,
+        child: Text(
+          "R",
+          style: TextStyle(fontSize: 40.0),
+        ),
+      );
+    }
   }
 }

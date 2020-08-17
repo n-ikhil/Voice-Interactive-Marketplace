@@ -14,5 +14,5 @@ const LENGTH_TO_TRIGGER_SEARCH = "strLenTriggerSearch";
 
 //from Swathi's chat module
 class Constants {
-  static String myName = "";
+  static String muUid = "";
 }

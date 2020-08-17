@@ -27,7 +27,7 @@ class _ChatState extends State<Chat> {
                 itemBuilder: (context, index) {
                   return MessageTile(
                     message: snapshot.data.documents[index].data["message"],
-                    sendByMe: Constants.myName ==
+                    sendByMe: Constants.muUid ==
                         snapshot.data.documents[index].data["sendBy"],
                   );
                 })
@@ -39,7 +39,7 @@ class _ChatState extends State<Chat> {
   addMessage() {
     if (messageEditingController.text.isNotEmpty) {
       Map<String, dynamic> chatMessageMap = {
-        "sendBy": Constants.myName,
+        "sendBy": Constants.muUid,
         "message": messageEditingController.text,
         'time': DateTime.now().millisecondsSinceEpoch,
       };

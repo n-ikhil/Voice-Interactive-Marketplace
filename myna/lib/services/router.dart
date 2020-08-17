@@ -73,15 +73,26 @@ class Router {
       case credentialPage:
         return MaterialPageRoute(builder: (_) => RootPage(auth: auth));
       case chatRoom:
-        return MaterialPageRoute(builder: (_) => ChatRoom());
-      case conversation:
-        // argument is  nickName of the other member of chat
-        String chatRoomId =
-            conversationSetup().setupDualConversion(settings.arguments);
         return MaterialPageRoute(
-            builder: (_) => Chat(
-                  chatRoomId: chatRoomId,
-                ));
+            builder: (_) =>
+                Consumer<SharedObjects>(builder: (context, myModel, child) {
+                  return ChatRoom(
+                    myModel: myModel,
+                  );
+                }));
+      case conversation:
+        Map<String, dynamic> args = settings.arguments;
+        return MaterialPageRoute(
+            builder: (_) =>
+                Consumer<SharedObjects>(builder: (context, myModel, child) {
+                  String chatRoomId = conversationSetup().setupDualConversion(
+                      args["id"], myModel.currentUser.userID);
+
+                  return Chat(
+                    chatRoomId: chatRoomId,
+                    myModel: myModel,
+                  );
+                }));
       // case myItems:
       //   return MaterialPageRoute(builder: (_) => MyItems());
 

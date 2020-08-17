@@ -17,7 +17,7 @@ class chatFirestoreClient {
   Future<bool> addChatRoom(chatRoom, chatRoomId) {
     _chatFirestoreCollection
         .document(chatRoomId)
-        .setData(chatRoom)
+        .setData(chatRoom, merge: true)
         .catchError((e) {
       print(e.toString());
     });

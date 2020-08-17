@@ -76,7 +76,7 @@ class _ChatState extends State<Chat> {
               alignment: Alignment.bottomCenter,
               width: MediaQuery.of(context).size.width,
               child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+                padding: EdgeInsets.symmetric(horizontal: 24, vertical: 10),
                 color: Color(0x54FFFFFF),
                 child: Row(
                   children: [
@@ -111,11 +111,11 @@ class _ChatState extends State<Chat> {
                                   begin: FractionalOffset.topLeft,
                                   end: FractionalOffset.bottomRight),
                               borderRadius: BorderRadius.circular(40)),
-                          padding: EdgeInsets.all(12),
+                          padding: EdgeInsets.all(5),
                           child: Image.asset(
                             "images/send_icon.png",
-                            height: 25,
-                            width: 25,
+                            height: 70,
+                            width: 70,
                           )),
                     ),
                   ],

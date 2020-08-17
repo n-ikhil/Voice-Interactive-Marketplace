@@ -4,6 +4,7 @@ import 'package:myna/constants/variables/common.dart';
 import 'package:myna/models/widgetAndThemes/theme.dart';
 import 'package:myna/screens/chat/chat.dart';
 import 'package:myna/services/SharedObjects.dart';
+import 'package:provider/provider.dart';
 
 class ChatRoom extends StatefulWidget {
   final SharedObjects myModel;
@@ -25,10 +26,9 @@ class _ChatRoomState extends State<ChatRoom> {
                 shrinkWrap: true,
                 itemBuilder: (context, index) {
                   return ChatRoomsTile(
-                    userName: snapshot.data.documents[index].data['chatroomid']
+                    userName: snapshot.data.documents[index].data['users']
                         .toString()
-                        .replaceAll("_", "")
-                        .replaceAll(Constants.muUid, ""),
+                        .replaceAll(widget.myModel.currentUser.userID, ""),
                     chatRoomId:
                         snapshot.data.documents[index].data["chatroomid"],
                   );
@@ -89,9 +89,13 @@ class ChatRoomsTile extends StatelessWidget {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => Chat(
-                      chatRoomId: chatRoomId,
-                    )));
+                builder: (context) =>
+                    Consumer<SharedObjects>(builder: (context, myModel, child) {
+                      return Chat(
+                        chatRoomId: chatRoomId,
+                        myModel: myModel,
+                      );
+                    })));
       },
       child: Container(
         color: Colors.black26,
@@ -116,13 +120,19 @@ class ChatRoomsTile extends StatelessWidget {
             SizedBox(
               width: 12,
             ),
-            Text(userName,
-                textAlign: TextAlign.start,
-                style: TextStyle(
+            SizedBox(
+                width: 200,
+                child: Text(
+                  userName,
+                  textAlign: TextAlign.start,
+                  style: TextStyle(
                     color: Colors.black38,
                     fontSize: 16,
                     fontFamily: 'OverpassRegular',
-                    fontWeight: FontWeight.w300))
+                    fontWeight: FontWeight.w300,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ))
           ],
         ),
       ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myna/components/Loading.dart';
+import 'package:myna/constants/variables/ROUTES.dart';
 import 'package:myna/constants/variables/common.dart';
 import 'package:myna/models/Item.dart';
 import 'package:myna/services/SharedObjects.dart';
@@ -64,7 +65,12 @@ class _ItemDetailState extends State<ItemDetail> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(18.0),
                         ),
-                        onPressed: () => print("launch chatting"),
+                        onPressed: () {
+                          Navigator.pushNamed(context, conversation,
+                              arguments: {
+                                "id": item.ownerID,
+                              });
+                        },
                         child: Icon(Icons.message),
                       ),
                       RaisedButton(

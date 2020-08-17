@@ -32,7 +32,6 @@ class BaseLayout extends StatefulWidget {
 class _BaseLayoutState extends State<BaseLayout> {
   UserDetail userData;
 
-
   @override
   initState() {
     super.initState();
@@ -60,16 +59,15 @@ class _BaseLayoutState extends State<BaseLayout> {
   refreshFunc() {
     widget.myModel.updateLoginStatus().then((_) {
       userData = widget.myModel.currentUser;
-      SharedPreferencesFunctions.saveUserNameSharedPreference(
-          userData.userID);
+      print(userData.userID);
+      SharedPreferencesFunctions.saveUserNameSharedPreference(userData.userID);
     });
   }
 
   getDetails() async {
     await widget.myModel.updateLoginStatus();
-    setState(() {
-      refreshFunc();
-    });
+
+    refreshFunc();
   }
 
   @override
@@ -123,8 +121,8 @@ class _BaseLayoutState extends State<BaseLayout> {
               ListTile(
                 title: Text("Open Chat"),
                 trailing: Icon(Icons.arrow_forward),
-                onTap: ()   {
-                      Navigator.pushNamed(context, chatRoom);
+                onTap: () {
+                  Navigator.pushNamed(context, chatRoom);
                 },
               ),
               ListTile(
@@ -162,24 +160,25 @@ class _BaseLayoutState extends State<BaseLayout> {
       );
     }
   }
+
   imageFunc() {
-    try {
-      return FutureBuilder<Widget>(
-          future: getUserPhoto(),
-          builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
-            if (snapshot.hasData) {
-              return snapshot.data;
-            }
-            return Container(child: CircularProgressIndicator());
-          });
-    } catch (e) {
-      return CircleAvatar(
-        backgroundColor: Colors.blue,
-        child: Text(
-          "R",
-          style: TextStyle(fontSize: 40.0),
-        ),
-      );
-    }
+    // try {
+    //   return FutureBuilder<Widget>(
+    //       future: getUserPhoto(),
+    //       builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
+    //         if (snapshot.hasData) {
+    //           return snapshot.data;
+    //         }
+    //         return Container(child: CircularProgressIndicator());
+    //       });
+    // } catch (e) {
+    return CircleAvatar(
+      backgroundColor: Colors.blue,
+      child: Text(
+        "Hi",
+        style: TextStyle(fontSize: 40.0),
+      ),
+    );
+    // }
   }
 }

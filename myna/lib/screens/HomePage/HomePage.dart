@@ -24,24 +24,24 @@ class HomePage extends StatelessWidget {
               Consumer<SharedObjects>(builder: (context, myModel, child) {
                 return CategoryGrid(myModel);
               }),
-              Center(
-                child: FloatingActionButton(
-                  heroTag: "btn1",
-                  child: Icon(Icons.add),
-                  onPressed: () {
-                    Navigator.pushNamed(context, newItemPage);
-                  },
-                ),
-              ),
-              Center(
-                child: FloatingActionButton(
-                  heroTag: 'btn2',
-                  child: Icon(Icons.mic),
-                  onPressed: () {
-                    Navigator.pushNamed(context, speechPage);
-                  },
-                ),
-              )
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: <Widget>[
+                    FloatingActionButton(
+                      heroTag: "btn1",
+                      child: Icon(Icons.add),
+                      onPressed: () {
+                        Navigator.pushNamed(context, newItemPage);
+                      },
+                    ),
+                    // FloatingActionButton(
+                    //   heroTag: 'btn2',
+                    //   child: Icon(Icons.mic),
+                    //   onPressed: () {
+                    //     Navigator.pushNamed(context, speechPage);
+                    //   },
+                    // ),
+                  ])
             ],
             mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.start,

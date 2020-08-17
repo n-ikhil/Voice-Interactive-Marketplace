@@ -96,12 +96,12 @@ class _BaseLayoutState extends State<BaseLayout> {
         appBar: AppBar(
           title: Text(APP_NAME),
           actions: <Widget>[
+            FlatButton(onPressed: refreshFunc, child: Icon(Icons.refresh)),
             FlatButton(
                 child: Icon(Icons.search),
                 onPressed: () {
                   Navigator.pushNamed(context, searchPage);
                 }),
-            FlatButton(onPressed: refreshFunc, child: Icon(Icons.refresh)),
           ],
         ),
         drawer: Drawer(
@@ -146,9 +146,11 @@ class _BaseLayoutState extends State<BaseLayout> {
 
         body: SingleChildScrollView(child: widget.childWidget),
         bottomNavigationBar: RaisedButton(
-          onPressed: null,
+          onPressed: () {
+            Navigator.pushNamed(context, speechPage);
+          },
           child: Icon(Icons.record_voice_over),
-          color: Colors.red,
+          // color: Colors.,
         ));
   }
 

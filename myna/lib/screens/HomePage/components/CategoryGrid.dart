@@ -49,7 +49,7 @@ class _CategoryGridState extends State<CategoryGrid> {
   Widget build(BuildContext context) {
     //loadCategories();
     return SizedBox(
-        height: 450,
+        height: 300,
         width: double.infinity,
         child: loadedCategories
             ? Container(

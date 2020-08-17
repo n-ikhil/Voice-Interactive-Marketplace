@@ -112,11 +112,7 @@ class _ChatState extends State<Chat> {
                                   end: FractionalOffset.bottomRight),
                               borderRadius: BorderRadius.circular(40)),
                           padding: EdgeInsets.all(5),
-                          child: Image.asset(
-                            "images/send_icon.png",
-                            height: 70,
-                            width: 70,
-                          )),
+                          child: Icon(Icons.send)),
                     ),
                   ],
                 ),
@@ -155,11 +151,13 @@ class MessageTile extends StatelessWidget {
                     topLeft: Radius.circular(23),
                     topRight: Radius.circular(23),
                     bottomRight: Radius.circular(23)),
-            gradient: LinearGradient(
-              colors: sendByMe
-                  ? [const Color(0x99119944), const Color(0xff2A75BC)]
-                  : [const Color(0x66119944), const Color(0x1AFFFFFF)],
-            )),
+            color: sendByMe ? Colors.lightGreen : Colors.grey
+            // gradient: LinearGradient(
+            //   colors: sendByMe
+            //       ? [const Color(0x99119944), const Color(0xff2A75BC)]
+            //       : [const Color(0x66119944), const Color(0x1AFFFFFF)],
+            // )
+            ),
         child: Text(message,
             textAlign: TextAlign.start,
             style: TextStyle(

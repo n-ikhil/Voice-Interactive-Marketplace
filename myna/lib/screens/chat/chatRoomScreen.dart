@@ -25,10 +25,22 @@ class _ChatRoomState extends State<ChatRoom> {
                 itemCount: snapshot.data.documents.length,
                 shrinkWrap: true,
                 itemBuilder: (context, index) {
+                  String chatAliasName = snapshot
+                      .data.documents[index].data['aliasName']
+                      .toString()
+                      .replaceAll('|', '')
+                      .replaceAll(
+                          (widget.myModel.currentUser.nickName != "NA")
+                              ? widget.myModel.currentUser.nickName
+                              : "",
+                          "")
+                      .replaceAll(' ', '');
+                  if (!chatAliasName.isNotEmpty) {
+                    chatAliasName =
+                        widget.myModel.currentUser.nickName + "-self";
+                  }
                   return ChatRoomsTile(
-                    userName: snapshot.data.documents[index].data['aliasName']
-                        .toString(),
-                    // .replaceAll(widget.myModel.currentUser.userID, ""),
+                    userName: chatAliasName,
                     chatRoomId:
                         snapshot.data.documents[index].data["chatroomid"],
                   );
@@ -96,7 +108,11 @@ class ChatRoomsTile extends StatelessWidget {
                     })));
       },
       child: Container(
-        color: Colors.black26,
+        decoration: BoxDecoration(
+            border: Border.all(),
+            // borderRadius: BorderRadius.circular(20),
+            color: Colors.lightGreen[200]),
+        // color: Colors.black26,
         padding: EdgeInsets.symmetric(horizontal: 24, vertical: 20),
         child: Row(
           children: [

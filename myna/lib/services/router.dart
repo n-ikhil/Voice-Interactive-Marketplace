@@ -74,7 +74,7 @@ class Router {
         return MaterialPageRoute(builder: (_) => RootPage(auth: auth));
       case chatRoom:
         return MaterialPageRoute(builder: (_) => ChatRoom());
-      case Conversion:
+      case conversation:
         // argument is  nickName of the other member of chat
         String chatRoomId =
             conversationSetup().setupDualConversion(settings.arguments);

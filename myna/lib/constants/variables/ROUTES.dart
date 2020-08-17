@@ -11,5 +11,5 @@ const categoryResult = '/categoryResult';
 const credentialPage = '/credentialPage';
 const chatRoom = '/chat/all';
 const myItems = '/user/items';
-const Conversion = '/chatDual';
+const conversation = '/chatDual';
 // https://stackoverflow.com/questions/54190196/how-to-send-parameters-when-navigating-with-navigator-pushnamed

@@ -224,16 +224,14 @@ class _BaseLayoutState extends State<BaseLayout> {
                   final name = _codeController.text.trim();
                   if (name != null && name != 'NA' && name != '') {
                     UserDetail detail = UserDetail(
-                        userData.UserId,
-                        userData.EmailId,
+                        userData.userID,
+                        userData.emailID,
                         name,
                         userData.userFirstName,
                         userData.userLastName,
-                        userData.Address,
+                        userData.address,
                         userData.mobileNo);
-                    await sharedServices()
-                        .FirestoreClientInstance
-                        .userClient
+                    await widget.myModel.firestoreClientInstance.userClient
                         .updateUserData(detail);
                     refreshFunc();
                     Navigator.of(context).pop();

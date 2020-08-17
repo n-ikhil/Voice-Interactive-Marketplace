@@ -49,9 +49,8 @@ class _ItemDetailState extends State<ItemDetail> {
               crossAxisAlignment: CrossAxisAlignment.center,
               // child: Column(
               children: <Widget>[
-                Image.network(
-                  item.imgURL,
-                ),
+                Image.network(item.imgURL,
+                    width: 300, height: 300, fit: BoxFit.cover),
                 Text(item.description),
                 Text(item.productID),
                 Text(item.place),

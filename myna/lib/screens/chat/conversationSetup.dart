@@ -1,4 +1,5 @@
 import 'package:myna/constants/variables/common.dart';
+import 'package:myna/services/firebase/FirestoreClients.dart';
 
 class conversationSetup {
   String setupDualConversion(String currentUserNickName) {
@@ -16,10 +17,8 @@ class conversationSetup {
       "users": users,
       "chatroomid": chatRoomId,
     };
-    Share()
-        .FirestoreClientInstance
-        .chatRoomClient
-        .addChatRoom(chatRoom, chatRoomId);
+
+    FirestoreClient().chatRoomClient.addChatRoom(chatRoom, chatRoomId);
     return chatRoomId;
   }
 }

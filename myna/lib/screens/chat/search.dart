@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:myna/constants/variables/common.dart';
 import 'package:myna/models/widgetAndThemes/widget.dart';
 import 'package:myna/services/SharedObjects.dart';
-import 'package:myna/services/firebase/ChatService.dart';
 import 'chat.dart';
 
 class Search extends StatefulWidget {
@@ -64,7 +63,8 @@ class _SearchState extends State<Search> {
       "chatroomid": chatRoomId,
     };
 
-    databaseMethods.addChatRoom(chatRoom, chatRoomId);
+    widget.myModel.firestoreClientInstance.chatRoomClient
+        .addChatRoom(chatRoom, chatRoomId);
 
     Navigator.push(
         context,

@@ -35,6 +35,7 @@ class _BaseLayoutState extends State<BaseLayout> {
   @override
   initState() {
     super.initState();
+    getDetails();
   }
 
   _onShowDetail() {
@@ -72,13 +73,14 @@ class _BaseLayoutState extends State<BaseLayout> {
 
   @override
   Widget build(BuildContext context) {
-    getDetails();
+    // getDetails();
     void _signOut() async {
       try {
         await widget.auth.signOut();
         widget.SignOut();
       } catch (e) {
         print(e);
+        print("what");
       }
     }
 

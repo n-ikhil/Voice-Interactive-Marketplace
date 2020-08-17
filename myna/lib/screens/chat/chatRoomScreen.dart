@@ -45,15 +45,13 @@ class _ChatRoomState extends State<ChatRoom> {
   }
 
   getUserInfogetChats() async {
-    Constants.muUid =
-        await SharedPreferencesFunctions.getUserIdSharedPreference();
     widget.myModel.firestoreClientInstance.chatRoomClient
-        .getUserChats(Constants.muUid)
+        .getUserChats(widget.myModel.currentUser.userID)
         .then((snapshots) {
       setState(() {
         chatRooms = snapshots;
         print(
-            "we got the data + ${chatRooms.toString()} this is name  ${Constants.muUid}");
+            "we got the data + ${chatRooms.toString()} this is name  ${widget.myModel.currentUser.userID}");
       });
     });
   }

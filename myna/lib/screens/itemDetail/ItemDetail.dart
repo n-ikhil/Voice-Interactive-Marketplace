@@ -44,39 +44,41 @@ class _ItemDetailState extends State<ItemDetail> {
       appBar: AppBar(title: Text((showSpinner ? APP_NAME : item.description))),
       body: showSpinner
           ? LoadingWidget()
-          : Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              // child: Column(
-              children: <Widget>[
-                Image.network(item.imgURL,
-                    width: 300, height: 300, fit: BoxFit.cover),
-                Text(item.description),
-                Text(item.productID),
-                Text(item.place),
-                Text("\u{20B9} " + item.price.toString()),
-                Text("Can be rented : " + (item.isRentable ? "yes" : "no")),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: <Widget>[
-                    RaisedButton(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(18.0),
+          : SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                // child: Column(
+                children: <Widget>[
+                  Image.network(item.imgURL,
+                      width: 300, height: 300, fit: BoxFit.cover),
+                  Text(item.description),
+                  Text(item.productID),
+                  Text(item.place),
+                  Text("\u{20B9} " + item.price.toString()),
+                  Text("Can be rented : " + (item.isRentable ? "yes" : "no")),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: <Widget>[
+                      RaisedButton(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(18.0),
+                        ),
+                        onPressed: () => print("launch chatting"),
+                        child: Icon(Icons.message),
                       ),
-                      onPressed: () => print("launch chatting"),
-                      child: Icon(Icons.message),
-                    ),
-                    RaisedButton(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(18.0),
+                      RaisedButton(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(18.0),
+                        ),
+                        onPressed: () => launch("tel:" + item.contact),
+                        child: Icon(Icons.call),
                       ),
-                      onPressed: () => launch("tel:" + item.contact),
-                      child: Icon(Icons.call),
-                    ),
-                  ],
-                ),
-              ],
-              // )
+                    ],
+                  ),
+                ],
+                // )
+              ),
             ),
     );
   }

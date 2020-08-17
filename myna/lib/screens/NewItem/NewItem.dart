@@ -154,85 +154,88 @@ class _NewItemState extends State<NewItem> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(APP_NAME)),
-      body: Column(
-        children: <Widget>[
-          DropdownButtonFormField(
-            onChanged: (value) {
-              if (value.id == "-1") {
-                showNewCategoryDialog(context);
-              } else {
-                loadProducts(value.id);
-                this.setState(() {
-                  curCategory = value;
+      body: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            DropdownButtonFormField(
+              onChanged: (value) {
+                if (value.id == "-1") {
+                  showNewCategoryDialog(context);
+                } else {
+                  loadProducts(value.id);
+                  this.setState(() {
+                    curCategory = value;
+                  });
+                }
+              },
+              // initialValue: 'Male',
+              hint: Text(
+                  curCategory != null ? curCategory.name : 'Select category'),
+              items: [...allCats, Category.sample()]
+                  .map((cat) =>
+                      DropdownMenuItem(value: cat, child: Text(cat.name)))
+                  .toList(),
+            ),
+            DropdownButtonFormField(
+              onChanged: (value) {
+                if (value.id == "-1") {
+                  showNewProductDialog(context);
+                } else {
+                  this.setState(() {
+                    curProduct = value;
+                  });
+                }
+              },
+              hint:
+                  Text(curProduct != null ? curProduct.name : "Select Product"),
+              items: [...allProds, Product.sample()]
+                  .map((prod) =>
+                      DropdownMenuItem(value: prod, child: Text(prod.name)))
+                  .toList(),
+            ),
+            TextField(
+              controller: _newPriceTextController,
+              decoration: InputDecoration(labelText: "Expected price"),
+              keyboardType: TextInputType.number,
+              inputFormatters: <TextInputFormatter>[
+                WhitelistingTextInputFormatter.digitsOnly
+              ], // Only numbers can be entered
+            ),
+            TextField(
+              controller: _newContactTextController,
+              decoration: InputDecoration(labelText: "contact number"),
+              keyboardType: TextInputType.number,
+              inputFormatters: <TextInputFormatter>[
+                WhitelistingTextInputFormatter.digitsOnly
+              ], // Only numbers can be entered
+            ),
+            TextField(
+              controller: _newDescriptionTextController,
+              decoration: InputDecoration(
+                  labelText:
+                      "description of item"), // Only numbers can be entered
+            ),
+            CheckboxListTile(
+              title: Text("Availible for rent"),
+              value: isRentable,
+              onChanged: (bool newValue) {
+                setState(() {
+                  isRentable = newValue;
                 });
-              }
-            },
-            // initialValue: 'Male',
-            hint: Text(
-                curCategory != null ? curCategory.name : 'Select category'),
-            items: [...allCats, Category.sample()]
-                .map((cat) =>
-                    DropdownMenuItem(value: cat, child: Text(cat.name)))
-                .toList(),
-          ),
-          DropdownButtonFormField(
-            onChanged: (value) {
-              if (value.id == "-1") {
-                showNewProductDialog(context);
-              } else {
-                this.setState(() {
-                  curProduct = value;
-                });
-              }
-            },
-            hint: Text(curProduct != null ? curProduct.name : "Select Product"),
-            items: [...allProds, Product.sample()]
-                .map((prod) =>
-                    DropdownMenuItem(value: prod, child: Text(prod.name)))
-                .toList(),
-          ),
-          TextField(
-            controller: _newPriceTextController,
-            decoration: InputDecoration(labelText: "Expected price"),
-            keyboardType: TextInputType.number,
-            inputFormatters: <TextInputFormatter>[
-              WhitelistingTextInputFormatter.digitsOnly
-            ], // Only numbers can be entered
-          ),
-          TextField(
-            controller: _newContactTextController,
-            decoration: InputDecoration(labelText: "contact number"),
-            keyboardType: TextInputType.number,
-            inputFormatters: <TextInputFormatter>[
-              WhitelistingTextInputFormatter.digitsOnly
-            ], // Only numbers can be entered
-          ),
-          TextField(
-            controller: _newDescriptionTextController,
-            decoration: InputDecoration(
-                labelText:
-                    "description of item"), // Only numbers can be entered
-          ),
-          CheckboxListTile(
-            title: Text("Availible for rent"),
-            value: isRentable,
-            onChanged: (bool newValue) {
-              setState(() {
-                isRentable = newValue;
-              });
-            },
-            controlAffinity: ListTileControlAffinity.trailing,
-          ),
-          FlatButton.icon(
-              onPressed: this.getImage,
-              icon: Icon(Icons.image),
-              label: Text(_imageName)),
-          FlatButton.icon(
-              onPressed: this.submitForm,
-              icon: Icon(Icons.add),
-              label: Text("submit")),
-          showSpinner ? LoadingWidget() : Container(width: 0, height: 0),
-        ],
+              },
+              controlAffinity: ListTileControlAffinity.trailing,
+            ),
+            FlatButton.icon(
+                onPressed: this.getImage,
+                icon: Icon(Icons.image),
+                label: Text(_imageName)),
+            FlatButton.icon(
+                onPressed: this.submitForm,
+                icon: Icon(Icons.add),
+                label: Text("submit")),
+            showSpinner ? LoadingWidget() : Container(width: 0, height: 0),
+          ],
+        ),
       ),
     );
   }

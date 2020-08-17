@@ -24,8 +24,8 @@ BaseAuth auth = Auth();
 class Router {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
-      // case homePage:
-      //   return MaterialPageRoute(builder: (_) => HomePage());
+      case homePage:
+        return MaterialPageRoute(builder: (_) => HomePage());
       case newItemPage:
         return MaterialPageRoute(
             builder: (_) =>
@@ -62,7 +62,6 @@ class Router {
         return MaterialPageRoute(
             builder: (_) =>
                 Consumer<SharedObjects>(builder: (context, myModel, child) {
-                  print(myModel.currentLocation.place.administrativeArea);
                   return CategoryResult(
                     category: settings.arguments,
                     myModel: myModel,

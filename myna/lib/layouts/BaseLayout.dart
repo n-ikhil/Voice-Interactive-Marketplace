@@ -51,6 +51,7 @@ class _BaseLayoutState extends State<BaseLayout> {
       auth: widget.auth,
       showDetail: _onShowDetail,
     );
+    widget.myModel.updateLoginStatus();
     Navigator.pop(context);
 
     Navigator.pushNamed(context, userDetailFormPage, arguments: argSend);

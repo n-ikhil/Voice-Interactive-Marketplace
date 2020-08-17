@@ -16,7 +16,7 @@ class Item {
   Item(DocumentSnapshot data) {
     this.productID = data.data["productID"];
     this.ownerID = data.data["ownerID"];
-    this.ownerID = data.data["ownerNickName"];
+    this.ownerNickName = data.data["ownerNickName"];
     this.postalCode = data.data["postalCode"];
     this.price = data.data["price"];
     this.place = data.data["place"];

@@ -1,0 +1,15 @@
+{
+  "name": "noun_extraction",
+  "version": "1.0.0",
+  "description": "gs noun extraction",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "gs77c",
+  "license": "ISC",
+  "dependencies": {
+    "pos": "^0.4.2",
+    "pos-chunker": "^1.3.3"
+  }
+}

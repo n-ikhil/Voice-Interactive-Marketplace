@@ -4,12 +4,15 @@ import 'dart:ffi';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:myna/constants/variables/ROUTES.dart';
 import 'package:myna/constants/variables/common.dart';
 import 'package:myna/models/widgetAndThemes/theme.dart';
+import 'package:myna/screens/itemDetail/ItemDetail.dart';
 import 'package:speech_to_text/speech_recognition_error.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 import 'package:translator/translator.dart';
+import 'package:myna/services/apiHandler.dart';
 
 class SpeechTextCon extends StatefulWidget {
   @override
@@ -221,10 +224,19 @@ class _SpeechTextConState extends State<SpeechTextCon> {
             child: RaisedButton(
               color: Colors.blue[300],
               child: Text('send'),
-              onPressed: () {
-                translatedtext(lastWords);
-                //api call
-                //Navigator.pushNamed(context, '/ItemList');
+              onPressed: () async {
+                await translatedtext(lastWords);
+                String prodid = await productData(convertedWords);
+                print("-------------------${prodid}");
+
+                if (prodid == "") {
+                  print("could not understand the query");
+                } else {
+                  await Navigator.pushNamed(context, itemList,
+                      arguments: {'id': prodid});
+                  print(prodid);
+                }
+                //translatedtext(lastWords);
               },
             ),
           ),

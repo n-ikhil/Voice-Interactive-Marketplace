@@ -12,7 +12,9 @@ typedef void StringCallback(String val);
 
 class RecorderSpeech extends StatefulWidget {
   final StringCallback callbackFunction;
-  RecorderSpeech({this.callbackFunction});
+  final StringCallback languageChangeCallBack;
+
+  RecorderSpeech({this.callbackFunction, this.languageChangeCallBack});
   @override
   _RecorderSpeechState createState() => _RecorderSpeechState();
 }
@@ -171,6 +173,7 @@ class _RecorderSpeechState extends State<RecorderSpeech> {
   }
 
   _switchLang(selectedVal) {
+    widget.languageChangeCallBack(selectedVal);
     print(selectedVal.split("_")[0]);
     setState(() {
       _currentLocaleId = selectedVal;

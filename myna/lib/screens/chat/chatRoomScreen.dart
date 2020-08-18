@@ -3,16 +3,17 @@ import 'package:myna/constants/SharedPreferencesFunctions.dart';
 import 'package:myna/constants/variables/common.dart';
 import 'package:myna/models/widgetAndThemes/theme.dart';
 import 'package:myna/screens/chat/chat.dart';
-import 'package:myna/screens/chat/search.dart';
-import 'package:myna/services/firebase/ChatService.dart';
+import 'package:myna/services/SharedObjects.dart';
+import 'package:provider/provider.dart';
 
 class ChatRoom extends StatefulWidget {
+  final SharedObjects myModel;
+  ChatRoom({this.myModel});
   @override
   _ChatRoomState createState() => _ChatRoomState();
 }
 
 class _ChatRoomState extends State<ChatRoom> {
-  DatabaseMethods databaseMethods = DatabaseMethods();
   Stream chatRooms;
 
   Widget chatRoomsList() {
@@ -24,11 +25,22 @@ class _ChatRoomState extends State<ChatRoom> {
                 itemCount: snapshot.data.documents.length,
                 shrinkWrap: true,
                 itemBuilder: (context, index) {
+                  String chatAliasName = snapshot
+                      .data.documents[index].data['aliasName']
+                      .toString()
+                      .replaceAll('|', '')
+                      .replaceAll(
+                          (widget.myModel.currentUser.nickName != "NA")
+                              ? widget.myModel.currentUser.nickName
+                              : "",
+                          "")
+                      .replaceAll(' ', '');
+                  if (!chatAliasName.isNotEmpty) {
+                    chatAliasName =
+                        widget.myModel.currentUser.nickName + "-self";
+                  }
                   return ChatRoomsTile(
-                    userName: snapshot.data.documents[index].data['chatroomid']
-                        .toString()
-                        .replaceAll("_", "")
-                        .replaceAll(Constants.myName, ""),
+                    userName: chatAliasName,
                     chatRoomId:
                         snapshot.data.documents[index].data["chatroomid"],
                   );
@@ -45,13 +57,13 @@ class _ChatRoomState extends State<ChatRoom> {
   }
 
   getUserInfogetChats() async {
-    Constants.myName =
-        await SharedPreferencesFunctions.getUserNameSharedPreference();
-    DatabaseMethods().getUserChats(Constants.myName).then((snapshots) {
+    widget.myModel.firestoreClientInstance.chatRoomClient
+        .getUserChats(widget.myModel.currentUser.userID)
+        .then((snapshots) {
       setState(() {
         chatRooms = snapshots;
         print(
-            "we got the data + ${chatRooms.toString()} this is name  ${Constants.myName}");
+            "we got the data + ${chatRooms.toString()} this is name  ${widget.myModel.currentUser.userID}");
       });
     });
   }
@@ -70,13 +82,6 @@ class _ChatRoomState extends State<ChatRoom> {
       body: Container(
         child: chatRoomsList(),
       ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.search),
-        onPressed: () {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => Search()));
-        },
-      ),
     );
   }
 }
@@ -94,12 +99,20 @@ class ChatRoomsTile extends StatelessWidget {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => Chat(
-                      chatRoomId: chatRoomId,
-                    )));
+                builder: (context) =>
+                    Consumer<SharedObjects>(builder: (context, myModel, child) {
+                      return Chat(
+                        chatRoomId: chatRoomId,
+                        myModel: myModel,
+                      );
+                    })));
       },
       child: Container(
-        color: Colors.black26,
+        decoration: BoxDecoration(
+            border: Border.all(),
+            // borderRadius: BorderRadius.circular(20),
+            color: Colors.lightGreen[200]),
+        // color: Colors.black26,
         padding: EdgeInsets.symmetric(horizontal: 24, vertical: 20),
         child: Row(
           children: [
@@ -113,7 +126,7 @@ class ChatRoomsTile extends StatelessWidget {
               child: Text(userName.substring(0, 1),
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                      color: Colors.white,
+                      color: Colors.black38,
                       fontSize: 16,
                       fontFamily: 'OverpassRegular',
                       fontWeight: FontWeight.w300)),
@@ -121,13 +134,19 @@ class ChatRoomsTile extends StatelessWidget {
             SizedBox(
               width: 12,
             ),
-            Text(userName,
-                textAlign: TextAlign.start,
-                style: TextStyle(
-                    color: Colors.white,
+            SizedBox(
+                width: 200,
+                child: Text(
+                  userName,
+                  textAlign: TextAlign.start,
+                  style: TextStyle(
+                    color: Colors.black38,
                     fontSize: 16,
                     fontFamily: 'OverpassRegular',
-                    fontWeight: FontWeight.w300))
+                    fontWeight: FontWeight.w300,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ))
           ],
         ),
       ),

@@ -1,12 +1,12 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:myna/constants/SharedPreferencesFunctions.dart';
 import 'package:myna/constants/variables/ROUTES.dart';
 import 'package:myna/constants/variables/common.dart';
 import 'package:myna/models/UserDetail.dart';
 import 'package:myna/models/arguments/userDetailFormArg.dart';
 import 'package:myna/models/arguments/userDetailViewArg.dart';
+import 'package:myna/services/SharedObjects.dart';
 import 'package:myna/services/firebase/auth.dart';
-import 'package:myna/services/sharedservices.dart';
 import '../constants/variables/common.dart';
 
 class BaseLayout extends StatefulWidget {
@@ -14,9 +14,15 @@ class BaseLayout extends StatefulWidget {
   final VoidCallback SignOut;
   final BaseAuth auth;
   final BuildContext context;
+  final SharedObjects myModel;
 
   const BaseLayout(
-      {Key key, this.childWidget, this.SignOut, this.auth, this.context})
+      {Key key,
+      this.childWidget,
+      this.SignOut,
+      this.auth,
+      this.context,
+      this.myModel})
       : super(key: key);
 
   @override
@@ -24,44 +30,18 @@ class BaseLayout extends StatefulWidget {
 }
 
 class _BaseLayoutState extends State<BaseLayout> {
-  FirebaseUser _currentUser;
   UserDetail userData;
-
-  getUserPhoto() {
-    var url = widget.auth != null ? widget.auth.getImageUrl() : null;
-    if (url != null) {
-      return url.then((value) => ClipOval(
-          child: Image.network(value,
-              width: 100, height: 100, fit: BoxFit.cover)));
-    } else {
-      return CircleAvatar(
-        backgroundColor: Colors.blue,
-        child: Text(
-          "R",
-          style: TextStyle(fontSize: 40.0),
-        ),
-      );
-    }
-  }
 
   @override
   initState() {
     super.initState();
-  }
-
-  getUserEmail() {
-    var email = widget.auth != null ? widget.auth.currentUserEmail() : null;
-    return email;
+    getDetails();
   }
 
   _onShowDetail() {
-    if (_currentUser == null) {
-      print("===============user null");
-    }
-    userDetailViewArg argSend = userDetailViewArg(
-        title: "View Profile", user: _currentUser, editDetail: _onEditDetail);
+    userDetailViewArg argSend =
+        userDetailViewArg(title: "View Profile", editDetail: _onEditDetail);
     Navigator.pop(context);
-
     Navigator.pushNamed(context, userDetailViewPage, arguments: argSend);
   }
 
@@ -71,34 +51,42 @@ class _BaseLayoutState extends State<BaseLayout> {
       auth: widget.auth,
       showDetail: _onShowDetail,
     );
+    widget.myModel.updateLoginStatus();
     Navigator.pop(context);
 
     Navigator.pushNamed(context, userDetailFormPage, arguments: argSend);
   }
 
+  refreshFunc() {
+    widget.myModel.updateLoginStatus().then((_) {
+      userData = widget.myModel.currentUser;
+      print(userData.userID);
+      SharedPreferencesFunctions.saveUserNameSharedPreference(userData.userID);
+    });
+  }
+
   getDetails() async {
-    if (_currentUser == null || userData == null) {
-      await widget.auth.currentUser().then((value) => _currentUser = value);
-      await sharedServices()
-          .FirestoreClientInstance
-          .userClient
-          .getUserDetail(_currentUser)
-          .then((value) => setState(() {
-                userData = value;
-                print(userData.EmailId + "================");
-              }));
-    }
+    await widget.myModel.updateLoginStatus();
+    widget.myModel.addAuthInstance(widget.auth);
+    refreshFunc();
   }
 
   @override
   Widget build(BuildContext context) {
-    getDetails();
+    // getDetails();
     void _signOut() async {
       try {
         await widget.auth.signOut();
         widget.SignOut();
       } catch (e) {
+        try {
+          await widget.myModel.auth.signOut();
+          widget.SignOut();
+        } catch (e) {
+          print(e);
+        }
         print(e);
+        print("what");
       }
     }
 
@@ -108,15 +96,12 @@ class _BaseLayoutState extends State<BaseLayout> {
         appBar: AppBar(
           title: Text(APP_NAME),
           actions: <Widget>[
+            FlatButton(onPressed: refreshFunc, child: Icon(Icons.refresh)),
             FlatButton(
                 child: Icon(Icons.search),
                 onPressed: () {
                   Navigator.pushNamed(context, searchPage);
                 }),
-            FlatButton(
-                onPressed: _signOut,
-                child: Text('Logout',
-                    style: TextStyle(fontSize: 17.0, color: Colors.white))),
           ],
         ),
         drawer: Drawer(
@@ -125,11 +110,11 @@ class _BaseLayoutState extends State<BaseLayout> {
               UserAccountsDrawerHeader(
                 accountName: userData != null
                     ? Text(userData.nickName)
-                    : Text("nickName"),
+                    : Text("userData Loading"),
                 accountEmail: userData != null
-                    ? Text(userData.EmailId)
-                    : Text("nickName"),
-                currentAccountPicture: null,
+                    ? Text(userData.emailID)
+                    : Text("userData Loading"),
+                currentAccountPicture: imageFunc(),
                 onDetailsPressed: () {
                   _onShowDetail();
                 },
@@ -161,9 +146,49 @@ class _BaseLayoutState extends State<BaseLayout> {
 
         body: SingleChildScrollView(child: widget.childWidget),
         bottomNavigationBar: RaisedButton(
-          onPressed: null,
+          onPressed: () {
+            Navigator.pushNamed(context, speechPage);
+          },
           child: Icon(Icons.record_voice_over),
-          color: Colors.red,
+          // color: Colors.,
         ));
+  }
+
+  getUserPhoto() {
+    var url = widget.auth != null ? widget.auth.getImageUrl() : null;
+    if (url != null) {
+      return url.then((value) => ClipOval(
+          child: Image.network(value,
+              width: 100, height: 100, fit: BoxFit.cover)));
+    } else {
+      return CircleAvatar(
+        backgroundColor: Colors.blue,
+        child: Text(
+          "R",
+          style: TextStyle(fontSize: 40.0),
+        ),
+      );
+    }
+  }
+
+  imageFunc() {
+    // try {
+    //   return FutureBuilder<Widget>(
+    //       future: getUserPhoto(),
+    //       builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
+    //         if (snapshot.hasData) {
+    //           return snapshot.data;
+    //         }
+    //         return Container(child: CircularProgressIndicator());
+    //       });
+    // } catch (e) {
+    return CircleAvatar(
+      backgroundColor: Colors.blue,
+      child: Text(
+        "Hi",
+        style: TextStyle(fontSize: 40.0),
+      ),
+    );
+    // }
   }
 }

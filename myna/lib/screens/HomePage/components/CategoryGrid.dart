@@ -2,9 +2,11 @@ import 'package:myna/components/Loading.dart';
 import 'package:flutter/material.dart';
 import 'package:myna/models/Category.dart';
 import 'package:myna/screens/HomePage/components/CategoryItem.dart';
-import 'package:myna/services/sharedservices.dart';
+import 'package:myna/services/SharedObjects.dart';
 
 class CategoryGrid extends StatefulWidget {
+  final SharedObjects myModel;
+  CategoryGrid(this.myModel) : super();
   @override
   _CategoryGridState createState() => _CategoryGridState();
 }
@@ -26,9 +28,7 @@ class _CategoryGridState extends State<CategoryGrid> {
       loadedCategories = false;
       isError = false;
     });
-    sharedServices()
-        .FirestoreClientInstance
-        .categoryClient
+    widget.myModel.firestoreClientInstance.categoryClient
         .storeGetCategories()
         .then((data) {
       setState(() {
@@ -49,7 +49,7 @@ class _CategoryGridState extends State<CategoryGrid> {
   Widget build(BuildContext context) {
     //loadCategories();
     return SizedBox(
-        height: 450,
+        height: 300,
         width: double.infinity,
         child: loadedCategories
             ? Container(

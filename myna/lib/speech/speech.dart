@@ -32,6 +32,7 @@ class _SpeechTextConState extends State<SpeechTextCon> {
     print('entered to initstate');
     super.initState();
     initSpeechState();
+
   }
 
   void translatedtext(String lastWords) async {
@@ -97,6 +98,7 @@ class _SpeechTextConState extends State<SpeechTextCon> {
                     RaisedButton(
                       //child: Text('Start'),
                       child: Icon(Icons.mic),
+
                       onPressed: !_hasSpeech || speech.isListening
                           ? null
                           : startListening,
@@ -109,6 +111,7 @@ class _SpeechTextConState extends State<SpeechTextCon> {
                     //   child: Text('Cancel'),
                     //   onPressed: speech.isListening ? cancelListening : null,
                     // ),
+
                   ],
                 ),
                 Row(
@@ -135,9 +138,11 @@ class _SpeechTextConState extends State<SpeechTextCon> {
             flex: 4,
             child: Column(
               children: <Widget>[
+ 
                 SizedBox(
                   height: 80,
                 ),
+
                 Center(
                   child: Text(
                     'Recognized Words',
@@ -217,6 +222,7 @@ class _SpeechTextConState extends State<SpeechTextCon> {
                 translatedtext(lastWords);
                 //api call
                 //Navigator.pushNamed(context, '/ItemList');
+
               },
             ),
           ),
@@ -260,6 +266,7 @@ class _SpeechTextConState extends State<SpeechTextCon> {
     // print("----------------------########-----------------");
     // print(convertedWords);
     // Navigator.pushNamed(context, '/newItem');
+
   }
 
   void stopListening() {
@@ -283,6 +290,7 @@ class _SpeechTextConState extends State<SpeechTextCon> {
 
     // Navigator0Cs.Navigator.pushNamed(context, '/second');s.g /
     //Navigator.pushNamed(context, '/NewItem');
+
   }
 
   void soundLevelListener(double level) {

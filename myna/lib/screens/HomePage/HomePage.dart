@@ -47,5 +47,34 @@ class HomePage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
           ));
     });
+    // return BaseLayout(
+    //     SignOut: SignOut,
+    //     auth: auth,
+    //     context: context,
+    //     childWidget: Column(
+    //       children: [
+    //         CategoryGrid(),
+    //         Center(
+    //           child: FloatingActionButton(
+    //             heroTag: "btn1",
+    //             child: Icon(Icons.add),
+    //             onPressed: () {
+    //               Navigator.pushNamed(context, newItemPage);
+    //             },
+    //           ),
+    //         ),
+    //         Center(
+    //           child: FloatingActionButton(
+    //             heroTag: 'btn2',
+    //             child: Icon(Icons.mic),
+    //             onPressed: () {
+    //               Navigator.pushNamed(context, speechPage);
+    //             },
+    //           ),
+    //         )
+    //       ],
+    //       mainAxisSize: MainAxisSize.max,
+    //       crossAxisAlignment: CrossAxisAlignment.start,
+    //     ));
   }
 }

@@ -4,6 +4,8 @@ import 'dart:ffi';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:myna/constants/variables/common.dart';
+import 'package:myna/models/widgetAndThemes/theme.dart';
 import 'package:speech_to_text/speech_recognition_error.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
@@ -32,7 +34,6 @@ class _SpeechTextConState extends State<SpeechTextCon> {
     print('entered to initstate');
     super.initState();
     initSpeechState();
-
   }
 
   void translatedtext(String lastWords) async {
@@ -66,14 +67,16 @@ class _SpeechTextConState extends State<SpeechTextCon> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Speech to Text Example'),
+          title: const Text('Myna'),
+          backgroundColor: Colors.green,
         ),
         body: Column(children: [
           Center(
             child: Text(
-              'Speech recognition available',
+              'Speech recognition',
               style: TextStyle(fontSize: 22.0),
             ),
           ),
@@ -96,9 +99,11 @@ class _SpeechTextConState extends State<SpeechTextCon> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     RaisedButton(
+                      color: Colors.blue[300],
                       //child: Text('Start'),
-                      child: Icon(Icons.mic),
-
+                      child: Icon(
+                        Icons.mic,
+                      ),
                       onPressed: !_hasSpeech || speech.isListening
                           ? null
                           : startListening,
@@ -111,7 +116,6 @@ class _SpeechTextConState extends State<SpeechTextCon> {
                     //   child: Text('Cancel'),
                     //   onPressed: speech.isListening ? cancelListening : null,
                     // ),
-
                   ],
                 ),
                 Row(
@@ -138,11 +142,9 @@ class _SpeechTextConState extends State<SpeechTextCon> {
             flex: 4,
             child: Column(
               children: <Widget>[
- 
                 SizedBox(
                   height: 80,
                 ),
-
                 Center(
                   child: Text(
                     'Recognized Words',
@@ -217,18 +219,19 @@ class _SpeechTextConState extends State<SpeechTextCon> {
           // ),
           Container(
             child: RaisedButton(
+              color: Colors.blue[300],
               child: Text('send'),
               onPressed: () {
                 translatedtext(lastWords);
                 //api call
                 //Navigator.pushNamed(context, '/ItemList');
-
               },
             ),
           ),
           Container(
             padding: EdgeInsets.symmetric(vertical: 20),
-            color: Theme.of(context).backgroundColor,
+            //color: Theme.of(context).backgroundColor,
+            color: Colors.green,
             child: Center(
               child: speech.isListening
                   ? Text(
@@ -266,7 +269,6 @@ class _SpeechTextConState extends State<SpeechTextCon> {
     // print("----------------------########-----------------");
     // print(convertedWords);
     // Navigator.pushNamed(context, '/newItem');
-
   }
 
   void stopListening() {
@@ -290,7 +292,6 @@ class _SpeechTextConState extends State<SpeechTextCon> {
 
     // Navigator0Cs.Navigator.pushNamed(context, '/second');s.g /
     //Navigator.pushNamed(context, '/NewItem');
-
   }
 
   void soundLevelListener(double level) {

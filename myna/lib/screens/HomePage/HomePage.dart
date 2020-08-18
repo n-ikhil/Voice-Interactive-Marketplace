@@ -13,6 +13,7 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return Consumer<SharedObjects>(builder: (context, myModel, child) {
       return BaseLayout(
           myModel: myModel,

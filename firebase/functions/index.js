@@ -2,7 +2,7 @@ const functions = require("firebase-functions");
 const express = require("express");
 const admin = require("firebase-admin");
 const utility = require("./utility");
-
+//https://medium.com/@savinihemachandra/creating-rest-api-using-express-on-cloud-functions-for-firebase-53f33f22979c
 admin.initializeApp(functions.config().firebase);
 const app = express();
 const main = express();

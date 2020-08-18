@@ -1,21 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_tts/flutter_tts.dart';
+// import 'package:flutter_tts/flutter_tts_web.dart';
 import 'package:myna/components/Recorder.dart';
 import 'package:myna/constants/variables/common.dart';
 import 'package:myna/models/quesionCards.dart';
 
-class AudioBuyer extends StatefulWidget {
+class AudioSeller extends StatefulWidget {
   @override
-  _AudioBuyerState createState() => _AudioBuyerState();
+  _AudioSellerState createState() => _AudioSellerState();
 }
 
-class _AudioBuyerState extends State<AudioBuyer> {
+class _AudioSellerState extends State<AudioSeller> {
   String recognisedWords = "waiting..";
-  Questions allQuestions;
+  QuestionCard allQuestions;
   int currentQuestionNumber;
   int audioState;
+  FlutterTts flutterTts = FlutterTts();
+  // Ttsstate ttsState = TtsState.stopped;
   /*
-    1=> machine yet to speak
-    2=>machine is speaking
+    0=>setup
+    1=> machine can to speak
+    2=>machine has spoke
     3=> we can speak
     4=> we spoke
    */
@@ -25,27 +30,83 @@ class _AudioBuyerState extends State<AudioBuyer> {
   void initState() {
     super.initState();
     currentLanguage = "en_IN";
-    allQuestions.init(currentLanguage);
-    audioState = 1;
+    allQuestions = QuestionCard(curLang: currentLanguage);
+    audioState = 0;
     currentQuestionNumber = 0;
+    initTts();
+    incrementAudioState();
+  }
+
+  void incrementAudioState() {
+    this.setState(() {
+      audioState++;
+    });
+    if (audioState == 1) {
+      machineSpeak();
+    }
+    if (audioState == 2) {
+      // if current question doesnt want audio input then do not icrement
+      incrementAudioState();
+    }
+    if (audioState == 4) {
+      print(allQuestions.questions[currentQuestionNumber].questionLanguage +
+          "-" +
+          recognisedWords);
+      incrementQuestionNumber();
+    }
+  }
+
+  void machineSpeak() async {
+    // if (audioState == 1) {
+    await flutterTts
+        .speak(allQuestions.questions[currentQuestionNumber].questionLanguage);
+    // if (result == 1) setState(() => ttsState = TtsState.playing);
+    // }
+  }
+
+  Future changeMachineLanguage(String data) async {
+    // final languages = await flutterTts.getLanguages;
+    // print(languages);
+    var tlang = data;
+    tlang = tlang.replaceAll("_", "-");
+    print(tlang);
+    var isGoodLanguage = await flutterTts.isLanguageAvailable(tlang);
+    if (isGoodLanguage) {
+      // print("yup");
+      await flutterTts.setLanguage(tlang);
+    }
+  }
+
+  void machineStopped() {
+    // if (audioState == 1)
+    incrementAudioState();
   }
 
   void callBackForRecorder(String data) {
     print("called");
+    if (audioState != 3) {
+      return;
+    }
     this.setState(() {
       recognisedWords = data;
     });
+    if (true) {
+      // logic to determine if the spoken words were correct; else remain in same state
+      incrementAudioState();
+    }
   }
 
   void incrementQuestionNumber() {
-    if (this.currentQuestionNumber == allQuestions.questionStrings.length) {
+    if (this.currentQuestionNumber == allQuestions.questions.length - 1) {
       submit();
       return;
     }
     this.setState(() {
       currentQuestionNumber = currentQuestionNumber + 1;
-      audioState = 1;
+      audioState = 0;
+      recognisedWords = "wating...";
     });
+    incrementAudioState();
   }
 
   @override
@@ -56,8 +117,11 @@ class _AudioBuyerState extends State<AudioBuyer> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          Text(allQuestions.questionStrings[currentQuestionNumber]),
-          Text("parent translated words: " + this.recognisedWords),
+          Text(
+            allQuestions.questions[currentQuestionNumber].questionLanguage,
+            style: TextStyle(fontSize: 28),
+          ),
+          Text("Your answer: " + this.recognisedWords),
 
           RecorderSpeech(
             callbackFunction: this.callBackForRecorder,
@@ -70,10 +134,14 @@ class _AudioBuyerState extends State<AudioBuyer> {
   }
 
   Future setLanguage(String data) async {
+    await changeMachineLanguage(data);
     await this.allQuestions.init(data);
+
     this.setState(() {
       currentLanguage = data;
+      audioState = 0;
     });
+    incrementAudioState();
   }
 
   void submit() {
@@ -82,5 +150,31 @@ class _AudioBuyerState extends State<AudioBuyer> {
 
   void callBackForLanguageChange(String data) {
     setLanguage(data);
+  }
+
+  void initTts() {
+    flutterTts.setSpeechRate(0.8);
+    flutterTts.setStartHandler(() {
+      setState(() {
+        print("Playing");
+        // ttsState = TtsState.playing;
+      });
+    });
+
+    flutterTts.setCompletionHandler(() {
+      setState(() {
+        print("Complete");
+        // ttsState = TtsState.stopped;
+      });
+      machineStopped();
+    });
+
+    flutterTts.setErrorHandler((msg) {
+      setState(() {
+        print("error: $msg");
+        // ttsState = TtsState.stopped;
+      });
+      machineStopped();
+    });
   }
 }

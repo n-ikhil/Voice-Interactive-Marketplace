@@ -38,7 +38,7 @@ class HomePage extends StatelessWidget {
                       heroTag: 'btn2',
                       child: Icon(Icons.mic),
                       onPressed: () {
-                        Navigator.pushNamed(context, audioBuyer);
+                        Navigator.pushNamed(context, audioSeller);
                       },
                     ),
                   ])

@@ -1,38 +1,57 @@
 import 'package:myna/services/gtranslator.dart';
+import 'package:myna/speech/port.dart';
 
-class Questions {
-  List<String> questionStrings = [
-    " What is the name of product you want to sell ",
-    "What is the price of product you want to sell",
-    " Is the product rentable "
-  ];
+enum InputType { keyboard, audio }
 
-  List<String> languageBased = [
-    " What is the name of product you want to sell ",
-    "What is the price of product you want to sell",
-    " Is the product rentable "
-  ];
+class Question {
+  String questionEnglish;
+  String questionLanguage;
+  InputType type;
+  Question({language = "en_IN", this.questionEnglish, this.type}) {
+    setLanguage(language);
+  }
 
-  Future init(String languageCode) async {
-    // languageCode.replaceAll("_IN", "");
-    // languageCode = languageCode.split("_")[0];
-    if (languageCode.startsWith("en")) {
+  Future setLanguage(language) async {
+    if (language.startsWith("en")) {
+      this.questionLanguage = this.questionEnglish;
       return;
     }
+    await googleTranslateEnglishToSpecified(this.questionEnglish, language)
+        .then((onValue) {
+      questionLanguage = onValue;
+    });
+  }
+}
 
-    await googleTranslatedtext(questionStrings[0], languageCode)
-        .then((onValue) {
-      languageBased[0] = onValue;
-    });
-    await googleTranslatedtext(questionStrings[1], languageCode)
-        .then((onValue) {
-      languageBased[1] = onValue;
-    });
-    await googleTranslatedtext(questionStrings[2], languageCode)
-        .then((onValue) {
-      languageBased[2] = onValue;
-    });
+class QuestionCard {
+  List<String> fixedQuestions = [
+    " What is the name of product you want to sell ",
+    "What is the price of product you want to sell",
+    " Is the product rentable "
+  ];
 
-    return;
+  List<InputType> fixedTypes = [
+    InputType.audio,
+    InputType.audio,
+    InputType.audio,
+  ];
+
+  List<Question> questions = [];
+  String curLang = "en_IN";
+
+  QuestionCard({this.curLang = 'en_IN'}) {
+    for (int i = 0; i < fixedQuestions.length; i++) {
+      Question q = Question(
+          language: curLang,
+          questionEnglish: fixedQuestions[i],
+          type: fixedTypes[i]);
+      questions.add(q);
+    }
+  }
+
+  Future init(String languageCode) async {
+    for (int i = 0; i < questions.length; i++) {
+      await questions[i].setLanguage(languageCode);
+    }
   }
 }

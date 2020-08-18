@@ -40,7 +40,7 @@ class _RecorderSpeechState extends State<RecorderSpeech> {
   }
 
   void translatedtext(String lastWords) async {
-    await googleTranslatedtext(lastWords, _currentLocaleId).then((onValue) {
+    await googleTranslateToEnglish(lastWords, _currentLocaleId).then((onValue) {
       setState(() {
         convertedWords = onValue;
       });

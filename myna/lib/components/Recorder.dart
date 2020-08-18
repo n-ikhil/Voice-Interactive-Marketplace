@@ -76,23 +76,13 @@ class _RecorderSpeechState extends State<RecorderSpeech> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
             SizedBox(
-              width: 150,
-              child: DropdownButton(
-                onChanged: (selectedVal) => _switchLang(selectedVal),
-                value: _currentLocaleId,
-                items: _localeNames
-                    .map(
-                      (localeName) => DropdownMenuItem(
-                        value: localeName.localeId,
-                        child: Text(
-                          localeName.name,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    )
-                    .toList(),
-              ),
-            ),
+                width: 150,
+                child: FlatButton(
+                  child: Text("lang: " + _currentLocaleId),
+                  onPressed: () {
+                    showLanguages(context);
+                  },
+                )),
             Container(
               child: RaisedButton(
                 child: Text('send'),
@@ -186,5 +176,32 @@ class _RecorderSpeechState extends State<RecorderSpeech> {
       _currentLocaleId = selectedVal;
     });
     print(selectedVal);
+  }
+
+  void showLanguages(context) {
+    showDialog(
+        child: Dialog(
+          child: SingleChildScrollView(
+            child: DropdownButton(
+              onChanged: (selectedVal) {
+                _switchLang(selectedVal);
+                Navigator.pop(context);
+              },
+              value: _currentLocaleId,
+              items: _localeNames
+                  .map(
+                    (localeName) => DropdownMenuItem(
+                      value: localeName.localeId,
+                      child: Text(
+                        localeName.name,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  )
+                  .toList(),
+            ),
+          ),
+        ),
+        context: context);
   }
 }

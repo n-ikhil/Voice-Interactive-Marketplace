@@ -25,20 +25,17 @@ class _AudioBuyerState extends State<AudioBuyer> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(APP_NAME)),
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: <Widget>[
-            Text(this.recognisedWords),
-            SizedBox(
-              height: 500,
-              width: 500,
-              child: RecorderSpeech(
-                callbackFunction: this.callBackForRecorder,
-              ),
-            ),
-          ],
-        ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Text("parent translated words: " + this.recognisedWords),
+
+          RecorderSpeech(
+            callbackFunction: this.callBackForRecorder,
+          ),
+          // ),
+        ],
       ),
     );
   }

@@ -231,6 +231,9 @@ class _SpeechTextConState extends State<SpeechTextCon> {
 
                 if (prodid == "") {
                   print("could not understand the query");
+                  setState(() {
+                    convertedWords = "could not understand the query";
+                  });
                 } else {
                   await Navigator.pushNamed(context, itemList,
                       arguments: {'id': prodid});

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:ffi';
+// import 'dart:html';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -30,6 +31,7 @@ class _SpeechTextConState extends State<SpeechTextCon> {
   void initState() {
     print('entered to initstate');
     super.initState();
+    initSpeechState();
   }
 
   void translatedtext(String lastWords) async {
@@ -77,32 +79,36 @@ class _SpeechTextConState extends State<SpeechTextCon> {
           Container(
             child: Column(
               children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: <Widget>[
-                    FlatButton(
-                      child: Text('Initialize'),
-                      onPressed: _hasSpeech ? null : initSpeechState,
-                    ),
-                  ],
+                SizedBox(
+                  height: 100,
                 ),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+                //   children: <Widget>[
+                //     FlatButton(
+                //       child: Text('Initialize'),
+                //       //onPressed: _hasSpeech ? null : initSpeechState,
+                //     ),
+                //   ],
+                // ),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    FlatButton(
-                      child: Text('Start'),
+                    RaisedButton(
+                      //child: Text('Start'),
+                      child: Icon(Icons.mic),
                       onPressed: !_hasSpeech || speech.isListening
                           ? null
                           : startListening,
                     ),
-                    FlatButton(
-                      child: Text('Stop'),
-                      onPressed: speech.isListening ? stopListening : null,
-                    ),
-                    FlatButton(
-                      child: Text('Cancel'),
-                      onPressed: speech.isListening ? cancelListening : null,
-                    ),
+                    // FlatButton(
+                    //   child: Text('Stop'),
+                    //   onPressed: speech.isListening ? stopListening : null,
+                    // ),
+                    // FlatButton(
+                    //   child: Text('Cancel'),
+                    //   onPressed: speech.isListening ? cancelListening : null,
+                    // ),
                   ],
                 ),
                 Row(
@@ -129,6 +135,9 @@ class _SpeechTextConState extends State<SpeechTextCon> {
             flex: 4,
             child: Column(
               children: <Widget>[
+                SizedBox(
+                  height: 100,
+                ),
                 Center(
                   child: Text(
                     'Recognized Words',
@@ -176,7 +185,7 @@ class _SpeechTextConState extends State<SpeechTextCon> {
                               borderRadius:
                                   BorderRadius.all(Radius.circular(50)),
                             ),
-                            child: IconButton(icon: Icon(Icons.mic)),
+                            //child: IconButton(icon: Icon(Icons.mic)),
                           ),
                         ),
                       ),
@@ -186,22 +195,21 @@ class _SpeechTextConState extends State<SpeechTextCon> {
               ],
             ),
           ),
-          Expanded(
-            flex: 1,
-            child: Column(
-              children: <Widget>[
-                Center(
-                  child: Text(
-                    'Error Status',
-                    style: TextStyle(fontSize: 22.0),
-                  ),
-                ),
-                Center(
-                  child: Text(lastError),
-                ),
-              ],
-            ),
-          ),
+          // Expanded(
+          //   flex: 1,
+          //   child: Column(
+          //     children: <Widget>[
+          //       Center(
+          //         child: Text(
+          //           'Error Status',
+          //           style: TextStyle(fontSize: 22.0),
+          //         ),),
+          //       Center(
+          //         child: Text(lastError),jmh
+          //       ),
+          //     ],
+          //   ),
+          // ),
           Container(
             child: RaisedButton(
               child: Text('translate'),
@@ -243,7 +251,13 @@ class _SpeechTextConState extends State<SpeechTextCon> {
         partialResults: true,
         onDevice: true,
         listenMode: ListenMode.confirmation);
+
     setState(() {});
+    // translatedtext(lastWords);
+    //getItemResults(convertedWords);
+    // print("----------------------########-----------------");
+    // print(convertedWords);
+    // Navigator.pushNamed(context, '/newItem');
   }
 
   void stopListening() {
@@ -264,6 +278,9 @@ class _SpeechTextConState extends State<SpeechTextCon> {
     setState(() {
       lastWords = "${result.recognizedWords} - ${result.finalResult}";
     });
+
+    // Navigator0Cs.Navigator.pushNamed(context, '/second');s.g /
+    //Navigator.pushNamed(context, '/NewItem');
   }
 
   void soundLevelListener(double level) {

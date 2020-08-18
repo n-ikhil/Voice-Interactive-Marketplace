@@ -80,7 +80,7 @@ class _SpeechTextConState extends State<SpeechTextCon> {
             child: Column(
               children: <Widget>[
                 SizedBox(
-                  height: 100,
+                  height: 80,
                 ),
                 // Row(
                 //   mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -136,7 +136,7 @@ class _SpeechTextConState extends State<SpeechTextCon> {
             child: Column(
               children: <Widget>[
                 SizedBox(
-                  height: 100,
+                  height: 80,
                 ),
                 Center(
                   child: Text(
@@ -185,7 +185,7 @@ class _SpeechTextConState extends State<SpeechTextCon> {
                               borderRadius:
                                   BorderRadius.all(Radius.circular(50)),
                             ),
-                            //child: IconButton(icon: Icon(Icons.mic)),
+                            child: IconButton(icon: Icon(Icons.mic)),
                           ),
                         ),
                       ),
@@ -205,16 +205,18 @@ class _SpeechTextConState extends State<SpeechTextCon> {
           //           style: TextStyle(fontSize: 22.0),
           //         ),),
           //       Center(
-          //         child: Text(lastError),jmh
+          //         child: Text(lastError),
           //       ),
           //     ],
           //   ),
           // ),
           Container(
             child: RaisedButton(
-              child: Text('translate'),
+              child: Text('send'),
               onPressed: () {
                 translatedtext(lastWords);
+                //api call
+                //Navigator.pushNamed(context, '/ItemList');
               },
             ),
           ),

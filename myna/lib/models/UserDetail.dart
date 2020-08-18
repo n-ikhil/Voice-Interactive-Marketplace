@@ -1,19 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserDetail {
-  String _UserId;
-  String _EmailId;
+  String _userID;
+  String _emailID;
   String _nickName;
   String _userFirstName;
   String _userLastName;
   String _Address;
-  String    _mobileNo;
+  String _mobileNo;
 
-  UserDetail(this._UserId, this._EmailId, this._nickName, this._userFirstName,
+  UserDetail(this._userID, this._emailID, this._nickName, this._userFirstName,
       this._userLastName, this._Address, this._mobileNo);
   UserDetail.fromSnapshot(DocumentSnapshot data) {
-    this._UserId = data.data["uid"];
-    this._EmailId = data.data["email"];
+    this._userID = data.data["uid"];
+    this._emailID = data.data["email"];
     this._nickName = data.data["nickName"];
     this._userFirstName = data.data["userFistName"];
     this._userLastName = data.data["userLastName"];
@@ -21,9 +21,9 @@ class UserDetail {
     this._mobileNo = data.data["mobileNo"];
   }
 
-  String get UserId => _UserId;
+  String get userID => _userID;
 
-  String get EmailId => _EmailId;
+  String get emailID => _emailID;
 
   String get nickName => _nickName;
 
@@ -31,10 +31,9 @@ class UserDetail {
 
   String get userLastName => _userLastName;
 
-  String get Address => _Address;
+  String get address => _Address;
 
   String get mobileNo => _mobileNo;
 
   String get userFirstName => _userFirstName;
-
 }

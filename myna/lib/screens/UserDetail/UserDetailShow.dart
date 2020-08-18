@@ -1,19 +1,18 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:myna/constants/variables/common.dart';
 import 'package:myna/models/UserDetail.dart';
 import 'package:myna/models/arguments/userDetailViewArg.dart';
-import 'package:myna/services/IndependentFunctions/UserProfile.dart';
+import 'package:myna/services/SharedObjects.dart';
 
 class userDetailView extends StatefulWidget {
-  userDetailView({this.arg}) : super(key: arg.key) {
-    this.title = arg.title;
-    this.user = arg.user;
+  final SharedObjects myModel;
+  userDetailView({this.arg, this.myModel}) : super(key: arg.key) {
     this._callback = arg.editDetail;
   }
 
   final userDetailViewArg arg;
   String title;
-  FirebaseUser user;
   VoidCallback _callback;
 
   @override
@@ -22,7 +21,6 @@ class userDetailView extends StatefulWidget {
 
 class userDetailViewState extends State<userDetailView> {
   UserDetail detail;
-  FirebaseUser _user;
 
   @override
   void initState() {
@@ -31,7 +29,7 @@ class userDetailViewState extends State<userDetailView> {
 
   getData(BuildContext context) async {
     if (detail == null) {
-      detail = await UserProfile().fetchUserData(context, _user);
+      detail = widget.myModel.currentUser;
       if (detail != null) {
         print("done");
         setState(() {
@@ -43,7 +41,6 @@ class userDetailViewState extends State<userDetailView> {
 
   @override
   Widget build(BuildContext context) {
-    _user = widget.user;
     getData(context);
 
     TextStyle textStyle = TextStyle(fontSize: 20, fontWeight: FontWeight.w300);
@@ -53,7 +50,7 @@ class userDetailViewState extends State<userDetailView> {
 
     return Scaffold(
         appBar: AppBar(
-          title: Text(widget.title),
+          title: Text(APP_NAME),
         ),
         body: SingleChildScrollView(
             child: Container(
@@ -94,11 +91,11 @@ class userDetailViewState extends State<userDetailView> {
                       Padding(
                           padding: EdgeInsets.all(5),
                           child: showText(
-                              "Email ID : ${detail != null ? detail.EmailId : 'can\'t fetch'}")),
+                              "Email ID : ${detail != null ? detail.emailID : 'can\'t fetch'}")),
                       Padding(
                           padding: EdgeInsets.all(5),
                           child: showText(
-                              "Address : ${detail != null ? detail.Address : 'can\'t fetch'}")),
+                              "Address : ${detail != null ? detail.address : 'can\'t fetch'}")),
                       Padding(
                           padding: EdgeInsets.all(10),
                           child: FloatingActionButton(

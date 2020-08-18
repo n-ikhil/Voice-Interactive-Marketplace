@@ -15,7 +15,8 @@ class itemFirestoreClient {
       "postalCode": newItem.postalCode,
       "price": newItem.price,
       "place": newItem.place,
-      "imgURL": newItem.imgURL
+      "imgURL": newItem.imgURL,
+      "ownerNickName": newItem.ownerNickName
     }).then((v) async {
       print("succes in writing item");
       return v;

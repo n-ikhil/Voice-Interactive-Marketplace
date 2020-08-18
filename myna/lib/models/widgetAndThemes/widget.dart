@@ -11,13 +11,13 @@ InputDecoration textFieldInputDecoration(String hintText) {
       hintText: hintText,
       hintStyle: TextStyle(color: Colors.white54),
       focusedBorder:
-      UnderlineInputBorder(borderSide: BorderSide(color: Colors.white)),
+          UnderlineInputBorder(borderSide: BorderSide(color: Colors.white)),
       enabledBorder:
-      UnderlineInputBorder(borderSide: BorderSide(color: Colors.white)));
+          UnderlineInputBorder(borderSide: BorderSide(color: Colors.white)));
 }
 
 TextStyle simpleTextStyle() {
-  return TextStyle(color: Colors.white, fontSize: 16);
+  return TextStyle(color: Colors.black, fontSize: 16);
 }
 
 TextStyle biggerTextStyle() {

@@ -1,43 +1,30 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class DatabaseMethods {
-  Future<void> addUserInfo(userData) async {
-    await Firestore.instance.collection("user").add(userData).catchError((e) {
-      print(e.toString());
-    });
-  }
+class chatFirestoreClient {
+  final CollectionReference _chatFirestoreCollection;
+  final CollectionReference _userFirestoreCollection;
 
-  getUserInfo(String email) async {
-    return await Firestore.instance
-        .collection("user")
-        .where("email", isEqualTo: email)
-        .getDocuments()
-        .catchError((e) {
-      print(e.toString());
-    });
-  }
+  chatFirestoreClient(
+      this._chatFirestoreCollection, this._userFirestoreCollection);
 
   searchByName(String searchField) async {
-    return await Firestore.instance
-        .collection("users")
-        .where('name', isEqualTo: searchField)
+    return await _userFirestoreCollection
+        .where('nickName', isEqualTo: searchField)
         .getDocuments();
   }
 
   // ignore: missing_return
   Future<bool> addChatRoom(chatRoom, chatRoomId) {
-    Firestore.instance
-        .collection("ChatRoom")
+    _chatFirestoreCollection
         .document(chatRoomId)
-        .setData(chatRoom)
+        .setData(chatRoom, merge: true)
         .catchError((e) {
       print(e.toString());
     });
   }
 
   getChats(String chatRoomId) async {
-    return Firestore.instance
-        .collection("ChatRoom")
+    return _chatFirestoreCollection
         .document(chatRoomId)
         .collection("chats")
         .orderBy('time')
@@ -46,8 +33,7 @@ class DatabaseMethods {
 
   // ignore: missing_return
   Future<void> addMessage(String chatRoomId, chatMessageData) {
-    Firestore.instance
-        .collection("ChatRoom")
+    _chatFirestoreCollection
         .document(chatRoomId)
         .collection("chats")
         .add(chatMessageData)
@@ -57,8 +43,7 @@ class DatabaseMethods {
   }
 
   getUserChats(String itIsMyName) async {
-    return await Firestore.instance
-        .collection("ChatRoom")
+    return await _chatFirestoreCollection
         .where('users', arrayContains: itIsMyName)
         .snapshots();
   }

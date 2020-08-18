@@ -10,14 +10,22 @@ class userProfileFirestoreClient {
   Future<void> updateUserData(UserDetail data) async {
     final CollectionReference userCollection =
         Firestore.instance.collection('user');
-    return await userCollection.document(data.UserId).setData({
-      "uid": data.UserId,
-      "email": data.EmailId,
+    var loginCredEmail = "NA";
+    var loginCredPhone = "NA";
+
+    if (data.emailID != null) {
+      loginCredEmail = data.emailID;
+    } else if (data.mobileNo != null) {
+      loginCredPhone = data.mobileNo;
+    }
+    return await userCollection.document(data.userID).setData({
+      "uid": data.userID,
+      "email": loginCredEmail,
       "nickName": data.nickName,
       "userFistName": data.userFistName,
       "userLastName": data.userLastName,
-      "address": data.Address,
-      "mobileNo": data.mobileNo
+      "address": data.address,
+      "mobileNo": loginCredPhone
     });
   }
 

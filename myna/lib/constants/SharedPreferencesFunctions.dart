@@ -13,9 +13,9 @@ class SharedPreferencesFunctions {
         sharedPreferenceUserLoggedInKey, isUserLoggedIn);
   }
 
-  static Future<bool> saveUserNameSharedPreference(String userName) async {
+  static Future<bool> saveUserNameSharedPreference(String userId) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    return await preferences.setString(sharedPreferenceUserNameKey, userName);
+    return await preferences.setString(sharedPreferenceUserNameKey, userId);
   }
 
   static Future<bool> saveUserEmailSharedPreference(String userEmail) async {
@@ -29,7 +29,7 @@ class SharedPreferencesFunctions {
     return await preferences.getBool(sharedPreferenceUserLoggedInKey);
   }
 
-  static Future<String> getUserNameSharedPreference() async {
+  static Future<String> getUserIdSharedPreference() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     return await preferences.getString(sharedPreferenceUserNameKey);
   }

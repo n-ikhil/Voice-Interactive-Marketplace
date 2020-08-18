@@ -11,8 +11,4 @@ Color CARD_COLOR = Colors.grey[350];
 Color CANVAS_COLOR = Colors.lightGreen[100];
 const LENGTH_TO_TRIGGER_SEARCH = "strLenTriggerSearch";
 
-
 //from Swathi's chat module
-class Constants {
-  static String myName = "";
-}

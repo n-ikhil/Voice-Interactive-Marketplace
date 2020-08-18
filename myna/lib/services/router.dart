@@ -2,13 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:myna/screens/CategoryResult/CategoryResult.dart';
 import 'package:myna/screens/HomePage/HomePage.dart';
 import 'package:myna/screens/ItemList/ItemList.dart';
+// import 'package:myna/screens/MyItems/MyItems.dart';
 import 'package:myna/screens/NewItem/NewItem.dart';
 import 'package:myna/screens/SearchPage/SearchPage.dart';
 import 'package:myna/screens/Authorization/root_page.dart';
 import 'package:myna/screens/UserDetail/UserDetailRegistration.dart';
 import 'package:myna/screens/UserDetail/UserDetailShow.dart';
+import 'package:myna/screens/chat/chat.dart';
 import 'package:myna/screens/chat/chatRoomScreen.dart';
+import 'package:myna/screens/chat/conversationSetup.dart';
 import 'package:myna/screens/itemDetail/ItemDetail.dart';
+import 'package:myna/services/SharedObjects.dart';
+import 'package:provider/provider.dart';
+import 'package:myna/speech/speech.dart';
 import '../constants/variables/ROUTES.dart';
 import 'firebase/auth.dart';
 
@@ -22,7 +28,14 @@ class Router {
       case homePage:
         return MaterialPageRoute(builder: (_) => HomePage());
       case newItemPage:
-        return MaterialPageRoute(builder: (_) => NewItem());
+        return MaterialPageRoute(
+            builder: (_) =>
+                Consumer<SharedObjects>(builder: (context, myModel, child) {
+                  return NewItem(myModel);
+                }));
+
+      case speechPage:
+        return MaterialPageRoute(builder: (_) => SpeechTextCon());
       case userDetailFormPage:
         return MaterialPageRoute(
             builder: (_) => userDetailForm(
@@ -30,25 +43,61 @@ class Router {
                 ));
       case userDetailViewPage:
         return MaterialPageRoute(
-            builder: (_) => userDetailView(
-                  arg: settings.arguments,
-                ));
+            builder: (_) =>
+                Consumer<SharedObjects>(builder: (context, myModel, child) {
+                  return userDetailView(
+                    arg: settings.arguments,
+                    myModel: myModel,
+                  );
+                }));
       case itemDetail:
-        return MaterialPageRoute(
-            builder: (_) => ItemDetail(settings.arguments));
+        return MaterialPageRoute(builder: (_) {
+          return Consumer<SharedObjects>(builder: (context, myModel, child) {
+            return ItemDetail(settings.arguments, myModel);
+          });
+        });
       case itemList:
         return MaterialPageRoute(builder: (_) {
-          return ItemList(settings.arguments);
+          return Consumer<SharedObjects>(builder: (context, myModel, child) {
+            return ItemList(settings.arguments, myModel);
+          });
         });
       case categoryResult:
         return MaterialPageRoute(
-            builder: (_) => CategoryResult(settings.arguments));
+            builder: (_) =>
+                Consumer<SharedObjects>(builder: (context, myModel, child) {
+                  return CategoryResult(
+                    category: settings.arguments,
+                    myModel: myModel,
+                  );
+                }));
       case searchPage:
         return MaterialPageRoute(builder: (_) => SearchPage());
       case credentialPage:
         return MaterialPageRoute(builder: (_) => RootPage(auth: auth));
       case chatRoom:
-        return MaterialPageRoute(builder: (_) => ChatRoom());
+        return MaterialPageRoute(
+            builder: (_) =>
+                Consumer<SharedObjects>(builder: (context, myModel, child) {
+                  return ChatRoom(
+                    myModel: myModel,
+                  );
+                }));
+      case conversation:
+        Map<String, dynamic> args = settings.arguments;
+        return MaterialPageRoute(
+            builder: (_) =>
+                Consumer<SharedObjects>(builder: (context, myModel, child) {
+                  String chatRoomId = conversationSetup()
+                      .setupDualConversion(args["id"], myModel.currentUser);
+
+                  return Chat(
+                    chatRoomId: chatRoomId,
+                    myModel: myModel,
+                  );
+                }));
+      // case myItems:
+      //   return MaterialPageRoute(builder: (_) => MyItems());
 
       default:
         return MaterialPageRoute(

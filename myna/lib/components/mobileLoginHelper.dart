@@ -2,15 +2,15 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:myna/constants/variables/common.dart';
-import 'package:myna/services/sharedservices.dart';
+import 'package:myna/services/firebase/FirestoreClients.dart';
 
 class mobileLoginHelper {
   final _codeController = TextEditingController();
 
   SignInSuccess(
       BuildContext context, FirebaseUser user, VoidCallback fun) async {
-     // ignore: unawaited_futures
-     showDialog(
+    // ignore: unawaited_futures
+    showDialog(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
@@ -26,10 +26,7 @@ class mobileLoginHelper {
 
   Future<void> registerUserDatabase(
       BuildContext context, FirebaseUser user) async {
-    await sharedServices()
-        .FirestoreClientInstance
-        .userClient
-        .initiateUserData(user);
+    await FirestoreClient().userClient.initiateUserData(user);
   }
 
   mobileSignInHandler(context, _mobileNo, _callback, auth) async {
@@ -47,8 +44,8 @@ class mobileLoginHelper {
 
       print("exception code: ${exception.code}");
       print("exception message: ${exception.message}");
-       // ignore: unawaited_futures
-       showDialog(
+      // ignore: unawaited_futures
+      showDialog(
           context: context,
           barrierDismissible: false,
           builder: (context) {
@@ -112,6 +109,7 @@ class mobileLoginHelper {
           AuthResult result = await _auth.signInWithCredential(credential);
           FirebaseUser user = result.user;
           if (user != null) {
+            Navigator.of(context).pop();
             SignInSuccess(context, user, _callback);
             print("Done");
           } else {

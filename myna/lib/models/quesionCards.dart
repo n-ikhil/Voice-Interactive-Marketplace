@@ -38,7 +38,7 @@ class QuestionCard {
     [" Will you be able to rent the product  ", "isRentable", "boolButton"],
     [
       "please add some images",
-      "imageURL",
+      "imgURL",
       "file",
     ]
   ];

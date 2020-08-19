@@ -13,4 +13,6 @@ class Category {
     this.name = "add new category";
     this.id = "-1";
   }
+
+  Category.asForm(this.id, this.name);
 }

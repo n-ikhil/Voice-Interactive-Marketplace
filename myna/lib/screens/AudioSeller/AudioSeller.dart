@@ -16,6 +16,7 @@ class _AudioSellerState extends State<AudioSeller> {
   int currentQuestionNumber;
   int audioState;
   FlutterTts flutterTts = FlutterTts();
+  List<dynamic> recordedAnswers;
   // Ttsstate ttsState = TtsState.stopped;
   /*
     0=>setup
@@ -28,6 +29,7 @@ class _AudioSellerState extends State<AudioSeller> {
 
   @override
   void initState() {
+    recordedAnswers = [];
     super.initState();
     currentLanguage = "en_IN";
     allQuestions = QuestionCard(curLang: currentLanguage);
@@ -48,38 +50,16 @@ class _AudioSellerState extends State<AudioSeller> {
       // if current question doesnt want audio input then do not icrement
       incrementAudioState();
     }
+    if (audioState == 3) {
+      print("forwarddin listining to voice");
+      // myAnimation.forward();
+    }
     if (audioState == 4) {
       print(allQuestions.questions[currentQuestionNumber].questionLanguage +
           "-" +
           recognisedWords);
       incrementQuestionNumber();
     }
-  }
-
-  void machineSpeak() async {
-    // if (audioState == 1) {
-    await flutterTts
-        .speak(allQuestions.questions[currentQuestionNumber].questionLanguage);
-    // if (result == 1) setState(() => ttsState = TtsState.playing);
-    // }
-  }
-
-  Future changeMachineLanguage(String data) async {
-    // final languages = await flutterTts.getLanguages;
-    // print(languages);
-    var tlang = data;
-    tlang = tlang.replaceAll("_", "-");
-    print(tlang);
-    var isGoodLanguage = await flutterTts.isLanguageAvailable(tlang);
-    if (isGoodLanguage) {
-      // print("yup");
-      await flutterTts.setLanguage(tlang);
-    }
-  }
-
-  void machineStopped() {
-    // if (audioState == 1)
-    incrementAudioState();
   }
 
   void callBackForRecorder(String data) {
@@ -97,6 +77,8 @@ class _AudioSellerState extends State<AudioSeller> {
   }
 
   void incrementQuestionNumber() {
+    recordedAnswers.add(recognisedWords);
+
     if (this.currentQuestionNumber == allQuestions.questions.length - 1) {
       submit();
       return;
@@ -104,7 +86,7 @@ class _AudioSellerState extends State<AudioSeller> {
     this.setState(() {
       currentQuestionNumber = currentQuestionNumber + 1;
       audioState = 0;
-      recognisedWords = "wating...";
+      recognisedWords = "NA";
     });
     incrementAudioState();
   }
@@ -114,19 +96,39 @@ class _AudioSellerState extends State<AudioSeller> {
     return Scaffold(
       appBar: AppBar(title: Text(APP_NAME)),
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          Text(
-            allQuestions.questions[currentQuestionNumber].questionLanguage,
-            style: TextStyle(fontSize: 28),
+          Expanded(
+            child: Container(
+              child: Center(
+                child: Text(
+                  allQuestions
+                          .questions[currentQuestionNumber].questionLanguage +
+                      " ?",
+                  style: TextStyle(fontSize: 28),
+                ),
+              ),
+            ),
           ),
-          Text("Your answer: " + this.recognisedWords),
+          // Text("Your answer: " + this.recognisedWords),
+
+          this.audioState == 3
+              ? Expanded(
+                  child: Column(
+                  children: <Widget>[
+                    Text("Listening ...", style: TextStyle(fontSize: 20)),
+                    Text("(press mic icon below)",
+                        style: TextStyle(fontSize: 7)),
+                  ],
+                ))
+              : Container(width: 0, height: 0),
 
           RecorderSpeech(
             callbackFunction: this.callBackForRecorder,
             languageChangeCallBack: this.callBackForLanguageChange,
           ),
+
           // ),
         ],
       ),
@@ -145,6 +147,9 @@ class _AudioSellerState extends State<AudioSeller> {
   }
 
   void submit() {
+    for (int i = 0; i < recordedAnswers.length; i++) {
+      print(i.toString() + recordedAnswers[i]);
+    }
     print("submit");
   }
 
@@ -176,5 +181,31 @@ class _AudioSellerState extends State<AudioSeller> {
       });
       machineStopped();
     });
+  }
+
+  void machineSpeak() async {
+    // if (audioState == 1) {
+    await flutterTts
+        .speak(allQuestions.questions[currentQuestionNumber].questionLanguage);
+    // if (result == 1) setState(() => ttsState = TtsState.playing);
+    // }
+  }
+
+  Future changeMachineLanguage(String data) async {
+    // final languages = await flutterTts.getLanguages;
+    // print(languages);
+    var tlang = data;
+    tlang = tlang.replaceAll("_", "-");
+    print(tlang);
+    var isGoodLanguage = await flutterTts.isLanguageAvailable(tlang);
+    if (isGoodLanguage) {
+      // print("yup");
+      await flutterTts.setLanguage(tlang);
+    }
+  }
+
+  void machineStopped() {
+    // if (audioState == 1)
+    incrementAudioState();
   }
 }

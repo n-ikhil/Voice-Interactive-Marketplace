@@ -40,7 +40,10 @@ class _RecorderSpeechState extends State<RecorderSpeech> {
   }
 
   void translatedtext(String lastWords) async {
-    await googleTranslateToEnglish(lastWords, _currentLocaleId).then((onValue) {
+    String cleanedTex = lastWords;
+    cleanedTex = cleanedTex.replaceAll(" - true", "");
+    await googleTranslateToEnglish(cleanedTex, _currentLocaleId)
+        .then((onValue) {
       setState(() {
         convertedWords = onValue;
       });
@@ -85,16 +88,21 @@ class _RecorderSpeechState extends State<RecorderSpeech> {
                     showLanguages(context);
                   },
                 )),
-            Container(
-              child: RaisedButton(
-                child: Text('send'),
-                onPressed: () {
-                  translatedtext(lastWords);
-                  //api call
-                  //Navigator.pushNamed(context, '/ItemList');
-                },
-              ),
-            ),
+            lastWords.endsWith("true")
+                ? Container(
+                    child: RaisedButton(
+                      child: Text('submit'),
+                      onPressed: () {
+                        translatedtext(lastWords);
+                        //api call
+                        //Navigator.pushNamed(context, '/ItemList');
+                      },
+                    ),
+                  )
+                : Container(
+                    height: 0,
+                    width: 0,
+                  ),
             RaisedButton(
               //child: Text('Start'),
               child: Icon(

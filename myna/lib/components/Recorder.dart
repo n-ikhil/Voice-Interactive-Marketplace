@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:ffi';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -13,7 +12,6 @@ typedef void StringCallback(String val);
 class RecorderSpeech extends StatefulWidget {
   final StringCallback callbackFunction;
   final StringCallback languageChangeCallBack;
-
   RecorderSpeech({this.callbackFunction, this.languageChangeCallBack});
   @override
   _RecorderSpeechState createState() => _RecorderSpeechState();
@@ -71,13 +69,13 @@ class _RecorderSpeechState extends State<RecorderSpeech> {
       mainAxisAlignment: MainAxisAlignment.end,
       children: <Widget>[
         Container(
-          child: Text("recognized : " + this.convertedWords),
+          child: Text("recognized in english as : " + this.convertedWords),
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
             SizedBox(
-                width: 150,
+                width: 100,
                 child: FlatButton(
                   child: Text("lang: " + _currentLocaleId),
                   onPressed: () {
@@ -87,14 +85,13 @@ class _RecorderSpeechState extends State<RecorderSpeech> {
             lastWords.endsWith("true")
                 ? Container(
                     child: RaisedButton(
-                      child: Text('submit'),
-                      onPressed: () {
-                        widget.callbackFunction(this.convertedWords);
-                        // translatedtext(lastWords);
-                        //api call
-                        //Navigator.pushNamed(context, '/ItemList');
-                      },
-                    ),
+                        child: Text("audio submit"),
+                        onPressed: () {
+                          widget.callbackFunction(this.convertedWords);
+                          // translatedtext(lastWords);
+                          //api call
+                          //Navigator.pushNamed(context, '/ItemList');
+                        }),
                   )
                 : Container(
                     height: 0,
@@ -106,7 +103,7 @@ class _RecorderSpeechState extends State<RecorderSpeech> {
                 Icons.mic,
                 color: speech.isListening ? Colors.orange : Colors.white,
               ),
-
+              color: Colors.green,
               onPressed:
                   !_hasSpeech || speech.isListening ? null : startListening,
             ),

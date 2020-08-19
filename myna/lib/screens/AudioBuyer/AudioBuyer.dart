@@ -29,9 +29,9 @@ class _AudioBuyerState extends State<AudioBuyer> {
     super.initState();
     currentLanguage = "en_IN";
     question = Question(
-        language: currentLanguage,
-        questionEnglish: "Which product you want to buy",
-        type: InputType.audio);
+      language: currentLanguage,
+      data: ["Which product you want to buy", "buyer", "audio"],
+    );
     audioState = 0;
     currentQuestionNumber = 0;
     initTts();

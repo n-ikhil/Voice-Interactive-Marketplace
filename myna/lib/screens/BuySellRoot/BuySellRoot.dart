@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 // import 'package:flutter_tts/flutter_tts_web.dart';
-import 'package:myna/components/Recorder.dart';
 import 'package:myna/components/buysellRecorder.dart';
 import 'package:myna/constants/variables/common.dart';
 import 'package:myna/models/quesionCards.dart';
@@ -16,9 +15,9 @@ class _BuySellRootState extends State<BuySellRoot> {
   int audioState;
   FlutterTts flutterTts = FlutterTts();
   Question question = Question(
-      language: 'en_IN',
-      questionEnglish: "Would you like to buy or sell products",
-      type: InputType.audio);
+    language: 'en_IN',
+    data: ["Would you like to buy or sell products", "rootbuysell", "button"],
+  );
   String currentLanguage;
 
   @override

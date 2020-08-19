@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:myna/screens/AudioBuyer/AudioBuyer.dart';
 import 'package:myna/screens/AudioSeller/AudioSeller.dart';
+import 'package:myna/screens/BuySellRoot/BuySellRoot.dart';
 import 'package:myna/screens/CategoryResult/CategoryResult.dart';
 import 'package:myna/screens/HomePage/HomePage.dart';
 import 'package:myna/screens/ItemList/ItemList.dart';
@@ -30,6 +31,8 @@ class Router {
         return MaterialPageRoute(builder: (_) => AudioBuyer());
       case audioSeller:
         return MaterialPageRoute(builder: (_) => AudioSeller());
+      case buySellRoot:
+        return MaterialPageRoute(builder: (_) => BuySellRoot());
       case homePage:
         return MaterialPageRoute(builder: (_) => HomePage());
       case newItemPage:

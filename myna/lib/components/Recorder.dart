@@ -40,14 +40,10 @@ class _RecorderSpeechState extends State<RecorderSpeech> {
   }
 
   void translatedtext(String lastWords) async {
-    String cleanedTex = lastWords;
-    cleanedTex = cleanedTex.replaceAll(" - true", "");
-    await googleTranslateToEnglish(cleanedTex, _currentLocaleId)
-        .then((onValue) {
+    await googleTranslateToEnglish(lastWords, _currentLocaleId).then((onValue) {
       setState(() {
         convertedWords = onValue;
       });
-      widget.callbackFunction(convertedWords);
     });
   }
 
@@ -75,7 +71,7 @@ class _RecorderSpeechState extends State<RecorderSpeech> {
       mainAxisAlignment: MainAxisAlignment.end,
       children: <Widget>[
         Container(
-          child: Text("recognized : " + this.lastWords),
+          child: Text("recognized : " + this.convertedWords),
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -93,7 +89,8 @@ class _RecorderSpeechState extends State<RecorderSpeech> {
                     child: RaisedButton(
                       child: Text('submit'),
                       onPressed: () {
-                        translatedtext(lastWords);
+                        widget.callbackFunction(this.convertedWords);
+                        // translatedtext(lastWords);
                         //api call
                         //Navigator.pushNamed(context, '/ItemList');
                       },
@@ -150,6 +147,9 @@ class _RecorderSpeechState extends State<RecorderSpeech> {
 
   void resultListener(SpeechRecognitionResult result) async {
     print("this is listener in recorder");
+    if (result.finalResult) {
+      translatedtext(result.recognizedWords);
+    }
     print(lastWords);
     setState(() {
       lastWords = "${result.recognizedWords} - ${result.finalResult}";

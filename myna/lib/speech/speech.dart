@@ -1,10 +1,18 @@
 import 'dart:async';
+import 'dart:ffi';
+// import 'dart:html';
 import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:myna/constants/variables/ROUTES.dart';
+import 'package:myna/constants/variables/common.dart';
+import 'package:myna/models/widgetAndThemes/theme.dart';
+import 'package:myna/screens/itemDetail/ItemDetail.dart';
 import 'package:speech_to_text/speech_recognition_error.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 import 'package:translator/translator.dart';
+import 'package:myna/services/apiHandler.dart';
 
 class SpeechTextCon extends StatefulWidget {
   @override
@@ -28,6 +36,7 @@ class _SpeechTextConState extends State<SpeechTextCon> {
   void initState() {
     print('entered to initstate');
     super.initState();
+    initSpeechState();
   }
 
   void translatedtext(String lastWords) async {
@@ -61,46 +70,55 @@ class _SpeechTextConState extends State<SpeechTextCon> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Speech to Text Example'),
+          title: const Text('Myna'),
+          backgroundColor: Colors.green,
         ),
         body: Column(children: [
           Center(
             child: Text(
-              'Speech recognition available',
+              'Speech recognition',
               style: TextStyle(fontSize: 22.0),
             ),
           ),
           Container(
             child: Column(
               children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: <Widget>[
-                    FlatButton(
-                      child: Text('Initialize'),
-                      onPressed: _hasSpeech ? null : initSpeechState,
-                    ),
-                  ],
+                SizedBox(
+                  height: 80,
                 ),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+                //   children: <Widget>[
+                //     FlatButton(
+                //       child: Text('Initialize'),
+                //       //onPressed: _hasSpeech ? null : initSpeechState,
+                //     ),
+                //   ],
+                // ),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    FlatButton(
-                      child: Text('Start'),
+                    RaisedButton(
+                      color: Colors.blue[300],
+                      //child: Text('Start'),
+                      child: Icon(
+                        Icons.mic,
+                      ),
                       onPressed: !_hasSpeech || speech.isListening
                           ? null
                           : startListening,
                     ),
-                    FlatButton(
-                      child: Text('Stop'),
-                      onPressed: speech.isListening ? stopListening : null,
-                    ),
-                    FlatButton(
-                      child: Text('Cancel'),
-                      onPressed: speech.isListening ? cancelListening : null,
-                    ),
+                    // FlatButton(
+                    //   child: Text('Stop'),
+                    //   onPressed: speech.isListening ? stopListening : null,
+                    // ),
+                    // FlatButton(
+                    //   child: Text('Cancel'),
+                    //   onPressed: speech.isListening ? cancelListening : null,
+                    // ),
                   ],
                 ),
                 Row(
@@ -127,6 +145,9 @@ class _SpeechTextConState extends State<SpeechTextCon> {
             flex: 4,
             child: Column(
               children: <Widget>[
+                SizedBox(
+                  height: 80,
+                ),
                 Center(
                   child: Text(
                     'Recognized Words',
@@ -184,33 +205,48 @@ class _SpeechTextConState extends State<SpeechTextCon> {
               ],
             ),
           ),
-          Expanded(
-            flex: 1,
-            child: Column(
-              children: <Widget>[
-                Center(
-                  child: Text(
-                    'Error Status',
-                    style: TextStyle(fontSize: 22.0),
-                  ),
-                ),
-                Center(
-                  child: Text(lastError),
-                ),
-              ],
-            ),
-          ),
+          // Expanded(
+          //   flex: 1,
+          //   child: Column(
+          //     children: <Widget>[
+          //       Center(
+          //         child: Text(
+          //           'Error Status',
+          //           style: TextStyle(fontSize: 22.0),
+          //         ),),
+          //       Center(
+          //         child: Text(lastError),
+          //       ),
+          //     ],
+          //   ),
+          // ),
           Container(
             child: RaisedButton(
-              child: Text('translate'),
-              onPressed: () {
-                translatedtext(lastWords);
+              color: Colors.blue[300],
+              child: Text('send'),
+              onPressed: () async {
+                await translatedtext(lastWords);
+                String prodid = await productData(convertedWords);
+                print("-------------------${prodid}");
+
+                if (prodid == "") {
+                  print("could not understand the query");
+                  setState(() {
+                    convertedWords = "could not understand the query";
+                  });
+                } else {
+                  await Navigator.pushNamed(context, itemList,
+                      arguments: {'id': prodid});
+                  print(prodid);
+                }
+                //translatedtext(lastWords);
               },
             ),
           ),
           Container(
             padding: EdgeInsets.symmetric(vertical: 20),
-            color: Theme.of(context).backgroundColor,
+            //color: Theme.of(context).backgroundColor,
+            color: Colors.green,
             child: Center(
               child: speech.isListening
                   ? Text(
@@ -241,7 +277,13 @@ class _SpeechTextConState extends State<SpeechTextCon> {
         partialResults: true,
         onDevice: true,
         listenMode: ListenMode.confirmation);
+
     setState(() {});
+    // translatedtext(lastWords);
+    //getItemResults(convertedWords);
+    // print("----------------------########-----------------");
+    // print(convertedWords);
+    // Navigator.pushNamed(context, '/newItem');
   }
 
   void stopListening() {
@@ -262,6 +304,9 @@ class _SpeechTextConState extends State<SpeechTextCon> {
     setState(() {
       lastWords = "${result.recognizedWords} - ${result.finalResult}";
     });
+
+    // Navigator0Cs.Navigator.pushNamed(context, '/second');s.g /
+    //Navigator.pushNamed(context, '/NewItem');
   }
 
   void soundLevelListener(double level) {

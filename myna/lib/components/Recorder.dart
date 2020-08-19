@@ -11,8 +11,8 @@ typedef void StringCallback(String val);
 
 class RecorderSpeech extends StatefulWidget {
   final StringCallback callbackFunction;
-  final StringCallback languageChangeCallBack;
-  RecorderSpeech({this.callbackFunction, this.languageChangeCallBack});
+  final String currentLanguage;
+  RecorderSpeech({this.callbackFunction, this.currentLanguage});
   @override
   _RecorderSpeechState createState() => _RecorderSpeechState();
 }
@@ -35,6 +35,7 @@ class _RecorderSpeechState extends State<RecorderSpeech> {
     print('entered to initstate');
     super.initState();
     initSpeechState();
+    _currentLocaleId = widget.currentLanguage;
   }
 
   void translatedtext(String lastWords) async {
@@ -49,12 +50,12 @@ class _RecorderSpeechState extends State<RecorderSpeech> {
     print("eneterd to initspeech state");
     bool hasSpeech = await speech.initialize(
         onError: errorListener, onStatus: statusListener);
-    if (hasSpeech) {
-      _localeNames = await speech.locales();
+    // if (hasSpeech) {
+    //   // _localeNames = await speech.locales();
 
-      var systemLocale = await speech.systemLocale();
-      _currentLocaleId = systemLocale.localeId;
-    }
+    //   // var systemLocale = await speech.systemLocale();
+    //   _currentLocaleId = systemLocale.localeId;
+    // }
 
     if (!mounted) return;
 
@@ -74,14 +75,14 @@ class _RecorderSpeechState extends State<RecorderSpeech> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            SizedBox(
-                width: 100,
-                child: FlatButton(
-                  child: Text("lang: " + _currentLocaleId),
-                  onPressed: () {
-                    showLanguages(context);
-                  },
-                )),
+            // SizedBox(
+            //     width: 100,
+            //     child: FlatButton(
+            //       child: Text("lang: " + _currentLocaleId),
+            //       onPressed: () {
+            //         showLanguages(context);
+            //       },
+            //     )),
             lastWords.endsWith("true")
                 ? Container(
                     child: RaisedButton(
@@ -104,8 +105,9 @@ class _RecorderSpeechState extends State<RecorderSpeech> {
                 color: speech.isListening ? Colors.orange : Colors.white,
               ),
               color: Colors.green,
-              onPressed:
-                  !_hasSpeech || speech.isListening ? null : startListening,
+              onPressed: () {
+                !_hasSpeech || speech.isListening ? null : startListening();
+              },
             ),
           ],
         ),
@@ -176,40 +178,40 @@ class _RecorderSpeechState extends State<RecorderSpeech> {
       lastStatus = "$status";
     });
   }
-
-  _switchLang(selectedVal) {
-    widget.languageChangeCallBack(selectedVal);
-    print(selectedVal.split("_")[0]);
-    setState(() {
-      _currentLocaleId = selectedVal;
-    });
-    print(selectedVal);
-  }
-
-  void showLanguages(context) {
-    showDialog(
-        child: Dialog(
-          child: SingleChildScrollView(
-            child: DropdownButton(
-              onChanged: (selectedVal) {
-                _switchLang(selectedVal);
-                Navigator.pop(context);
-              },
-              value: _currentLocaleId,
-              items: _localeNames
-                  .map(
-                    (localeName) => DropdownMenuItem(
-                      value: localeName.localeId,
-                      child: Text(
-                        localeName.name,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  )
-                  .toList(),
-            ),
-          ),
-        ),
-        context: context);
-  }
 }
+// _switchLang(selectedVal) {
+//   widget.languageChangeCallBack(selectedVal);
+//   print(selectedVal.split("_")[0]);
+//   setState(() {
+//     _currentLocaleId = selectedVal;
+//   });
+//   print(selectedVal);
+// }
+
+//   void showLanguages(context) {
+//     showDialog(
+//         child: Dialog(
+//           child: SingleChildScrollView(
+//             child: DropdownButton(
+//               onChanged: (selectedVal) {
+//                 _switchLang(selectedVal);
+//                 Navigator.pop(context);
+//               },
+//               value: _currentLocaleId,
+//               items: _localeNames
+//                   .map(
+//                     (localeName) => DropdownMenuItem(
+//                       value: localeName.localeId,
+//                       child: Text(
+//                         localeName.name,
+//                         overflow: TextOverflow.ellipsis,
+//                       ),
+//                     ),
+//                   )
+//                   .toList(),
+//             ),
+//           ),
+//         ),
+//         context: context);
+//   }
+// }

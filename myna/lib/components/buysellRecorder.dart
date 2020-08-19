@@ -14,8 +14,11 @@ typedef void StringCallback(String val);
 class BuySellRecorder extends StatefulWidget {
   final StringCallback callbackFunction;
   final StringCallback languageChangeCallBack;
-
-  BuySellRecorder({this.callbackFunction, this.languageChangeCallBack});
+  final String currentLanguage;
+  BuySellRecorder(
+      {this.callbackFunction,
+      this.languageChangeCallBack,
+      this.currentLanguage});
   @override
   _BuySellRecorderState createState() => _BuySellRecorderState();
 }
@@ -35,7 +38,9 @@ class _BuySellRecorderState extends State<BuySellRecorder> {
 
   @override
   void initState() {
-    print('entered to initstate');
+    this._currentLocaleId = widget.currentLanguage;
+    print('entered to initstate of buy sell recorder');
+    print(_currentLocaleId);
     super.initState();
     initSpeechState();
   }
@@ -59,8 +64,8 @@ class _BuySellRecorderState extends State<BuySellRecorder> {
     if (hasSpeech) {
       _localeNames = await speech.locales();
 
-      var systemLocale = await speech.systemLocale();
-      _currentLocaleId = systemLocale.localeId;
+      // var systemLocale = await speech.systemLocale();
+      // _currentLocaleId = systemLocale.localeId;
     }
 
     if (!mounted) return;

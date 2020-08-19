@@ -42,6 +42,7 @@ class _AudioSellerState extends State<AudioSeller> {
     4=> we spoke
    */
   String currentLanguage;
+  String flutterLanguage;
 
   @override
   void initState() {
@@ -50,7 +51,8 @@ class _AudioSellerState extends State<AudioSeller> {
     _newContactTextController = TextEditingController();
     recordedAnswers = [];
     super.initState();
-    currentLanguage = "en_IN";
+    currentLanguage = widget.myModel.currentLanguage;
+    flutterLanguage = widget.myModel.flutterLanguage;
     allQuestions = QuestionCard(curLang: currentLanguage);
     audioState = 0;
     currentQuestionNumber = 0;
@@ -58,7 +60,10 @@ class _AudioSellerState extends State<AudioSeller> {
     incrementAudioState();
   }
 
-  void incrementAudioState() {
+  void incrementAudioState() async {
+    if (audioState == 0) {
+      await allQuestions.QuestionCardSet();
+    }
     this.setState(() {
       audioState++;
     });
@@ -83,9 +88,9 @@ class _AudioSellerState extends State<AudioSeller> {
 
   void callBackForRecorder(dynamic data) {
     print("called");
-    if (audioState != 3) {
-      return;
-    }
+    // if (audioState != 3) {
+    //   return;
+    // }
     this.setState(() {
       recognisedWords = data;
     });
@@ -215,11 +220,15 @@ class _AudioSellerState extends State<AudioSeller> {
                                 ))
                               : Container(width: 0, height: 0)))))
               : Container(width: 0, height: 0)),
-
-          RecorderSpeech(
-            callbackFunction: this.callBackForRecorder,
-            languageChangeCallBack: this.callBackForLanguageChange,
-          )
+          audioState == 3 &&
+                  allQuestions.questions[currentQuestionNumber].type == "audio"
+              ? RecorderSpeech(
+                  callbackFunction: this.callBackForRecorder,
+                  currentLanguage: this.currentLanguage)
+              : Container(
+                  height: 0,
+                  width: 0,
+                )
           // ),
         ],
       ),
@@ -232,21 +241,6 @@ class _AudioSellerState extends State<AudioSeller> {
       _imageName = (image.path.split(Platform.pathSeparator).last);
       _image = image;
     });
-  }
-
-  Future setLanguage(String data) async {
-    this.setState(() {
-      showSpinner = true;
-    });
-    await changeMachineLanguage(data);
-    await this.allQuestions.init(data);
-
-    this.setState(() {
-      currentLanguage = data;
-      audioState = 0;
-      showSpinner = false;
-    });
-    incrementAudioState();
   }
 
   Future imageSubmit() async {
@@ -295,13 +289,9 @@ class _AudioSellerState extends State<AudioSeller> {
     Navigator.pop(context);
   }
 
-  void callBackForLanguageChange(String data) {
-    setLanguage(data);
-  }
-
   void initTts() {
     flutterTts.setSpeechRate(0.8);
-    flutterTts.setLanguage("en-IN");
+    flutterTts.setLanguage(flutterLanguage);
     flutterTts.setStartHandler(() {
       setState(() {
         print("Playing");
@@ -332,24 +322,6 @@ class _AudioSellerState extends State<AudioSeller> {
         .speak(allQuestions.questions[currentQuestionNumber].questionLanguage);
     // if (result == 1) setState(() => ttsState = TtsState.playing);
     // }
-  }
-
-  Future changeMachineLanguage(String data) async {
-    // final languages = await flutterTts.getLanguages;
-    // print(languages);
-    print("changing machine langue");
-    // print(data);
-    var tlang = data;
-    tlang = tlang.replaceAll("_", "-");
-    // print(tlang);
-    print("check");
-    var isGoodLanguage = await flutterTts.isLanguageAvailable(tlang);
-    if (isGoodLanguage) {
-      print("yup");
-      await flutterTts.setLanguage(tlang);
-    } else {
-      await flutterTts.setLanguage("hi-IN"); // fallback
-    }
   }
 
   void machineStopped() {

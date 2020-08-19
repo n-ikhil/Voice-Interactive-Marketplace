@@ -4,6 +4,7 @@ import 'package:myna/models/UserDetail.dart';
 import 'package:myna/services/firebase/FirestoreClients.dart';
 import 'package:myna/services/firebase/auth.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:myna/services/textToSpeech.dart';
 
 class CurrentLocation {
   bool isLoaded = false;
@@ -33,11 +34,26 @@ class SharedObjects with ChangeNotifier {
   CurrentLocation currentLocation;
 
   UserDetail get currentUser => _currentUser;
+  String currentLanguage;
+  String flutterLanguage;
 
   SharedObjects() {
+    currentLanguage = "en_IN";
+    flutterLanguage = "en_IN";
     isLoggedIn = false;
     firestoreClientInstance = FirestoreClient(); //sync
     currentLocation = CurrentLocation();
+  }
+
+  void setLanguage(String newLanguge) async {
+    print("changin root language");
+    this.currentLanguage = newLanguge; //csdcorp standard
+    print("changing flutter language");
+    this.flutterLanguage =
+        await getTtsCompliantLanguageCode(this.currentLanguage);
+    print("new flutter language");
+    print(flutterLanguage);
+    notifyListeners();
   }
 
   void addAuthInstance(authInst) {

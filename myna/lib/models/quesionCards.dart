@@ -5,11 +5,15 @@ class Question {
   String questionLanguage;
   String type;
   String id;
-  Question({language = "en_IN", data}) {
+  bool questionLoaded;
+  Question();
+  QuestionSet({language = "en_IN", data}) async {
     questionEnglish = data[0];
+    questionLanguage = data[0];
+    questionLoaded = false;
     id = data[1];
     type = data[2];
-    setLanguage(language);
+    await setLanguage(language);
   }
 
   Future setLanguage(language) async {
@@ -21,6 +25,7 @@ class Question {
         .then((onValue) {
       questionLanguage = onValue;
     });
+    this.questionLoaded = true;
   }
 }
 
@@ -48,8 +53,15 @@ class QuestionCard {
 
   QuestionCard({this.curLang = 'en_IN'}) {
     for (int i = 0; i < fixedQuestions.length; i++) {
-      Question q = Question(language: curLang, data: fixedQuestions[i]);
+      Question q = Question();
       questions.add(q);
+    }
+  }
+
+  QuestionCardSet() async {
+    for (int i = 0; i < fixedQuestions.length; i++) {
+      await questions[i]
+          .QuestionSet(language: curLang, data: fixedQuestions[i]);
     }
   }
 

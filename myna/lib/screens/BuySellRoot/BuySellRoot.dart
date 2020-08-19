@@ -4,8 +4,11 @@ import 'package:flutter_tts/flutter_tts.dart';
 import 'package:myna/components/buysellRecorder.dart';
 import 'package:myna/constants/variables/common.dart';
 import 'package:myna/models/quesionCards.dart';
+import 'package:myna/services/SharedObjects.dart';
 
 class BuySellRoot extends StatefulWidget {
+  final SharedObjects myModel;
+  BuySellRoot(this.myModel);
   @override
   _BuySellRootState createState() => _BuySellRootState();
 }
@@ -14,22 +17,30 @@ class _BuySellRootState extends State<BuySellRoot> {
   String recognisedWords = "waiting..";
   int audioState;
   FlutterTts flutterTts = FlutterTts();
-  Question question = Question(
-    language: 'en_IN',
-    data: ["Would you like to buy or sell products", "rootbuysell", "button"],
-  );
+  Question question;
   String currentLanguage;
 
   @override
   void initState() {
+    question = Question();
     super.initState();
-    currentLanguage = "en_IN";
+    currentLanguage = widget.myModel.currentLanguage;
     audioState = 0;
     initTts();
     incrementAudioState();
   }
 
-  void incrementAudioState() {
+  void incrementAudioState() async {
+    if (audioState == 0) {
+      await question.QuestionSet(
+        language: widget.myModel.currentLanguage,
+        data: [
+          "Would you like to buy or sell products",
+          "rootbuysell",
+          "button"
+        ],
+      );
+    }
     this.setState(() {
       audioState++;
     });
@@ -78,6 +89,7 @@ class _BuySellRootState extends State<BuySellRoot> {
           BuySellRecorder(
             callbackFunction: this.callBackForRecorder,
             languageChangeCallBack: this.callBackForLanguageChange,
+            currentLanguage: this.currentLanguage,
           ),
 
           // ),
@@ -87,12 +99,8 @@ class _BuySellRootState extends State<BuySellRoot> {
   }
 
   Future setLanguage(String data) async {
-    await changeMachineLanguage(data);
-    await question.setLanguage(data);
-    //await this.allQuestions.init(data);
-
+    widget.myModel.setLanguage(data);
     this.setState(() {
-      currentLanguage = data;
       audioState = 0;
     });
     incrementAudioState();
@@ -104,6 +112,7 @@ class _BuySellRootState extends State<BuySellRoot> {
 
   void initTts() {
     flutterTts.setSpeechRate(0.8);
+    flutterTts.setLanguage(widget.myModel.flutterLanguage);
     flutterTts.setStartHandler(() {
       setState(() {
         print("Playing");
@@ -131,19 +140,6 @@ class _BuySellRootState extends State<BuySellRoot> {
   void machineSpeak() async {
     // if (audioState == 1) {
     await flutterTts.speak(question.questionLanguage);
-  }
-
-  Future changeMachineLanguage(String data) async {
-    // final languages = await flutterTts.getLanguages;
-    // print(languages);
-    var tlang = data;
-    tlang = tlang.replaceAll("_", "-");
-    print(tlang);
-    var isGoodLanguage = await flutterTts.isLanguageAvailable(tlang);
-    if (isGoodLanguage) {
-      // print("yup");
-      await flutterTts.setLanguage(tlang);
-    }
   }
 
   void machineStopped() {

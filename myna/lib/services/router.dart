@@ -28,10 +28,22 @@ class Router {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case audioBuyer:
-        return MaterialPageRoute(builder: (_) => AudioBuyer());
+        return MaterialPageRoute(
+            builder: (_) =>
+                Consumer<SharedObjects>(builder: (context, myModel, child) {
+                  return AudioBuyer(
+                    myModel,
+                  );
+                }));
 
       case buySellRoot:
-        return MaterialPageRoute(builder: (_) => BuySellRoot());
+        return MaterialPageRoute(
+            builder: (_) =>
+                Consumer<SharedObjects>(builder: (context, myModel, child) {
+                  return BuySellRoot(
+                    myModel,
+                  );
+                }));
       case audioSeller:
         return MaterialPageRoute(
             builder: (_) =>

@@ -53,11 +53,11 @@ class _NewItemState extends State<NewItem> {
     loadCategories();
   }
 
-  void loadCategories() {
+  Future loadCategories() async {
     this.setState(() {
       showSpinner = true;
     });
-    this
+    await this
         .widget
         .myModel
         .firestoreClientInstance
@@ -65,7 +65,7 @@ class _NewItemState extends State<NewItem> {
         .storeGetCategories()
         .then((onValue) {
       this.setState(() {
-        allCats = onValue;
+        allCats = [...onValue, Category.sample()];
         showSpinner = false;
       });
     }).catchError((_) {
@@ -75,11 +75,11 @@ class _NewItemState extends State<NewItem> {
     });
   }
 
-  void loadProducts(String id) {
+  Future loadProducts(String id) async {
     this.setState(() {
       showSpinner = true;
     });
-    this
+    await this
         .widget
         .myModel
         .firestoreClientInstance
@@ -87,7 +87,7 @@ class _NewItemState extends State<NewItem> {
         .storeGetProductsOnCategories(id)
         .then((onValue) {
       setState(() {
-        this.allProds = onValue;
+        this.allProds = [...onValue, Product.sample()];
         this.showSpinner = false;
       });
     }).catchError((_) {
@@ -110,7 +110,7 @@ class _NewItemState extends State<NewItem> {
     setState(() {
       showSpinner = true;
     });
-    String imgURL;
+    String imgURL = "";
     if (_image != null) {
       print("saving  the image");
       String curDateTime =
@@ -176,7 +176,7 @@ class _NewItemState extends State<NewItem> {
               // initialValue: 'Male',
               hint: Text(
                   curCategory != null ? curCategory.name : 'Select category'),
-              items: [...allCats, Category.sample()]
+              items: allCats
                   .map((cat) =>
                       DropdownMenuItem(value: cat, child: Text(cat.name)))
                   .toList(),
@@ -184,6 +184,7 @@ class _NewItemState extends State<NewItem> {
             DropdownButtonFormField(
               onChanged: (value) {
                 if (value.id == "-1") {
+                  print("show prod");
                   showNewProductDialog(context);
                 } else {
                   this.setState(() {
@@ -193,7 +194,7 @@ class _NewItemState extends State<NewItem> {
               },
               hint:
                   Text(curProduct != null ? curProduct.name : "Select Product"),
-              items: [...allProds, Product.sample()]
+              items: allProds
                   .map((prod) =>
                       DropdownMenuItem(value: prod, child: Text(prod.name)))
                   .toList(),
@@ -256,28 +257,26 @@ class _NewItemState extends State<NewItem> {
               ),
               FlatButton(
                 child: Text("Save"),
-                onPressed: () {
+                onPressed: () async {
                   print("writing category");
                   setState(() {
                     showSpinner = true;
                   });
-                  widget.myModel.firestoreClientInstance.categoryClient
+                  await widget.myModel.firestoreClientInstance.categoryClient
                       .storeSaveCategory(_newCategoryTextController.text)
-                      .then((cat) {
-                    print("At main");
-                    print(cat);
+                      .then((cat) async {
+                    await loadCategories();
+                    await loadProducts(cat.id);
                     setState(() {
                       curCategory = cat;
-                      loadProducts(cat.id);
-                      allCats = [...allCats, cat];
                       showSpinner = false;
                     });
                   }).catchError((onError) {
                     print(onError);
                     print("new category not written");
-                    setState(() {
-                      showSpinner = false;
-                    });
+                  });
+                  setState(() {
+                    showSpinner = false;
                   });
                   Navigator.pop(context);
                 },
@@ -293,22 +292,6 @@ class _NewItemState extends State<NewItem> {
         child: Dialog(
           child: Column(
             children: <Widget>[
-              DropdownButtonFormField(
-                value: curCategory,
-                onChanged: (value) {
-                  loadProducts(value.id);
-                  this.setState(() {
-                    curCategory = value;
-                  });
-                },
-                // initialValue: 'Male',
-                hint: Text(
-                    curCategory != null ? curCategory.name : 'Select category'),
-                items: allCats
-                    .map((cat) =>
-                        DropdownMenuItem(value: cat, child: Text(cat.name)))
-                    .toList(),
-              ),
               TextField(
                 decoration: InputDecoration(hintText: "add new product"),
                 controller: _newProductTextController,
@@ -322,15 +305,14 @@ class _NewItemState extends State<NewItem> {
                   widget.myModel.firestoreClientInstance.productClient
                       .storeSaveProduct(
                           curCategory, _newProductTextController.text)
-                      .then((onValue) {
+                      .then((onValue) async {
+                    await loadProducts(curCategory.id);
                     setState(() {
                       curProduct = onValue;
-                      allProds = [...allProds, curProduct];
-                      showSpinner = false;
                     });
-                    setState(() {
-                      showSpinner = false;
-                    });
+                  });
+                  setState(() {
+                    showSpinner = false;
                   });
                   Navigator.pop(context);
                 },

@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'dart:ffi';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:myna/constants/variables/ROUTES.dart';
 import 'package:myna/services/gtranslator.dart';
 import 'package:speech_to_text/speech_recognition_error.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
@@ -9,15 +11,16 @@ import 'package:speech_to_text/speech_to_text.dart';
 
 typedef void StringCallback(String val);
 
-class RecorderSpeech extends StatefulWidget {
+class BuySellRecorder extends StatefulWidget {
   final StringCallback callbackFunction;
   final StringCallback languageChangeCallBack;
-  RecorderSpeech({this.callbackFunction, this.languageChangeCallBack});
+
+  BuySellRecorder({this.callbackFunction, this.languageChangeCallBack});
   @override
-  _RecorderSpeechState createState() => _RecorderSpeechState();
+  _BuySellRecorderState createState() => _BuySellRecorderState();
 }
 
-class _RecorderSpeechState extends State<RecorderSpeech> {
+class _BuySellRecorderState extends State<BuySellRecorder> {
   bool _hasSpeech = false;
   double level = 0.0;
   double minSoundLevel = 50000;
@@ -38,10 +41,14 @@ class _RecorderSpeechState extends State<RecorderSpeech> {
   }
 
   void translatedtext(String lastWords) async {
-    await googleTranslateToEnglish(lastWords, _currentLocaleId).then((onValue) {
+    String cleanedTex = lastWords;
+    cleanedTex = cleanedTex.replaceAll(" - true", "");
+    await googleTranslateToEnglish(cleanedTex, _currentLocaleId)
+        .then((onValue) {
       setState(() {
         convertedWords = onValue;
       });
+      widget.callbackFunction(convertedWords);
     });
   }
 
@@ -69,43 +76,36 @@ class _RecorderSpeechState extends State<RecorderSpeech> {
       mainAxisAlignment: MainAxisAlignment.end,
       children: <Widget>[
         Container(
-          child: Text("recognized in english as : " + this.convertedWords),
+          child: SizedBox(
+              width: 150,
+              height: 100,
+              child: FlatButton(
+                child: Text("language: " + _currentLocaleId),
+                onPressed: () {
+                  showLanguages(context);
+                },
+              )),
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            SizedBox(
-                width: 100,
-                child: FlatButton(
-                  child: Text("lang: " + _currentLocaleId),
-                  onPressed: () {
-                    showLanguages(context);
-                  },
-                )),
-            lastWords.endsWith("true")
-                ? Container(
-                    child: RaisedButton(
-                        child: Text("audio submit"),
-                        onPressed: () {
-                          widget.callbackFunction(this.convertedWords);
-                          // translatedtext(lastWords);
-                          //api call
-                          //Navigator.pushNamed(context, '/ItemList');
-                        }),
-                  )
-                : Container(
-                    height: 0,
-                    width: 0,
-                  ),
-            RaisedButton(
-              //child: Text('Start'),
-              child: Icon(
-                Icons.mic,
-                color: speech.isListening ? Colors.orange : Colors.white,
+            Container(
+              margin: EdgeInsets.only(bottom: 50),
+              child: RaisedButton(
+                child: Text('Buy'),
+                onPressed: () {
+                  Navigator.pushNamed(context, audioBuyer);
+                },
               ),
-              color: Colors.green,
-              onPressed:
-                  !_hasSpeech || speech.isListening ? null : startListening,
+            ),
+            Container(
+              margin: EdgeInsets.only(bottom: 50),
+              child: RaisedButton(
+                child: Text('Sell'),
+                onPressed: () {
+                  Navigator.pushNamed(context, audioSeller);
+                },
+              ),
             ),
           ],
         ),
@@ -144,9 +144,6 @@ class _RecorderSpeechState extends State<RecorderSpeech> {
 
   void resultListener(SpeechRecognitionResult result) async {
     print("this is listener in recorder");
-    if (result.finalResult) {
-      translatedtext(result.recognizedWords);
-    }
     print(lastWords);
     setState(() {
       lastWords = "${result.recognizedWords} - ${result.finalResult}";

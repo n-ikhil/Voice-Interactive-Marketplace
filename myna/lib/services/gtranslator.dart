@@ -5,7 +5,7 @@ Future<String> googleTranslateToEnglish(
   final translator = GoogleTranslator();
   var translation = await translator.translate(lastWords,
       from: currentLocaleId.split("_")[0], to: 'en');
-  return translation.toString();
+  return translation.toString().toLowerCase();
 }
 
 Future<String> googleTranslateEnglishToSpecified(

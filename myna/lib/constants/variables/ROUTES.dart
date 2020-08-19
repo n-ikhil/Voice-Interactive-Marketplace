@@ -15,5 +15,6 @@ const myItems = '/user/items';
 const conversation = '/chatDual';
 const audioBuyer = '/audio/buyer';
 const audioSeller = '/audio/seller';
+const buySellRoot = '/audio/buysellroot';
 
 // https://stackoverflow.com/questions/54190196/how-to-send-parameters-when-navigating-with-navigator-pushnamed

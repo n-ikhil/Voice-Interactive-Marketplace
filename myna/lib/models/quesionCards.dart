@@ -1,13 +1,14 @@
 import 'package:myna/services/gtranslator.dart';
-import 'package:myna/speech/port.dart';
-
-enum InputType { keyboard, audio }
 
 class Question {
   String questionEnglish;
   String questionLanguage;
-  InputType type;
-  Question({language = "en_IN", this.questionEnglish, this.type}) {
+  String type;
+  String id;
+  Question({language = "en_IN", data}) {
+    questionEnglish = data[0];
+    id = data[1];
+    type = data[2];
     setLanguage(language);
   }
 
@@ -24,16 +25,22 @@ class Question {
 }
 
 class QuestionCard {
-  List<String> fixedQuestions = [
-    " What is the name of product you want to sell ",
-    "What is the price of product you want to sell",
-    " Is the product rentable "
-  ];
-
-  List<InputType> fixedTypes = [
-    InputType.audio,
-    InputType.audio,
-    InputType.audio,
+  // basically [string,id]
+  List<List<String>> fixedQuestions = [
+    [" What is the name of product you want to sell ", "productID", "audio"],
+    ["What is the price of product you want to sell", "price", "keyPad"],
+    ["Please enter your contact number to call ", "contact", "keyPad"],
+    [
+      "Please give some brief Description of the product ",
+      "description",
+      "audio"
+    ],
+    [" Will you be able to rent the product  ", "isRentable", "boolButton"],
+    [
+      "please add some images",
+      "imgURL",
+      "file",
+    ]
   ];
 
   List<Question> questions = [];
@@ -41,10 +48,7 @@ class QuestionCard {
 
   QuestionCard({this.curLang = 'en_IN'}) {
     for (int i = 0; i < fixedQuestions.length; i++) {
-      Question q = Question(
-          language: curLang,
-          questionEnglish: fixedQuestions[i],
-          type: fixedTypes[i]);
+      Question q = Question(language: curLang, data: fixedQuestions[i]);
       questions.add(q);
     }
   }

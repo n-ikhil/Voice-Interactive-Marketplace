@@ -147,7 +147,7 @@ class _BaseLayoutState extends State<BaseLayout> {
         body: SingleChildScrollView(child: widget.childWidget),
         bottomNavigationBar: RaisedButton(
           onPressed: () {
-            Navigator.pushNamed(context, speechPage);
+            Navigator.pushNamed(context, buySellRoot);
           },
           child: Icon(Icons.record_voice_over),
           // color: Colors.,

@@ -19,5 +19,18 @@ exports.extractingNouns = (rvstring) => {
     if (s2.length >= 2 && s2[0] === "N" && s2[1] === "N") final_nouns.push(s1);
   });
 
-  return final_nouns;
+  const propNouns = [];
+  final_nouns.forEach(el=>{
+      propNouns.push(el);
+      if(el[el.length-1] == 's') {
+          propNouns.push(el.substr(0,el.length-1));
+      }
+      else {
+          let strs1 = el+'s';
+          propNouns.push(strs1);
+      }
+  })
+
+  
+  return propNouns;
 };

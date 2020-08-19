@@ -29,7 +29,13 @@ class Router {
       case audioBuyer:
         return MaterialPageRoute(builder: (_) => AudioBuyer());
       case audioSeller:
-        return MaterialPageRoute(builder: (_) => AudioSeller());
+        return MaterialPageRoute(
+            builder: (_) =>
+                Consumer<SharedObjects>(builder: (context, myModel, child) {
+                  return AudioSeller(
+                    myModel: myModel,
+                  );
+                }));
       case homePage:
         return MaterialPageRoute(builder: (_) => HomePage());
       case newItemPage:

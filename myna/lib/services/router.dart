@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:myna/screens/AudioBuyer/AudioBuyer.dart';
+import 'package:myna/screens/AudioSeller/AudioSeller.dart';
 import 'package:myna/screens/CategoryResult/CategoryResult.dart';
 import 'package:myna/screens/HomePage/HomePage.dart';
 import 'package:myna/screens/ItemList/ItemList.dart';
-// import 'package:myna/screens/MyItems/MyItems.dart';
 import 'package:myna/screens/NewItem/NewItem.dart';
 import 'package:myna/screens/SearchPage/SearchPage.dart';
 import 'package:myna/screens/Authorization/root_page.dart';
@@ -25,6 +26,10 @@ BaseAuth auth = Auth();
 class Router {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
+      case audioBuyer:
+        return MaterialPageRoute(builder: (_) => AudioBuyer());
+      case audioSeller:
+        return MaterialPageRoute(builder: (_) => AudioSeller());
       case homePage:
         return MaterialPageRoute(builder: (_) => HomePage());
       case newItemPage:

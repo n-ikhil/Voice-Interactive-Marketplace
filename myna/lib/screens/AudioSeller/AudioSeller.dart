@@ -10,6 +10,7 @@ import 'package:myna/components/Recorder.dart';
 import 'package:myna/constants/variables/common.dart';
 import 'package:myna/models/quesionCards.dart';
 import 'package:myna/services/SharedObjects.dart';
+import 'package:myna/services/audioSellerFormSubmission.dart';
 
 class AudioSeller extends StatefulWidget {
   final SharedObjects myModel;
@@ -25,6 +26,7 @@ class _AudioSellerState extends State<AudioSeller> {
   int audioState;
   FlutterTts flutterTts = FlutterTts();
   List<dynamic> recordedAnswers;
+  Map<String, dynamic> mappedAnswers;
   TextEditingController _newContactTextController;
   File _image;
   String _imageName = "please add image";
@@ -43,6 +45,7 @@ class _AudioSellerState extends State<AudioSeller> {
 
   @override
   void initState() {
+    mappedAnswers = {};
     showSpinner = false;
     _newContactTextController = TextEditingController();
     recordedAnswers = [];
@@ -78,7 +81,7 @@ class _AudioSellerState extends State<AudioSeller> {
     }
   }
 
-  void callBackForRecorder(String data) {
+  void callBackForRecorder(dynamic data) {
     print("called");
     if (audioState != 3) {
       return;
@@ -99,6 +102,9 @@ class _AudioSellerState extends State<AudioSeller> {
       allQuestions.questions[currentQuestionNumber].id
     ];
     recordedAnswers.add(ans);
+
+    mappedAnswers[allQuestions.questions[currentQuestionNumber].id] =
+        recognisedWords;
 
     if (this.currentQuestionNumber == allQuestions.questions.length - 1) {
       submit();
@@ -275,9 +281,18 @@ class _AudioSellerState extends State<AudioSeller> {
   }
 
   Future submit() async {
-    for (int i = 0; i < recordedAnswers.length; i++) {
-      print(recordedAnswers[i][0] + " " + recordedAnswers[i][1]);
-    }
+    // for (int i = 0; i < recordedAnswers.length; i++) {
+    //   print(recordedAnswers[i][0] + " " + recordedAnswers[i][1]);
+    // }
+    setState(() {
+      showSpinner = true;
+    });
+    await audioSellerFormSubmission(widget.myModel, mappedAnswers);
+    setState(() {
+      showSpinner = false;
+    });
+    print("saved from audio");
+    Navigator.pop(context);
   }
 
   void callBackForLanguageChange(String data) {

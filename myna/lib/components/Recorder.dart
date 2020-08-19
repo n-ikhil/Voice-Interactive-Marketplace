@@ -89,7 +89,7 @@ class _RecorderSpeechState extends State<RecorderSpeech> {
                     child: RaisedButton(
                       child: Text('submit'),
                       onPressed: () {
-                        widget.callbackFunction(convertedWords);
+                        widget.callbackFunction(this.convertedWords);
                         // translatedtext(lastWords);
                         //api call
                         //Navigator.pushNamed(context, '/ItemList');

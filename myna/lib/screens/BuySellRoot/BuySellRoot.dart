@@ -101,7 +101,8 @@ class _BuySellRootState extends State<BuySellRoot> {
     this.setState(() {
       audioState = 0;
     });
-    incrementAudioState();
+    loadConvertedText();
+//    incrementAudioState();
   }
 
   void callBackForLanguageChange(String data) {

@@ -27,20 +27,18 @@ class _BuySellRootState extends State<BuySellRoot> {
     currentLanguage = widget.myModel.currentLanguage;
     audioState = 0;
     initTts();
+    loadConvertedText();
+  }
+
+  void loadConvertedText() async {
+    await question.QuestionSet(
+      language: widget.myModel.currentLanguage,
+      data: ["Would you like to buy or sell products", "rootbuysell", "button"],
+    );
     incrementAudioState();
   }
 
   void incrementAudioState() async {
-    if (audioState == 0) {
-      await question.QuestionSet(
-        language: widget.myModel.currentLanguage,
-        data: [
-          "Would you like to buy or sell products",
-          "rootbuysell",
-          "button"
-        ],
-      );
-    }
     this.setState(() {
       audioState++;
     });

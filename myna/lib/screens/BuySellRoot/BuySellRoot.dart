@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+
 // import 'package:flutter_tts/flutter_tts_web.dart';
 import 'package:myna/components/buysellRecorder.dart';
 import 'package:myna/constants/variables/common.dart';
@@ -8,7 +9,9 @@ import 'package:myna/services/SharedObjects.dart';
 
 class BuySellRoot extends StatefulWidget {
   final SharedObjects myModel;
+
   BuySellRoot(this.myModel);
+
   @override
   _BuySellRootState createState() => _BuySellRootState();
 }
@@ -97,7 +100,7 @@ class _BuySellRootState extends State<BuySellRoot> {
   }
 
   Future setLanguage(String data) async {
-    widget.myModel.setLanguage(data);
+    await widget.myModel.setLanguage(data);
     this.setState(() {
       audioState = 0;
     });

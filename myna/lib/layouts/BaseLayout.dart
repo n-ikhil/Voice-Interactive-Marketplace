@@ -35,7 +35,6 @@ class _BaseLayoutState extends State<BaseLayout> {
   @override
   initState() {
     super.initState();
-    getDetails();
   }
 
   _onShowDetail() {
@@ -53,15 +52,16 @@ class _BaseLayoutState extends State<BaseLayout> {
     );
     widget.myModel.updateLoginStatus();
     Navigator.pop(context);
-
     Navigator.pushNamed(context, userDetailFormPage, arguments: argSend);
   }
 
   refreshFunc() {
     widget.myModel.updateLoginStatus().then((_) {
-      userData = widget.myModel.currentUser;
-      print(userData.userID);
-      SharedPreferencesFunctions.saveUserNameSharedPreference(userData.userID);
+      setState(() {
+        userData = widget.myModel.currentUser;
+        print(userData.userID);
+        SharedPreferencesFunctions.saveUserNameSharedPreference(userData.userID);
+      });
     });
   }
 
@@ -73,7 +73,7 @@ class _BaseLayoutState extends State<BaseLayout> {
 
   @override
   Widget build(BuildContext context) {
-    // getDetails();
+     getDetails();
     void _signOut() async {
       try {
         await widget.auth.signOut();

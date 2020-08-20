@@ -38,16 +38,18 @@ class _AudioBuyerState extends State<AudioBuyer> {
     audioState = 0;
     currentQuestionNumber = 0;
     initTts();
+    loadConvertedText();
+  }
+
+  void loadConvertedText() async {
+    await question.QuestionSet(
+      language: currentLanguage,
+      data: ["Which product you want to buy", "buyer", "audio"],
+    );
     incrementAudioState();
   }
 
   void incrementAudioState() async {
-    if (audioState == 0) {
-      await question.QuestionSet(
-        language: currentLanguage,
-        data: ["Which product you want to buy", "buyer", "audio"],
-      );
-    }
     this.setState(() {
       audioState++;
     });

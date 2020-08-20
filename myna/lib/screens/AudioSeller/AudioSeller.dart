@@ -57,13 +57,23 @@ class _AudioSellerState extends State<AudioSeller> {
     audioState = 0;
     currentQuestionNumber = 0;
     initTts();
+    loadConvertedText();
+    // incrementAudioState();
+  }
+
+  void loadConvertedText() async {
+    this.setState(() {
+      showSpinner = true;
+    });
+    await allQuestions.QuestionCardSet();
+    this.setState(() {
+      showSpinner = false;
+    });
+    print("converted the text");
     incrementAudioState();
   }
 
   void incrementAudioState() async {
-    if (audioState == 0) {
-      await allQuestions.QuestionCardSet();
-    }
     this.setState(() {
       audioState++;
     });

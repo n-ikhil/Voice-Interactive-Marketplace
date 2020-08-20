@@ -20,17 +20,15 @@ exports.extractingNouns = (rvstring) => {
   });
 
   const propNouns = [];
-  final_nouns.forEach(el=>{
-      propNouns.push(el);
-      if(el[el.length-1] == 's') {
-          propNouns.push(el.substr(0,el.length-1));
-      }
-      else {
-          let strs1 = el+'s';
-          propNouns.push(strs1);
-      }
-  })
+  final_nouns.forEach((el) => {
+    propNouns.push(el);
+    if (el[el.length - 1] === "s") {
+      propNouns.push(el.substr(0, el.length - 1));
+    } else {
+      let strs1 = el + "s";
+      propNouns.push(strs1);
+    }
+  });
 
-  
   return propNouns;
 };

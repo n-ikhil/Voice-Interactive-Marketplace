@@ -34,6 +34,7 @@ class _BaseLayoutState extends State<BaseLayout> {
 
   @override
   initState() {
+    getDetails();
     super.initState();
   }
 
@@ -60,12 +61,15 @@ class _BaseLayoutState extends State<BaseLayout> {
       setState(() {
         userData = widget.myModel.currentUser;
         print(userData.userID);
-        SharedPreferencesFunctions.saveUserNameSharedPreference(userData.userID);
+        print("base layout");
+        SharedPreferencesFunctions.saveUserNameSharedPreference(
+            userData.userID);
       });
     });
   }
 
   getDetails() async {
+    print("get details");
     await widget.myModel.updateLoginStatus();
     widget.myModel.addAuthInstance(widget.auth);
     refreshFunc();
@@ -73,7 +77,6 @@ class _BaseLayoutState extends State<BaseLayout> {
 
   @override
   Widget build(BuildContext context) {
-     getDetails();
     void _signOut() async {
       try {
         await widget.auth.signOut();

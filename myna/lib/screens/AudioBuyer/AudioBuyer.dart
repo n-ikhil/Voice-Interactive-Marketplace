@@ -91,7 +91,10 @@ class _AudioBuyerState extends State<AudioBuyer> {
     if (true) {
       // logic to determine if the spoken words were correct; else remain in same state
       //incrementAudioState();
-      await translatedtext(recognisedWords);
+      // await translatedtext(recognisedWords);
+      setState(() {
+        convertedWords = recognisedWords.toString();
+      });
       convertedWords = convertedWords.toLowerCase();
       String prodid = await productData(convertedWords);
       print("-------------------${prodid}");

@@ -25,6 +25,7 @@ class _BuySellRootState extends State<BuySellRoot> {
 
   @override
   void initState() {
+    print("init recalled");
     question = Question();
     super.initState();
     currentLanguage = widget.myModel.currentLanguage;
@@ -101,6 +102,7 @@ class _BuySellRootState extends State<BuySellRoot> {
 
   Future setLanguage(String data) async {
     await widget.myModel.setLanguage(data);
+    await setTtsLanguage();
     this.setState(() {
       audioState = 0;
     });
@@ -110,6 +112,10 @@ class _BuySellRootState extends State<BuySellRoot> {
 
   void callBackForLanguageChange(String data) {
     setLanguage(data);
+  }
+
+  void setTtsLanguage() async {
+    await flutterTts.setLanguage(widget.myModel.flutterLanguage);
   }
 
   void initTts() {

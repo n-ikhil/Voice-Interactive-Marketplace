@@ -147,7 +147,7 @@ class _RecorderSpeechState extends State<RecorderSpeech> {
   void resultListener(SpeechRecognitionResult result) async {
     print("this is listener in recorder");
     if (result.finalResult) {
-      translatedtext(result.recognizedWords);
+      await translatedtext(result.recognizedWords);
     }
     print(lastWords);
     setState(() {

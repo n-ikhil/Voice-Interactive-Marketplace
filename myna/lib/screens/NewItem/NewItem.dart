@@ -292,11 +292,7 @@ class _NewItemState extends State<NewItem> {
                   });
                   Navigator.pop(context);
                   // ignore: unawaited_futures
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => NewItem(widget.myModel)),
-                  );
+                  Navigator.pushNamed(context, newItemPage);
                 },
               ),
             ],
@@ -335,11 +331,7 @@ class _NewItemState extends State<NewItem> {
                   });
                   Navigator.pop(context);
                   // ignore: unawaited_futures
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => NewItem(widget.myModel)),
-                  );
+                  Navigator.pushNamed(context, newItemPage);
                 },
               ),
             ],

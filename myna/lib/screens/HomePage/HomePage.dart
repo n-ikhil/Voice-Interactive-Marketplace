@@ -34,13 +34,6 @@ class HomePage extends StatelessWidget {
                         Navigator.pushNamed(context, newItemPage);
                       },
                     ),
-                    // FloatingActionButton(
-                    //   heroTag: 'btn2',
-                    //   child: Icon(Icons.mic),
-                    //   onPressed: () {
-                    //     Navigator.pushNamed(context, buySellRoot);
-                    //   },
-                    // ),
                   ])
             ],
             mainAxisSize: MainAxisSize.max,

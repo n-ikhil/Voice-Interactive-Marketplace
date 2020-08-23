@@ -206,16 +206,6 @@ class _BaseLayoutState extends State<BaseLayout> {
   }
 
   imageFunc() {
-    // try {
-    //   return FutureBuilder<Widget>(
-    //       future: getUserPhoto(),
-    //       builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
-    //         if (snapshot.hasData) {
-    //           return snapshot.data;
-    //         }
-    //         return Container(child: CircularProgressIndicator());
-    //       });
-    // } catch (e) {
     return CircleAvatar(
       backgroundColor: Colors.blue,
       child: Text(

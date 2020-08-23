@@ -28,7 +28,7 @@ class HomePage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: <Widget>[
                     FloatingActionButton(
-                      heroTag: "btn1",
+                      heroTag: "btn5",
                       child: Icon(Icons.add),
                       onPressed: () {
                         Navigator.pushNamed(context, newItemPage);

@@ -166,7 +166,25 @@ class _NewItemState extends State<NewItem> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return WillPopScope(
+        onWillPop: () => showDialog<bool>(
+          context: context,
+          builder: (c) => AlertDialog(
+            title: Text('Form not completed'),
+            content: Text('Do you really want to go back'),
+            actions: [
+              FlatButton(
+                child: Text('Yes'),
+                onPressed: () =>Navigator.pushNamed(c, homePage),
+              ),
+              FlatButton(
+                child: Text('No'),
+                onPressed: () => Navigator.pop(c, false),
+              ),
+            ],
+          ),
+        ),
+        child: Scaffold(
       appBar: AppBar(title: Text(APP_NAME)),
       body: SingleChildScrollView(
         child: Column(
@@ -254,7 +272,7 @@ class _NewItemState extends State<NewItem> {
           ],
         ),
       ),
-    );
+    ));
   }
 
   void showNewCategoryDialog(context) {

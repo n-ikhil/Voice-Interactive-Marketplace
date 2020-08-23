@@ -4,6 +4,7 @@ import 'package:myna/models/widgetAndThemes/widget.dart';
 import 'package:myna/constants/variables/common.dart';
 import 'package:myna/services/SharedObjects.dart';
 
+//https://medium.com/flutter-community/building-a-chat-app-with-flutter-and-firebase-from-scratch-9eaa7f41782e
 class Chat extends StatefulWidget {
   final String chatRoomId;
   final SharedObjects myModel;

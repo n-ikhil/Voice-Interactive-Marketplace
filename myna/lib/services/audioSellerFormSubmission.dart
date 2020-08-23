@@ -7,7 +7,7 @@ Future audioSellerFormSubmission(
     SharedObjects myModel, Map<String, dynamic> data) async {
   String newProductID, curProductID;
   curProductID = data.containsKey("productID") ? data["productID"] : "NA";
-  curProductID.toLowerCase();
+  curProductID = curProductID.toLowerCase();
   if (curProductID == "NA") {
     return Future.error("not found the product");
   }

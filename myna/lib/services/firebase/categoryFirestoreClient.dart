@@ -17,7 +17,7 @@ class categoryFirestoreClient {
   }
 
   Future storeSaveCategory(String str) async {
-    str.toLowerCase();
+    str = str.toLowerCase();
     Category cat;
     await _firestoreCollection
         .document(str)

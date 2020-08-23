@@ -7,7 +7,7 @@ class productFirestoreClient {
   productFirestoreClient(this._firestoreCollection);
 
   Future storeSaveProduct(Category cat, String str) async {
-    str.toLowerCase();
+    str = str.toLowerCase();
     Product p;
     await _firestoreCollection
         .document(str)

@@ -21,6 +21,7 @@ app.post("/product_id", async (req, res) => {
   if (!("data" in req.body)) {
     return res.status(400).send("failed");
   }
+  console.log("1");
   const inputQuery = req.body["data"];
   console.log(inputQuery);
 
@@ -34,37 +35,16 @@ app.post("/product_id", async (req, res) => {
     return res.status(400).send("no nouns found in the query");
   } else {
     try {
-      var loopStop = false;
-      nouns.forEach(async (noun) => {
-        if (!loopStop) {
-          const allProducts = await productDB.where("name", "==", noun).get();
-          console.log(allProducts);
-          if (allProducts.length !== 0) {
-            snap = allProducts[0];
-            const curItem = snap.data();
-            resultProductIDs.push({ id: snap.id, name: curItem["name"] });
-            loopStop = true;
-          }
+      const allProducts = await productDB.get();
+      allProducts.forEach((snap) => {
+        const curItem = snap.data();
+        if (nouns.indexOf(curItem.name) > -1) {
+          resultProductIDs.push({ id: snap.id, name: curItem["name"] });
         }
       });
     } catch (error) {
       return res.status(400).send(error);
     }
   }
-
-  return resultProductIDs;
-
-  //   try {
-  //     const allProducts = await productDB.get();
-  //     allProducts.forEach((snap) => {
-  //       const curItem = snap.data();
-  //       if (nouns.indexOf(curItem.name) > -1) {
-  //         resultProductIDs.push({ id: snap.id, name: curItem["name"] });
-  //       }
-  //     });
-  //   } catch (error) {
-  //     return res.status(400).send(error);
-  //   }
-  // }
-  // return res.status(200).send(resultProductIDs);
+  return res.status(200).send(resultProductIDs);
 });

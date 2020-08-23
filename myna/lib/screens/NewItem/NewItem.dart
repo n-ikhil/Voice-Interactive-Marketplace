@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:myna/components/Loading.dart';
+import 'package:myna/constants/variables/ROUTES.dart';
 import 'package:myna/constants/variables/common.dart';
 import 'package:myna/models/Category.dart';
 import 'package:myna/models/Item.dart';
@@ -11,6 +12,9 @@ import 'package:myna/models/Product.dart';
 import 'package:myna/models/UserDetail.dart';
 import 'package:myna/services/SharedObjects.dart';
 import 'package:intl/intl.dart';
+
+var globalCategory;
+var globalProduct;
 
 class NewItem extends StatefulWidget {
   final SharedObjects myModel;
@@ -21,8 +25,8 @@ class NewItem extends StatefulWidget {
 
 class _NewItemState extends State<NewItem> {
   // UserDetail curUser;
-  Category curCategory;
-  Product curProduct;
+  Category curCategory = globalCategory;
+  Product curProduct = globalProduct;
   bool isRentable = false;
   bool showSpinner = false;
   Placemark place;
@@ -51,6 +55,7 @@ class _NewItemState extends State<NewItem> {
     _newContactTextController = TextEditingController();
     super.initState();
     loadCategories();
+    if (globalCategory != null) loadProducts(globalCategory.id);
   }
 
   Future loadCategories() async {
@@ -102,6 +107,10 @@ class _NewItemState extends State<NewItem> {
     //   print("please add nick name before adding item");
     //   return;
     // }
+
+    globalCategory = null;
+    globalProduct = null;
+
     curUser = widget.myModel.currentUser;
 
     if (place == null) {
@@ -146,7 +155,7 @@ class _NewItemState extends State<NewItem> {
         .storeSaveItem(_newItem)
         .then((documentID) {
       print("saved the item");
-      Navigator.pop(context);
+      Navigator.pushNamed(context, homePage);
     }).catchError((onError) {
       print("error saving");
     });
@@ -170,6 +179,7 @@ class _NewItemState extends State<NewItem> {
                   loadProducts(value.id);
                   this.setState(() {
                     curCategory = value;
+                    globalCategory = value;
                   });
                 }
               },
@@ -189,6 +199,7 @@ class _NewItemState extends State<NewItem> {
                 } else {
                   this.setState(() {
                     curProduct = value;
+                    globalProduct = value;
                   });
                 }
               },
@@ -270,6 +281,7 @@ class _NewItemState extends State<NewItem> {
                     setState(() {
                       curCategory = cat;
                       showSpinner = false;
+                      globalCategory = cat;
                     });
                   }).catchError((onError) {
                     print(onError);
@@ -279,6 +291,12 @@ class _NewItemState extends State<NewItem> {
                     showSpinner = false;
                   });
                   Navigator.pop(context);
+                  // ignore: unawaited_futures
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => NewItem(widget.myModel)),
+                  );
                 },
               ),
             ],
@@ -309,12 +327,19 @@ class _NewItemState extends State<NewItem> {
                     await loadProducts(curCategory.id);
                     setState(() {
                       curProduct = onValue;
+                      globalProduct = onValue;
                     });
                   });
                   setState(() {
                     showSpinner = false;
                   });
                   Navigator.pop(context);
+                  // ignore: unawaited_futures
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => NewItem(widget.myModel)),
+                  );
                 },
               ),
             ],

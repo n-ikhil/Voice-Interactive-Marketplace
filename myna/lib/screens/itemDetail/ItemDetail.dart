@@ -10,7 +10,9 @@ import 'package:url_launcher/url_launcher.dart';
 class ItemDetail extends StatefulWidget {
   final Map<String, dynamic> args;
   final SharedObjects myModel;
+
   ItemDetail(this.args, this.myModel);
+
   @override
   _ItemDetailState createState() => _ItemDetailState();
 }
@@ -18,10 +20,20 @@ class ItemDetail extends StatefulWidget {
 class _ItemDetailState extends State<ItemDetail> {
   Item item;
   bool showSpinner = false;
+  bool isMyItem = false;
+
   @override
   void initState() {
     super.initState();
     loadItemDetail();
+  }
+
+  inspectItem(Item item) {
+    if (item.ownerID == widget.myModel.currentUser.userID) {
+      setState(() {
+        isMyItem = true;
+      });
+    }
   }
 
   void loadItemDetail() async {
@@ -37,6 +49,7 @@ class _ItemDetailState extends State<ItemDetail> {
     setState(() {
       showSpinner = false;
     });
+    inspectItem(item);
   }
 
   @override
@@ -79,6 +92,25 @@ class _ItemDetailState extends State<ItemDetail> {
                         },
                         child: Icon(Icons.message),
                       ),
+                      Visibility(
+                        visible: isMyItem,
+                        child: RaisedButton(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18.0),
+                          ),
+                          color: Colors.red,
+                          onPressed: () async => {
+                            await widget.myModel.firestoreClientInstance.itemClient
+                                .storeDeleteItemDetail(widget.args["id"]),
+                            Navigator.pop(context),
+                            Navigator.pop(context),
+                          },
+                          child: Icon(
+                            Icons.delete_outline,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
                       RaisedButton(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(18.0),
@@ -88,6 +120,12 @@ class _ItemDetailState extends State<ItemDetail> {
                       ),
                     ],
                   ),
+                  Center(
+                    child: Visibility(
+                      visible: isMyItem,
+                      child: Text("This item was added by you."),
+                    ),
+                  )
                 ],
                 // )
               ),

@@ -38,6 +38,16 @@ class itemFirestoreClient {
     return item;
   }
 
+   storeDeleteItemDetail(String itemID) async {
+    Item item;
+    await _firestoreCollection.document(itemID).delete().whenComplete((){
+      print('Field Deleted');
+    }).catchError((onError) {
+      print(onError);
+      Future.error(onError);
+    });
+  }
+
   Future storeGetItem(String pid, String pcode) async {
     List<Item> items = [];
     await _firestoreCollection

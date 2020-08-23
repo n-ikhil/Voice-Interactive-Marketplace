@@ -40,7 +40,11 @@ class QuestionCard {
       "description",
       "audio"
     ],
-    [" Will you be able to rent the product  ", "isRentable", "boolButton"],
+    [
+      " Will you be able to rent the product  ",
+      "isRentable",
+      "boolButtonaudio"
+    ],
     [
       "please add some images",
       "imgURL",

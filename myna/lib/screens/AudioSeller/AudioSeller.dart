@@ -101,6 +101,18 @@ class _AudioSellerState extends State<AudioSeller> {
     // if (audioState != 3) {
     //   return;
     // }
+    if (allQuestions.questions[currentQuestionNumber].type ==
+        "boolButtonaudio") {
+      print(data);
+      if ((data.toString().contains("yes")) ||
+          (data.toString().contains("true"))) {
+        data = "yes";
+      } else {
+        data = "no";
+      }
+      print(data);
+      print("audio");
+    }
     this.setState(() {
       recognisedWords = data;
     });
@@ -169,7 +181,7 @@ class _AudioSellerState extends State<AudioSeller> {
                       ],
                     ))
                   : (allQuestions.questions[currentQuestionNumber].type ==
-                          "boolButton"
+                          "boolButtonaudio"
                       ? Expanded(
                           child: Column(
                           children: <Widget>[
@@ -180,7 +192,7 @@ class _AudioSellerState extends State<AudioSeller> {
                             RaisedButton(
                                 onPressed: () => callBackForRecorder("no"),
                                 child:
-                                    Text("no", style: TextStyle(fontSize: 20))),
+                                    Text("No", style: TextStyle(fontSize: 20))),
                           ],
                         ))
                       : (allQuestions.questions[currentQuestionNumber].type ==
@@ -231,7 +243,8 @@ class _AudioSellerState extends State<AudioSeller> {
                               : Container(width: 0, height: 0)))))
               : Container(width: 0, height: 0)),
           audioState == 3 &&
-                  allQuestions.questions[currentQuestionNumber].type == "audio"
+                  allQuestions.questions[currentQuestionNumber].type
+                      .endsWith("audio")
               ? RecorderSpeech(
                   callbackFunction: this.callBackForRecorder,
                   currentLanguage: this.currentLanguage)

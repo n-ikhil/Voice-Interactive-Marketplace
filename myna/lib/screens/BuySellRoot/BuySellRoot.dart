@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 
 // import 'package:flutter_tts/flutter_tts_web.dart';
-import 'package:myna/components/buysellRecorder.dart';
+import 'package:myna/components/buy_sell_copy.dart';
+import 'package:myna/constants/variables/ROUTES.dart';
 import 'package:myna/constants/variables/common.dart';
 import 'package:myna/models/quesionCards.dart';
 import 'package:myna/services/SharedObjects.dart';
@@ -56,9 +57,23 @@ class _BuySellRootState extends State<BuySellRoot> {
 
   void callBackForRecorder(String data) {
     print("called");
-    if (audioState != 3) {
+    print(data);
+    data = data.toLowerCase();
+    if (data.contains("buy") ||
+        data.contains("purchase") ||
+        data.contains("bye")) {
+      Navigator.pushNamed(context, audioBuyer);
       return;
     }
+    if (data.contains("send") ||
+        data.contains("sell") ||
+        data.contains("sale") ||
+        data.contains("cell") ||
+        data.contains("give")) {
+      Navigator.pushNamed(context, audioSeller);
+      return;
+    }
+
     this.setState(() {
       recognisedWords = data;
     });

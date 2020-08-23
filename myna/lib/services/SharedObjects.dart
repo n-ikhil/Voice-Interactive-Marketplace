@@ -11,6 +11,12 @@ class CurrentLocation {
   Placemark place;
 
   CurrentLocation() {
+    place = Placemark(
+        administrativeArea: "Delhi",
+        subAdministrativeArea: "Karol Bagh",
+        postalCode: "110001", //delhi
+        subLocality: " Ashoka tower ",
+        locality: " New Delhi ");
     getCurrentLocation();
   }
 
@@ -21,6 +27,7 @@ class CurrentLocation {
     List<Placemark> p = await geolocator.placemarkFromCoordinates(
         _currentPosition.latitude, _currentPosition.longitude);
     place = p[0];
+    print("got the final location");
     isLoaded = true;
   }
 }
